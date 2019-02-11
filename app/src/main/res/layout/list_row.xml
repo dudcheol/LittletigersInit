@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="#cf7f7f"
+    >
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_marginRight="8dp" />
+
+    <TextView
+        android:id="@+id/link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:textColor="#575294"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-condensed"
+        />
+
+    <TextView
+        android:id="@+id/roadAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dip"
+        android:textSize="15dp"
+        android:textColor="#575294"
+        android:fontFamily="sans-serif-condensed"
+
+        />
+
+    <TextView
+        android:id="@+id/mapx"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textSize="15dp"
+        android:textColor="#575294"
+        android:fontFamily="sans-serif-condensed"
+
+        />
+
+    <TextView
+        android:id="@+id/mapy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:textColor="#f9f9f9"
+        android:fontFamily="sans-serif-condensed"
+
+        />
+
+</LinearLayout>
