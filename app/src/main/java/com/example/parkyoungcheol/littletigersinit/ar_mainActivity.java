@@ -68,6 +68,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
             public void onClick(View v) {
                 Intent intent = new Intent(ar_mainActivity.this, ar_navigationActivity.class);
                 startActivity(intent);
+
             }
         });
 
