@@ -46,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
         //구글 로그인 옵션
         var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 //Open google-services.json file -> client -> oauth_client -> client_id -> .requestIdToken("your ID")
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken("734825216046-ch2jatumuchr8cbob6fle8n14s21msg7.apps.googleusercontent.com")
                 .requestEmail()
                 .build()
 

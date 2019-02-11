@@ -3,6 +3,8 @@
     <string name="facebook_app_id">336977890241694</string>
     <string name="fb_login_protocol_scheme">fb336977890241694</string>
 
+    <!-- <string name="naver_client_ID">28dMbtnQ2ce6ytQckJ6h</string>
+    <string name="default_web_client_id">734825216046-3umqn4hcvvk7vun1n44usgu0aolern24.apps.googleusercontent.com</string>-->
 
     <!-- Sign In -->
     <string name="email">Email</string>

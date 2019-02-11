@@ -12,7 +12,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.example.parkyoungcheol.littletigersinit.Navigation.*
+import com.example.parkyoungcheol.littletigersinit.Navigation.SNS.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
@@ -35,6 +35,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
         //푸시토큰 서버 등록
         registerPushToken()
+
+        ARbtn.setOnClickListener {
+            val intent_AR = Intent(this, ar_mainActivity::class.java)
+            startActivity(intent_AR)
+        }
     }
 
     fun registerPushToken(){
