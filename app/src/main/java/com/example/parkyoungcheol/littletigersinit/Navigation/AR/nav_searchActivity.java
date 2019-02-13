@@ -47,7 +47,7 @@ public class nav_searchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ar_navigation);
+        setContentView(R.layout.activity_nav_search);
 
         startSearchBtn = (Button) findViewById(R.id.start_search);
         destSearchBtn = (Button) findViewById(R.id.dest_search);

@@ -30,7 +30,7 @@ class AddPhotoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_photo)
 
-        // Firebase storage 
+        // Firebase storage
         storage = FirebaseStorage.getInstance()
         // Firebase Database
         firestore = FirebaseFirestore.getInstance()
