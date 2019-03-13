@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/signin_layout">
 
-        <TextView
+        <ImageView
             android:id="@+id/image_logo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -17,10 +17,8 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="50dp"
             android:contentDescription="@string/app_name"
-            android:text="Littletigers"
-            android:textSize="70dp"
-            android:textAlignment="center"/>
-            <!--android:src="@drawable/logo_title"-->
+            android:textAlignment="center"
+            android:src="@drawable/logo_title"/>
     </LinearLayout>
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -78,7 +76,7 @@
             android:text="@string/signin_email"
             android:theme="@style/ButtonStyle" />
 
-        <Button
+        <!--<Button
             android:id="@+id/google_sign_in_button"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -87,7 +85,16 @@
             android:layout_marginStart="20dp"
             android:background="@drawable/btn_signin_google"
             android:text="@string/signin_google"
-            android:textColor="@color/colorWhite" />
+            android:textColor="@color/colorWhite" />-->
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/google_sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/signin_google"/>
 
 
         <Button

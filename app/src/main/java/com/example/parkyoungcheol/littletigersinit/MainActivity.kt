@@ -40,6 +40,12 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             val intent_AR = Intent(this, ar_mainActivity::class.java)
             startActivity(intent_AR)
         }
+
+        ChatBtn.setOnClickListener {
+            val intent_CHAT = Intent(this,Chat_MainActivity::class.java)
+            startActivity(intent_CHAT)
+        }
+
     }
 
     fun registerPushToken(){
@@ -123,7 +129,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                     .child(uid)
                     .putFile(imageUri!!)
                     .addOnCompleteListener { task ->
-                        val url = task.result.downloadUrl.toString()
+                        val url = task.result!!.downloadUrl.toString()
                         val map = HashMap<String, Any>()
                         map["image"] = url
                         FirebaseFirestore.getInstance().collection("profileImages").document(uid).set(map)

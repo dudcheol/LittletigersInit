@@ -8,6 +8,9 @@ import android.util.Log;
 
 import com.example.parkyoungcheol.littletigersinit.R;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 // 데이터 소스를 실질적으로 다루는 클래스
 public class DataSource {
 
@@ -34,7 +37,7 @@ public class DataSource {
     public static Bitmap videoIcon;
 
     private static final String NAVER_MAP_URL =	"http://map.naver.com/findroute2/findWalkRoute.nhn?call=route2&output=json&coord_type=naver&search=0";
-
+    private static final String T_MAP_URL = "https://api2.sktelecom.com/tmap/routes/pedestrian?version=1&format=json";
 
     public DataSource() {
 
@@ -220,7 +223,7 @@ public class DataSource {
         return ret;
     }
 
-    // 지도 경로 검색
+    // 네이버 지도 경로 검색
     public static String createNaverMapRequestURL(double start_lon, double start_lat, double end_lon, double end_lat) {
         String ret;
         ret = NAVER_MAP_URL;
@@ -228,6 +231,17 @@ public class DataSource {
         ret += "&start=" + Double.toString(start_lon) + "%2C" + Double.toString(start_lat)
                 + "&destination=" + Double.toString(end_lon) + "%2C" + Double.toString(end_lat);
         //ret은 http://map.naver.com/findroute2/findWalkRoute.nhn?call=route2&output=json&coord_type=naver&search=0&start= *출발지lon* %2C *출발지lat* &destination= *도착지lon* %2C *도착지lat*
+
+        return ret;
+    }
+
+    // 티 맵 지도 보행자 경로 검색
+    public static String createTMapRequestURL(double start_lon, double start_lat, double end_lon,double end_lat){
+        String ret;
+        ret=T_MAP_URL;
+
+        ret += "&startX=" + Double.toString(start_lon) + "&startY=" + Double.toString(start_lat)
+                + "&endX=" + Double.toString(end_lon) + "&endY=" + Double.toString(end_lat);
 
         return ret;
     }

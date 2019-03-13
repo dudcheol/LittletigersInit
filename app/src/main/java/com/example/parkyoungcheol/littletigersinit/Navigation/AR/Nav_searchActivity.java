@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class nav_searchActivity extends AppCompatActivity {
+public class Nav_searchActivity extends AppCompatActivity {
     String clientId = "28dMbtnQ2ce6ytQckJ6h";//애플리케이션 클라이언트 아이디값";
     String clientSecret = "ZNsxiYjwC2";//애플리케이션 클라이언트 시크릿값";
     Button startSearchBtn, destSearchBtn;
@@ -63,7 +63,7 @@ public class nav_searchActivity extends AppCompatActivity {
             public void onClick(View v) {
                 keyword=startEdit.getText().toString();
 
-                pDialog = new ProgressDialog(nav_searchActivity.this);
+                pDialog = new ProgressDialog(Nav_searchActivity.this);
                 // Showing progress dialog before making http request
                 pDialog.setMessage("Loading...");
                 pDialog.show();
@@ -119,7 +119,7 @@ public class nav_searchActivity extends AppCompatActivity {
                         // TODO Auto-generated method stub
                         Log.d("ERROR_RESPONSE =>", error.toString());
                         hidePDialog();
-                        AlertDialog.Builder add = new AlertDialog.Builder(nav_searchActivity.this);
+                        AlertDialog.Builder add = new AlertDialog.Builder(Nav_searchActivity.this);
                         add.setMessage(error.getMessage()).setCancelable(true);
                         AlertDialog alert = add.create();
                         alert.setTitle("Error!!");

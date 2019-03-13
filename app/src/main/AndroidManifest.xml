@@ -17,8 +17,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Navigation.AR.nav_searchActivity"></activity>
-        <activity android:name=".Navigation.AR.ar_navigationActivity" />
+        <activity android:name=".Chat_MainActivity"></activity>
+        <activity android:name=".Navigation.AR.Nav_searchActivity" />
+        <activity android:name=".Navigation.AR.AR_navigationActivity" />
         <activity android:name=".ar_mainActivity" />
         <activity android:name=".Navigation.SNS.AlarmFragment" />
         <activity android:name=".Navigation.SNS.CommentActivity" />

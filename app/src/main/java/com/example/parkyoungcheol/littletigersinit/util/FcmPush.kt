@@ -21,7 +21,7 @@ class FcmPush() {
     fun sendMessage(destinationUid: String, title: String, message: String) {
         FirebaseFirestore.getInstance().collection("pushtokens").document(destinationUid).get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                var token = task.result["pushtoken"].toString()
+                var token = task.result!!["pushtoken"].toString()
                 println(token)
                 var pushDTO = PushDTO()
                 pushDTO.to = token

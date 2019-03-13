@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.parkyoungcheol.littletigersinit.Navigation.AR.ar_navigationActivity;
+import com.example.parkyoungcheol.littletigersinit.Navigation.AR.AR_navigationActivity;
 import com.github.clans.fab.FloatingActionMenu;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.MapView;
@@ -20,8 +20,6 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
-
-import javax.sql.DataSource;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,7 +66,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         ar_nav_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ar_mainActivity.this, ar_navigationActivity.class);
+                Intent intent = new Intent(ar_mainActivity.this, AR_navigationActivity.class);
                 startActivity(intent);
 
             }

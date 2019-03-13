@@ -20,16 +20,21 @@
                 android:id="@+id/toolbar_title_image"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_margin="3dp"
                 android:src="@drawable/logo_title" />
 
             <Button
                 android:id="@+id/ARbtn"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:text="AR"
                 android:layout_alignRight="@id/toolbar_title_image"/>
+
+            <Button
+                android:id="@+id/ChatBtn"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="CHAT"
+                android:layout_toLeftOf="@id/ARbtn"/>
 
 <!--
             <TextView

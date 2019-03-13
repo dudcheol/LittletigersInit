@@ -61,6 +61,8 @@ dependencies {
     implementation 'com.android.support:cardview-v7:28.0.0'
     implementation 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    //firebase database
+    implementation 'com.google.firebase:firebase-database:12.0.0'
 
     //버튼 라이브러리
     implementation 'com.github.clans:fab:1.6.4'

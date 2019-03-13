@@ -1,5 +1,6 @@
 package com.example.parkyoungcheol.littletigersinit
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -17,9 +18,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.SignInButton
 import com.google.firebase.auth.*
 import kotlinx.android.synthetic.main.activity_login.*
 import java.util.*
+
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -36,6 +40,7 @@ class LoginActivity : AppCompatActivity() {
     val GOOGLE_LOGIN_CODE = 9001 // Intent Request ID
 
 
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -63,6 +68,10 @@ class LoginActivity : AppCompatActivity() {
 
         //이메일 로그인 세팅
         email_login_button.setOnClickListener { emailLogin() }
+
+        // 로그인 버튼의 크기/색상을 설정합니다.
+        google_sign_in_button.setSize(SignInButton.SIZE_WIDE)
+        google_sign_in_button.setColorScheme(SignInButton.COLOR_DARK)
 
     }
 
