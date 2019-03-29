@@ -21,11 +21,14 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     val PICK_PROFILE_FROM_ALBUM = 10
+    var backKeyPressedTime = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         progress_bar.visibility = View.VISIBLE
+
 
         // Bottom Navigation View
         bottom_navigation.setOnNavigationItemSelectedListener(this)
@@ -60,6 +63,15 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         toolbar_title_image.visibility = View.VISIBLE
         toolbar_btn_back.visibility = View.GONE
         toolbar_username.visibility = View.GONE
+    }
+
+    override fun onBackPressed() {
+        if(System.currentTimeMillis() - backKeyPressedTime < 1500){
+            // 뒤로가기 버튼을 누른지 1.5초 이상 지난 경우
+            finish()
+        }
+        Toast.makeText(this, "'뒤로가기' 버튼을 한번 더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show()
+        backKeyPressedTime = System.currentTimeMillis()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

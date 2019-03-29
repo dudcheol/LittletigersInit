@@ -15,6 +15,7 @@ import com.example.parkyoungcheol.littletigersinit.Model.ContentDTO
 import com.example.parkyoungcheol.littletigersinit.R
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.fragment_grid.view.*
 import java.util.ArrayList
 
@@ -47,7 +48,7 @@ class GridFragment : Fragment() {
         init {
             contentDTOs = ArrayList()
             imagesSnapshot = FirebaseFirestore
-                    .getInstance().collection("images").orderBy("timestamp")?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                    .getInstance().collection("images").orderBy("timestamp", Query.Direction.DESCENDING)?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                         contentDTOs.clear()
                         if (querySnapshot == null) return@addSnapshotListener
                         for (snapshot in querySnapshot!!.documents) {

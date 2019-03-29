@@ -3,10 +3,12 @@ package com.example.parkyoungcheol.littletigersinit.Navigation.SNS
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutCompat
 import android.support.v7.widget.RecyclerView
@@ -69,16 +71,32 @@ class UserFragment : Fragment() {
 
             uid = arguments!!.getString("destinationUid")
 
-            // 본인 계정인 경우 -> 로그아웃, Toolbar 기본으로 설정
+            // 본인 계정인 경우 -> 로그아웃, Toolbar 기본으로 설정 , 사진추가 아이콘 보이기
             if (uid != null && uid == currentUserUid) {
 
                 fragmentView!!.account_btn_follow_signout.text = getString(R.string.signout)
+                fragmentView!!.account_btn_follow_signout.setTextColor(Color.BLACK)
+                fragmentView!!.account_btn_follow_signout.setBackgroundResource(R.drawable.rectangle_btn_default)
                 fragmentView?.account_btn_follow_signout?.setOnClickListener {
                     startActivity(Intent(activity, LoginActivity::class.java))
                     activity?.finish()
                     auth?.signOut()
                 }
+
+                // Profile Image Click Listener
+                fragmentView?.account_iv_profile?.setOnClickListener {
+                    if (ContextCompat.checkSelfPermission(activity!!, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+
+                        //앨범 오픈
+                        var photoPickerIntent = Intent(Intent.ACTION_PICK)
+                        photoPickerIntent.type = "image/*"
+                        activity!!.startActivityForResult(photoPickerIntent, PICK_PROFILE_FROM_ALBUM)
+                    }
+                }
+
             } else {
+                showHide(fragmentView!!.add_photo)
+                fragmentView!!.account_btn_follow_signout.setBackgroundResource(R.drawable.rectangle_btn)
                 fragmentView!!.account_btn_follow_signout.text = getString(R.string.follow)
                 //view.account_btn_follow_signout.setOnClickListener{ requestFollow() }
                 var mainActivity = (activity as MainActivity)
@@ -98,16 +116,6 @@ class UserFragment : Fragment() {
 
         }
 
-        // Profile Image Click Listener
-        fragmentView?.account_iv_profile?.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(activity!!, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-
-                //앨범 오픈
-                var photoPickerIntent = Intent(Intent.ACTION_PICK)
-                photoPickerIntent.type = "image/*"
-                activity!!.startActivityForResult(photoPickerIntent, PICK_PROFILE_FROM_ALBUM)
-            }
-        }
         getFollowing()
         getFollower()
         fragmentView?.account_recyclerview?.layoutManager = GridLayoutManager(activity!!, 3)
@@ -121,6 +129,14 @@ class UserFragment : Fragment() {
         getProfileImage()
     }
 
+    fun showHide(view:View) {
+        view.visibility = if (view.visibility == View.VISIBLE){
+            View.INVISIBLE
+        } else{
+            View.VISIBLE
+        }
+    }
+
     fun getProfileImage() {
         imageprofileListenerRegistration = firestore?.collection("profileImages")?.document(uid!!)
                 ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
@@ -130,6 +146,8 @@ class UserFragment : Fragment() {
                         Glide.with(activity)
                                 .load(url)
                                 .apply(RequestOptions().circleCrop()).into(fragmentView!!.account_iv_profile)
+                    }else{
+                        cover_account_iv_profile.setImageResource(R.drawable.ic_account)
                     }
                 }
 
@@ -153,15 +171,18 @@ class UserFragment : Fragment() {
             fragmentView?.account_tv_follower_count?.text = followDTO?.followerCount.toString()
             if (followDTO?.followers?.containsKey(currentUserUid)!!) {
 
+                fragmentView!!.account_btn_follow_signout.setBackgroundResource(R.drawable.rectangle_btn_default)
                 fragmentView?.account_btn_follow_signout?.text = getString(R.string.follow_cancel)
+                fragmentView!!.account_btn_follow_signout.setTextColor(Color.BLACK)
                 fragmentView?.account_btn_follow_signout
                         ?.background
                         ?.setColorFilter(ContextCompat.getColor(activity!!, R.color.colorLightGray), PorterDuff.Mode.MULTIPLY)
             } else {
 
                 if (uid != currentUserUid) {
-
+                    fragmentView!!.account_btn_follow_signout.setBackgroundResource(R.drawable.rectangle_btn)
                     fragmentView?.account_btn_follow_signout?.text = getString(R.string.follow)
+                    fragmentView!!.account_btn_follow_signout.setTextColor(Color.WHITE)
                     fragmentView?.account_btn_follow_signout?.background?.colorFilter = null
                 }
             }

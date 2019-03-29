@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.android.synthetic.main.item_detail.view.*
 import okhttp3.OkHttpClient
@@ -45,9 +46,9 @@ class DetailViewFragment : Fragment() {
         //리사이클러 뷰와 어뎁터랑 연결
         mainView = inflater.inflate(R.layout.fragment_detail, container, false)
 
-
         return mainView
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -154,15 +155,15 @@ class DetailViewFragment : Fragment() {
 
             //좋아요 버튼 설정
             if (contentDTOs[position].favorites.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
-
-                viewHolder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite)
+                viewHolder.detailviewitem_favorite_imageview.setChecked(true)
+                //viewHolder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite)
 
             } else {
-
-                viewHolder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite_border)
+                viewHolder.detailviewitem_favorite_imageview.setChecked(false)
+                //viewHolder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite_border)
             }
             //좋아요 카운터 설정
-            viewHolder.detailviewitem_favoritecounter_textview.text = "좋아요 " + contentDTOs[position].favoriteCount + "개"
+            viewHolder.detailviewitem_favoritecounter_textview.text = "" + contentDTOs[position].favoriteCount + "명"
 
             viewHolder.detailviewitem_comment_imageview.setOnClickListener {
                 val intent = Intent(activity, CommentActivity::class.java)

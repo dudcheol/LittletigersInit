@@ -2,16 +2,23 @@ package com.example.parkyoungcheol.littletigersinit;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.parkyoungcheol.littletigersinit.Navigation.AR.AR_navigationActivity;
 import com.github.clans.fab.FloatingActionMenu;
+import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.CameraUpdate;
+import com.naver.maps.map.LocationSource;
+import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
@@ -30,8 +37,8 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
     private Context context;
-    //private Button menu,ar_nav,info,poi;
 
+    //private Button menu,ar_nav,info,poi;
     @BindView(R.id.fab_menu_btn)
     FloatingActionMenu fab_menu;
     @BindView(R.id.ar_nav_btn)
@@ -51,6 +58,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         setContentView(R.layout.activity_ar_main);
         ButterKnife.bind(this);
 
+        // 네이버 맵 띄우기
         NaverMapSdk.getInstance(this).setClient(
                 new NaverMapSdk.NaverCloudPlatformClient("0yfv84wqze"));
 
@@ -59,16 +67,25 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
             mapFragment = MapFragment.newInstance();
             getSupportFragmentManager().beginTransaction().add(R.id.map, mapFragment).commit();
         }
-
         mapFragment.getMapAsync(this);
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
+
 
         ar_nav_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ar_mainActivity.this, AR_navigationActivity.class);
                 startActivity(intent);
+            }
+        });
 
+        poi_browser_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*Intent intent = new Intent(ar_mainActivity.this, MixView.class);
+                startActivity(intent);*/
+                Intent intent = new Intent(ar_mainActivity.this, com.dragon4.owo.ar_trace.ARCore.MixView.class);
+                startActivity(intent);
             }
         });
 
@@ -85,10 +102,9 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-
-    // 사전설정?같은거
+    // 사전설정
     @Override
-    public void onMapReady(@NonNull NaverMap naverMap) {
+    public void onMapReady(@NonNull final NaverMap naverMap) {
         // 사용자 현위치 버튼 활성화
         UiSettings uiSettings = naverMap.getUiSettings();
         uiSettings.setLocationButtonEnabled(true);
@@ -98,7 +114,9 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         // 위치 오버레이 반경
         locationOverlay.setCircleRadius(100);
 
+        naverMap.setLocationSource(locationSource);
 
+        naverMap.setLocationTrackingMode(LocationTrackingMode.Face);
 
         /*
         Projection projection = naverMap.getProjection();
@@ -107,8 +125,18 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         // 지도의 x,y 지점을 화면 좌표로 변환
         PointF point = projection.toScreenLocation(new LatLng(37.5666102, 126.9783881));
         */
-        // 위치추적
-        naverMap.setLocationSource(locationSource);
+
+        naverMap.addOnLocationChangeListener(new NaverMap.OnLocationChangeListener() {
+            @Override
+            public void onLocationChange(@NonNull Location location) {
+                Toast.makeText(ar_mainActivity.this, location.getLatitude() + ", " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+                // 카메라 이동
+                CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(location.getLatitude(), location.getLongitude()));
+                naverMap.moveCamera(cameraUpdate);
+            }
+        });
+
 
     }
+
 }

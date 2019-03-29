@@ -7,12 +7,12 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.facebook.AccessToken
+/*import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
+import com.facebook.login.LoginResult*/
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -34,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
     var googleSignInClient: GoogleSignInClient? = null
 
     // Facebook 로그인 처리 결과 관리 클래스
-    var callbackManager: CallbackManager? = null
+    //var callbackManager: CallbackManager? = null
 
     //GoogleLogin
     val GOOGLE_LOGIN_CODE = 9001 // Intent Request ID
@@ -57,21 +57,21 @@ class LoginActivity : AppCompatActivity() {
 
         //구글 로그인 클래스를 만듬
         googleSignInClient = GoogleSignIn.getClient(this, gso)
-        callbackManager = CallbackManager.Factory.create()
+        //callbackManager = CallbackManager.Factory.create()
 
 
         //구글 로그인 버튼 세팅
         google_sign_in_button.setOnClickListener { googleLogin() }
 
         //페이스북 로그인 세팅
-        facebook_login_button.setOnClickListener { facebookLogin() }
+        //facebook_login_button.setOnClickListener { facebookLogin() }
 
         //이메일 로그인 세팅
         email_login_button.setOnClickListener { emailLogin() }
 
         // 로그인 버튼의 크기/색상을 설정합니다.
-        google_sign_in_button.setSize(SignInButton.SIZE_WIDE)
-        google_sign_in_button.setColorScheme(SignInButton.COLOR_DARK)
+        google_sign_in_button.setSize(SignInButton.SIZE_STANDARD)
+        google_sign_in_button.setColorScheme(SignInButton.COLOR_LIGHT)
 
     }
 
@@ -79,7 +79,7 @@ class LoginActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         // Facebook SDK로 값 넘겨주기
-        callbackManager?.onActivityResult(requestCode, resultCode, data)
+        //callbackManager?.onActivityResult(requestCode, resultCode, data)
 
 
         // 구글에서 승인된 정보를 가지고 오기
@@ -113,7 +113,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    fun facebookLogin() {
+    /*fun facebookLogin() {
         progress_bar.visibility = View.VISIBLE
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"))
         LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
@@ -129,11 +129,11 @@ class LoginActivity : AppCompatActivity() {
                 progress_bar.visibility = View.GONE
             }
         })
-    }
+    }*/
 
 
     // Facebook 토큰을 Firebase로 넘겨주는 코드
-    fun handleFacebookAccessToken(token: AccessToken) {
+    /*fun handleFacebookAccessToken(token: AccessToken) {
         val credential = FacebookAuthProvider.getCredential(token.token)
         auth?.signInWithCredential(credential)
                 ?.addOnCompleteListener { task ->
@@ -143,7 +143,7 @@ class LoginActivity : AppCompatActivity() {
                         moveMainPage(auth?.currentUser)
                     }
                 }
-    }
+    }*/
 
     //이메일 회원가입 및 로그인 메소드
     fun createAndLoginEmail() {

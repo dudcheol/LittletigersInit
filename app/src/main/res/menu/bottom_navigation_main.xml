@@ -8,8 +8,8 @@
     <item
         android:id="@+id/action_search"
         android:enabled="true"
-        android:icon="@drawable/ic_search"
-        android:title="@string/search" />
+        android:icon="@drawable/ic_photo"
+        android:title="@string/search"/>
     <item
         android:id="@+id/action_add_photo"
         android:enabled="true"
@@ -18,7 +18,7 @@
     <item
         android:id="@+id/action_favorite_alarm"
         android:enabled="true"
-        android:icon="@drawable/ic_favorite_border"
+        android:icon="@drawable/ic_favorite"
         android:title="@string/favorite" />
     <item
         android:id="@+id/action_account"

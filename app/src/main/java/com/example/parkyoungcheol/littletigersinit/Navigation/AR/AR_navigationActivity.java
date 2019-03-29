@@ -69,7 +69,12 @@ public class AR_navigationActivity extends AppCompatActivity {
             start_lat=37.340267;
             end_lon=126.742849;
             end_lat=37.351813;
-            String url = DataSource.createTMapRequestURL(start_lon, start_lat, end_lon, end_lat);
+            /*start_lat=527209;
+            start_lon=287975;
+            end_lat=528507;
+            end_lon=288821;*/
+            //String url = DataSource.createTMapRequestURL_KATECH(start_lon, start_lat, end_lon, end_lat);
+            String url = DataSource.createTMapRequestURL_WGS84GEO(start_lon, start_lat, end_lon, end_lat);
             Log.i("티맵 url 주소 생성", url);
 
             // TmapHttpHandler의 doInBackground에 파라미터로 url 전달(params)

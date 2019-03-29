@@ -5,6 +5,7 @@
     android:layout_height="50dp"
     android:gravity="center_vertical"
     android:orientation="horizontal">
+
     <ImageView
         android:id="@+id/commentviewitem_imageview_profile"
         android:layout_width="35dp"
@@ -14,12 +15,17 @@
         android:id="@+id/commentviewitem_textview_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="7.5dp"
         android:textStyle="bold"
+        android:textColor="#000000"
+        android:textSize="12dp"
         tools:text="유저 아이디" />
+
     <TextView
         android:id="@+id/commentviewitem_textview_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="메세지 입니다" />
+        android:layout_marginLeft="7.5dp"
+        tools:text="메세지 입니다"
+        android:textSize="12dp"
+        android:textColor="#000000"/>
 </LinearLayout>

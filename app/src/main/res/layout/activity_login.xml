@@ -1,116 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/signin_layout">
 
-        <ImageView
-            android:id="@+id/image_logo"
+    <ImageView
+        android:id="@+id/image_logo"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_above="@+id/email_area"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/logo_title" />
+    <!-- EditText - Email -->
+
+    <!-- <android.support.design.widget.TextInputLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginEnd="20dp"
+         android:layout_marginStart="20dp">
+
+         <EditText
+             android:id="@+id/email_edittext"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:hint="@string/email"
+             android:inputType="textEmailAddress" />
+     </android.support.design.widget.TextInputLayout>-->
+    <com.github.florent37.materialtextfield.MaterialTextField
+        android:id="@+id/email_area"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        app:mtf_backgroundColor="@color/colorPrimary"
+        app:mtf_cardCollapsedHeight="4dp"
+        app:mtf_image="@drawable/email"
+        app:mtf_labelColor="#666"
+        app:mtf_openKeyboardOnFocus="true">
+
+        <EditText
+            android:id="@+id/email_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="50dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="50dp"
-            android:contentDescription="@string/app_name"
-            android:textAlignment="center"
-            android:src="@drawable/logo_title"/>
-    </LinearLayout>
+            android:hint="Email"
+            android:textColor="#333"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:textSize="15sp" />
+    </com.github.florent37.materialtextfield.MaterialTextField>
+
+    <com.github.florent37.materialtextfield.MaterialTextField
+        android:id="@+id/password_area"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/email_area"
+        android:layout_centerHorizontal="true"
+        app:mtf_backgroundColor="@color/colorPrimary"
+        app:mtf_cardCollapsedHeight="4dp"
+        app:mtf_image="@drawable/password"
+        app:mtf_labelColor="#666"
+        app:mtf_openKeyboardOnFocus="true">
+
+        <EditText
+            android:id="@+id/password_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:textColor="#333"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:textSize="15sp" />
+    </com.github.florent37.materialtextfield.MaterialTextField>
+
+    <!-- EditText - Password -->
+    <!-- <android.support.design.widget.TextInputLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginEnd="20dp"
+         android:layout_marginStart="20dp">
+
+         <EditText
+             android:id="@+id/password_edittext"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:hint="@string/password"
+             android:inputType="textPassword" />
+     </android.support.design.widget.TextInputLayout>-->
+    <!-- Button -->
+    <Button
+        android:id="@+id/email_login_button"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/password_area"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rectangle_btn_default"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:text="로그인"
+        android:theme="@style/ButtonStyle" />
+
+
+    <!--<Button
+        android:id="@+id/google_sign_in_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/btn_signin_google"
+        android:text="@string/signin_google"
+        android:textColor="@color/colorWhite" />-->
+
+    <TextView
+        android:id="@+id/text_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sign_in_button"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="50dp"
+        android:text="구글 계정이 있으신가요?" />
+
+    <Button
+        android:id="@+id/sign_in_button"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/email_login_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rectangle_btn_default"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:text="회원가입"
+        android:theme="@style/ButtonStyle" />
+
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/google_sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_below="@+id/text_area"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="50dp"
+        android:text="@string/signin_google" />
+
+
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone" />
-
-    <LinearLayout
-        android:id="@+id/signin_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="bottom"
-        android:orientation="vertical">
-
-        <!-- EditText - Email -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp">
-
-            <EditText
-                android:id="@+id/email_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress" />
-        </android.support.design.widget.TextInputLayout>
-
-        <!-- EditText - Password -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp">
-
-            <EditText
-                android:id="@+id/password_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/password"
-                android:inputType="textPassword" />
-        </android.support.design.widget.TextInputLayout>
-        <!-- Button -->
-        <Button
-            android:id="@+id/email_login_button"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginBottom="35dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="15dp"
-            android:text="@string/signin_email"
-            android:theme="@style/ButtonStyle" />
-
-        <!--<Button
-            android:id="@+id/google_sign_in_button"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:background="@drawable/btn_signin_google"
-            android:text="@string/signin_google"
-            android:textColor="@color/colorWhite" />-->
-
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/google_sign_in_button"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:text="@string/signin_google"/>
-
-
-        <Button
-            android:id="@+id/facebook_login_button"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="75dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:background="@drawable/btn_signin_facebook"
-            android:text="@string/signin_facebook"
-            android:textColor="@color/colorWhite" />
-
-
-    </LinearLayout>
-
 
 </RelativeLayout>

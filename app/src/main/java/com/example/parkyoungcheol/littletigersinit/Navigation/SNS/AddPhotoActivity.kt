@@ -51,6 +51,8 @@ class AddPhotoActivity : AppCompatActivity() {
             contentUpload()
         }
 
+        toolbar_btn_back2.setOnClickListener { onBackPressed() }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -77,6 +79,8 @@ class AddPhotoActivity : AppCompatActivity() {
 
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val imageFileName = "JPEG_" + timeStamp + "_.png"
+
+
         val storageRef = storage?.reference?.child("images")?.child(imageFileName)
         storageRef?.putFile(photoUri!!)?.addOnSuccessListener{ taskSnapshot ->
             progress_bar.visibility = View.GONE

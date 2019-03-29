@@ -37,7 +37,8 @@ public class DataSource {
     public static Bitmap videoIcon;
 
     private static final String NAVER_MAP_URL =	"http://map.naver.com/findroute2/findWalkRoute.nhn?call=route2&output=json&coord_type=naver&search=0";
-    private static final String T_MAP_URL = "https://api2.sktelecom.com/tmap/routes/pedestrian?version=1&format=json";
+    private static final String T_MAP_URL_KATHECH = "https://api2.sktelecom.com/tmap/routes/pedestrian?version=1&format=json&reqCoordType=KATECH&resCoordType=WGS84GEO";
+    private static final String T_MAP_URL_WGS84GEO = "https://api2.sktelecom.com/tmap/routes/pedestrian?version=1&format=json";
 
     public DataSource() {
 
@@ -47,7 +48,7 @@ public class DataSource {
     public static void createIcons(Resources res) {
 
         //todo - 이미지 넣어줘야함 2019.02.12 영철
-/*
+
         cafeIcon = BitmapFactory.decodeResource(res, R.drawable.ic_ar_cafe);
         busIcon = BitmapFactory.decodeResource(res,R.drawable.ic_ar_bus);
         restraurantIcon = BitmapFactory.decodeResource(res,R.drawable.ic_ar_restaurant);
@@ -55,8 +56,6 @@ public class DataSource {
         bankIcon = BitmapFactory.decodeResource(res,R.drawable.ic_ar_bank);
         hospitalIcon = BitmapFactory.decodeResource(res,R.drawable.ic_ar_hospital);
         accommodationIcon = BitmapFactory.decodeResource(res,R.drawable.ic_ar_lodgment);
-*/
-
 
     }
 
@@ -224,10 +223,13 @@ public class DataSource {
     }
 
     // 네이버 지도 경로 검색
+    //public static String createNaverMapRequestURL(double start_lon, double start_lat, double end_lon, double end_lat) {
     public static String createNaverMapRequestURL(double start_lon, double start_lat, double end_lon, double end_lat) {
         String ret;
         ret = NAVER_MAP_URL;
 
+        /*/*ret += "&start=" + Double.toString(start_lon) + "%2C" + Double.toString(start_lat)
+                + "&destination=" + Double.toString(end_lon) + "%2C" + Double.toString(end_lat);//*/
         ret += "&start=" + Double.toString(start_lon) + "%2C" + Double.toString(start_lat)
                 + "&destination=" + Double.toString(end_lon) + "%2C" + Double.toString(end_lat);
         //ret은 http://map.naver.com/findroute2/findWalkRoute.nhn?call=route2&output=json&coord_type=naver&search=0&start= *출발지lon* %2C *출발지lat* &destination= *도착지lon* %2C *도착지lat*
@@ -235,10 +237,21 @@ public class DataSource {
         return ret;
     }
 
-    // 티 맵 지도 보행자 경로 검색
-    public static String createTMapRequestURL(double start_lon, double start_lat, double end_lon,double end_lat){
+    // 티 맵 지도 보행자 경로 검색 - KATECH 좌표계일 경우
+    public static String createTMapRequestURL_KATECH(int start_lon, int start_lat, int end_lon,int end_lat){
         String ret;
-        ret=T_MAP_URL;
+        ret=T_MAP_URL_KATHECH;
+
+        ret += "&startX=" + Integer.toString(start_lon) + "&startY=" + Integer.toString(start_lat)
+                + "&endX=" + Integer.toString(end_lon) + "&endY=" + Integer.toString(end_lat);
+
+        return ret;
+    }
+
+    // 티 맵 지도 보행자 경로 검색 - 위도,경도 좌표계일 경우
+    public static String createTMapRequestURL_WGS84GEO(double start_lon, double start_lat, double end_lon, double end_lat){
+        String ret;
+        ret=T_MAP_URL_WGS84GEO;
 
         ret += "&startX=" + Double.toString(start_lon) + "&startY=" + Double.toString(start_lat)
                 + "&endX=" + Double.toString(end_lon) + "&endY=" + Double.toString(end_lat);

@@ -1,12 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <ImageView
+        android:visibility="visible"
+        android:id="@+id/sad"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:src="@drawable/sad"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="50dp"/>
+    <TextView
+        android:visibility="visible"
+        android:id="@+id/no_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/sad"
+        android:gravity="center"
+        android:text="이런! 아직 알림이 없네요.\n사진을 게시하고 다른 사람을 팔로우해보세요."
+        android:layout_marginRight="50dp"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/alarmframgent_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"/>
 
-</LinearLayout>
+</RelativeLayout>

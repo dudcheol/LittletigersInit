@@ -14,6 +14,7 @@ import com.example.parkyoungcheol.littletigersinit.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.android.synthetic.main.fragment_alarm.*
 import kotlinx.android.synthetic.main.fragment_alarm.view.*
 import kotlinx.android.synthetic.main.item_comment.view.*
 import java.util.*
@@ -54,7 +55,21 @@ class AlarmFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false)
+
+            if(alarmDTOList!=null){
+                showHide(sad)
+                showHide(no_alarm)
+            }
+
             return CustomViewHolder(view)
+        }
+
+        fun showHide(view:View) {
+            view.visibility = if (view.visibility == View.VISIBLE){
+                View.GONE
+            } else{
+                View.GONE
+            }
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
