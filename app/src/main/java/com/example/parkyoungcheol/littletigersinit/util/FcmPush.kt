@@ -9,7 +9,7 @@ import com.example.parkyoungcheol.littletigersinit.Model.*
 class FcmPush() {
     val JSON = MediaType.parse("application/json; charset=utf-8")
     val url = "https://fcm.googleapis.com/fcm/send"
-    val serverKey = "AAAAwiX7fiM:APA91bF6iZLUPXgD5oTZ0Nc4RJd7kr-amKEOMvyCkvhthHgoFVLRHwIs_YGewCYg-92C1tNzZaIUtyL0xpx0APshPEKbuPgjbg3EqsecXfAIdIJz8yAaOy-iojR22QQwTN8x8rKXpmZX"
+    val serverKey = "AAAAqxb--C4:APA91bETqeGKfGxircpXufVj14Tu53q6AbeNaSb6x8akiFgVJ0dVAkHd73q3PTE7c3W7yunJ5-ro_ExyrYeDXkzEaxT8mZiF-CKA2NvFCn-FVkLOlDyTvIaZK2g9_Bp4pDh4XmoRm8CC"
 
     var okHttpClient: OkHttpClient? = null
     var gson: Gson? = null

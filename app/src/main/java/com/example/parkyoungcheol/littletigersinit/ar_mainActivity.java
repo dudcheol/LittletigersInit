@@ -1,13 +1,16 @@
 package com.example.parkyoungcheol.littletigersinit;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +20,6 @@ import com.example.parkyoungcheol.littletigersinit.Navigation.AR.AR_navigationAc
 import com.github.clans.fab.FloatingActionMenu;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
-import com.naver.maps.map.LocationSource;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.MapView;
@@ -27,6 +29,7 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
+import com.test.littletigersAR.UnityPlayerActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +40,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
     private Context context;
+    private static final int REQUEST_CAMERA = 2000;
 
     //private Button menu,ar_nav,info,poi;
     @BindView(R.id.fab_menu_btn)
@@ -58,6 +62,14 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         setContentView(R.layout.activity_ar_main);
         ButterKnife.bind(this);
 
+        /*// 카메라 권한 받기
+        int permissionCamera = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
+        if(permissionCamera == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(ar_mainActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA);
+        } else {
+
+        }*/
+
         // 네이버 맵 띄우기
         NaverMapSdk.getInstance(this).setClient(
                 new NaverMapSdk.NaverCloudPlatformClient("0yfv84wqze"));
@@ -70,6 +82,14 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         mapFragment.getMapAsync(this);
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
 
+
+        about_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ar_mainActivity.this, UnityPlayerActivity.class);
+                startActivity(intent);
+            }
+        });
 
         ar_nav_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,13 +113,30 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
 
-    //위치추적하려고 쓴거
+    // 권한설정
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // 위치 추적 권한
         if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
             return;
         }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // 카메라 권한
+        if(requestCode==REQUEST_CAMERA){
+            for (int i = 0; i < permissions.length; i++) {
+                String permission = permissions[i];
+                int grantResult = grantResults[i];
+                if (permission.equals(Manifest.permission.CAMERA)) {
+                    if(grantResult == PackageManager.PERMISSION_GRANTED) {
+
+                    } else {
+                        Toast.makeText(this, "ar기능을 이용하려면 카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show();
+                        onBackPressed();
+                    }
+                }
+            }
+        }
     }
 
     // 사전설정

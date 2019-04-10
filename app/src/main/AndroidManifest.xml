@@ -39,46 +39,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Navigation.AR.ARCore.MixView"
-            android:windowSoftInputMode="adjustPan"
-            android:launchMode="singleTop"
-            android:screenOrientation="landscape">
-        </activity>
-        <activity android:name=".Navigation.AR.ARCore.Activity.SearchKeywordListActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:launchMode="singleTop"
-            android:screenOrientation="landscape"/>
 
-        <activity android:name=".Navigation.AR.ARCore.Activity.SearchCategoryListActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:launchMode="singleTop"
-            android:screenOrientation="landscape"/>
-
-
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="0yfv84wqze" />
 
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
-        <activity
-            android:name="com.facebook.CustomTabActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="@string/fb_login_protocol_scheme" />
-            </intent-filter>
-        </activity>
+        
         <activity android:name=".MainActivity" /> <!-- 안드로이드 8.0이상 푸시 처리 추가 코드 -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"

@@ -48,7 +48,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             val intent_CHAT = Intent(this,Chat_MainActivity::class.java)
             startActivity(intent_CHAT)
         }
-
     }
 
     fun registerPushToken(){
