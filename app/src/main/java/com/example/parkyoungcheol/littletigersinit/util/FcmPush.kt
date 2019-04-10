@@ -17,7 +17,7 @@ class FcmPush() {
         gson = Gson()
         okHttpClient = OkHttpClient()
     }
-/*    test*/
+/*    testazdsf */
 
     fun sendMessage(destinationUid: String, title: String, message: String) {
             FirebaseFirestore.getInstance().collection("pushtokens").document(destinationUid).get().addOnCompleteListener { task ->
