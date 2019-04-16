@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.example.parkyoungcheol.littletigersinit.Chat.ChatLoginActivity
+import com.example.parkyoungcheol.littletigersinit.Chat.ChatMainActivity
 import com.example.parkyoungcheol.littletigersinit.Navigation.SNS.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -45,7 +47,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         }
 
         ChatBtn.setOnClickListener {
-            val intent_CHAT = Intent(this,Chat_MainActivity::class.java)
+            val intent_CHAT = Intent(this,ChatMainActivity::class.java)
             startActivity(intent_CHAT)
         }
     }

@@ -13,4 +13,17 @@
     <color name="colorGoogleSignInPressed">#d02513</color>
     <color name="colorEmailSignIn">#009688</color>
     <color name="colorEmailSignInPressed">#004d40</color>
+
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="windowBackground">#FFFFFF</color>
+    <color name="navigationBarColor">#000000</color>
+
+    <color name="main_bg">#F6F6F6</color>
+    <color name="main_yellow">#FDCE00</color>
+    <color name="main_mint">#00CFC3</color>
+    <color name="main_red">#F96246</color>
+    <color name="font_color">#E4E4E4</color>
+
+    <color name="white">#fff</color>
+
 </resources>

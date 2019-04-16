@@ -23,7 +23,15 @@
         android:supportsRtl="true"
         android:windowSoftInputMode="adjustResize|stateHidden"
         android:theme="@style/AppTheme">
-        <activity android:name=".Chat_MainActivity" />
+        <activity android:name=".Chat.ChatActivity" />
+        <activity android:name=".Chat.ChatMainActivity"></activity>
+        <activity android:name=".Chat.ChatLoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".Navigation.AR.Nav_searchActivity" />
         <activity android:name=".Navigation.AR.AR_navigationActivity" />
         <activity android:name=".ar_mainActivity" />
@@ -32,13 +40,6 @@
         <activity android:name=".Navigation.SNS.UserFragment" />
         <activity android:name=".Navigation.SNS.GridFragment" />
         <activity android:name=".Navigation.SNS.AddPhotoActivity" />
-        <activity android:name=".LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"

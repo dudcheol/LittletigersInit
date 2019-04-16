@@ -8,7 +8,6 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutCompat
 import android.support.v7.widget.RecyclerView
@@ -18,7 +17,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.parkyoungcheol.littletigersinit.LoginActivity
+import com.example.parkyoungcheol.littletigersinit.Chat.ChatLoginActivity
 import com.example.parkyoungcheol.littletigersinit.MainActivity
 import com.example.parkyoungcheol.littletigersinit.Model.AlarmDTO
 import com.example.parkyoungcheol.littletigersinit.Model.ContentDTO
@@ -28,7 +27,6 @@ import com.example.parkyoungcheol.littletigersinit.util.FcmPush
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.fragment_user.view.*
@@ -79,7 +77,7 @@ class UserFragment : Fragment() {
                 fragmentView!!.account_btn_follow_signout.setTextColor(Color.BLACK)
                 fragmentView!!.account_btn_follow_signout.setBackgroundResource(R.drawable.rectangle_btn_default)
                 fragmentView?.account_btn_follow_signout?.setOnClickListener {
-                    startActivity(Intent(activity, LoginActivity::class.java))
+                    startActivity(Intent(activity, ChatLoginActivity::class.java))
                     activity?.finish()
                     auth?.signOut()
                 }

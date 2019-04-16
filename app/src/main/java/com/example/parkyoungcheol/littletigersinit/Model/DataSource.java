@@ -49,14 +49,14 @@ public class DataSource {
 
         //todo - 이미지 넣어줘야함 2019.02.12 영철
 
-        cafeIcon = BitmapFactory.decodeResource(res, R.drawable.ic_ar_cafe);
+        /*cafeIcon = BitmapFactory.decodeResource(res, R.drawable.ic_ar_cafe);
         busIcon = BitmapFactory.decodeResource(res,R.drawable.ic_ar_bus);
         restraurantIcon = BitmapFactory.decodeResource(res,R.drawable.ic_ar_restaurant);
         convenienceIcon = BitmapFactory.decodeResource(res,R.drawable.ic_ar_convenience_store);
         bankIcon = BitmapFactory.decodeResource(res,R.drawable.ic_ar_bank);
         hospitalIcon = BitmapFactory.decodeResource(res,R.drawable.ic_ar_hospital);
         accommodationIcon = BitmapFactory.decodeResource(res,R.drawable.ic_ar_lodgment);
-
+*/
     }
 
     // 아이콘 비트맵의 게터
