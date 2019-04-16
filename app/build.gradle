@@ -107,6 +107,11 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 
+
+    compileOnly 'org.projectlombok:lombok:1.16.16'
+    annotationProcessor 'org.projectlombok:lombok:1.16.16'
+    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
+
     //firebase database
     implementation 'com.google.firebase:firebase-database:12.0.0'
 
@@ -117,12 +122,14 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
+
+
+
     // ar 구현을 위한 외부 라이브러리
 
     //compile 'com.tsengvn:typekit:1.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'jp.wasabeef:picasso-transformations:2.1.0'
-    implementation project(':ar_trace')
 
     //  ui
     compile 'com.sackcentury:shinebutton:0.2.0'

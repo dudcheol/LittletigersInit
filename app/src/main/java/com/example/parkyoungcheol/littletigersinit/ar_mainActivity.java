@@ -99,15 +99,15 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
             }
         });
 
-        poi_browser_btn.setOnClickListener(new View.OnClickListener() {
+        /*poi_browser_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent(ar_mainActivity.this, MixView.class);
-                startActivity(intent);*/
+                *//*Intent intent = new Intent(ar_mainActivity.this, MixView.class);
+                startActivity(intent);*//*
                 Intent intent = new Intent(ar_mainActivity.this, com.dragon4.owo.ar_trace.ARCore.MixView.class);
                 startActivity(intent);
             }
-        });
+        });*/
 
 
     }
