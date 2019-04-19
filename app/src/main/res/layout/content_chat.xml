@@ -49,6 +49,13 @@
                 android:layout_width="48dp"
                 android:padding="8dp"
                 android:layout_height="48dp"/>
+        <ImageView
+            android:id="@+id/loactionSend"
+            android:src="@mipmap/handshake_round"
+            android:layout_gravity="center"
+            android:layout_width="48dp"
+            android:padding="8dp"
+            android:layout_height="48dp"/>
 
         <EditText
                 android:id="@+id/edtContent"

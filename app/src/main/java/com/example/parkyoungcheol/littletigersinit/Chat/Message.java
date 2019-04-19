@@ -17,6 +17,6 @@ public class Message {
     private List<String> readUserList;
 
     public enum MessageType{
-        TEXT, PHOTO, EXIT
+        TEXT, PHOTO, LOCATION,EXIT
     }
 }

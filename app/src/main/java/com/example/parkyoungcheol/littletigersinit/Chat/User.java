@@ -1,6 +1,8 @@
 package com.example.parkyoungcheol.littletigersinit.Chat;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
 public class User {

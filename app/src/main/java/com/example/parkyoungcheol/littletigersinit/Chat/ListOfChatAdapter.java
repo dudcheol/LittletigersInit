@@ -85,6 +85,8 @@ public class ListOfChatAdapter extends RecyclerView.Adapter<ListOfChatAdapter.Ch
 
             if (item.getLastMessage().getMessageType() == Message.MessageType.TEXT) {
                 holder.lastMessageView.setText(item.getLastMessage().getMessageText());
+            } else if (item.getLastMessage().getMessageType() == Message.MessageType.LOCATION){
+                holder.lastMessageView.setText("(위치)");
             } else if (item.getLastMessage().getMessageType() == Message.MessageType.PHOTO) {
                 holder.lastMessageView.setText("(사진)");
             } else if (item.getLastMessage().getMessageType() == Message.MessageType.EXIT) {

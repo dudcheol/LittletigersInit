@@ -1,10 +1,19 @@
 package com.example.parkyoungcheol.littletigersinit.Chat;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,8 +21,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.parkyoungcheol.littletigersinit.R;
+import com.example.parkyoungcheol.littletigersinit.ar_mainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -30,6 +41,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.CameraUpdate;
+import com.naver.maps.map.LocationTrackingMode;
+import com.naver.maps.map.NaverMap;
+import com.naver.maps.map.UiSettings;
+import com.naver.maps.map.overlay.LocationOverlay;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,6 +87,8 @@ public class ChatActivity extends AppCompatActivity {
     private StorageReference mImageStorageRef;
     private FirebaseAnalytics mFirebaseAnalytics;
 
+    public String locationText = "위치 예제";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +99,7 @@ public class ChatActivity extends AppCompatActivity {
         mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         mUserRef = mFirebaseDb.getReference("users");
         mToolbar.setTitleTextColor(Color.WHITE);
-        if ( mChatId != null ) {
+        if (mChatId != null) {
             mChatRef = mFirebaseDb.getReference("users").child(mFirebaseUser.getUid()).child("chats").child(mChatId);
             mChatMessageRef = mFirebaseDb.getReference("chat_messages").child(mChatId);
             mChatMemeberRef = mFirebaseDb.getReference("chat_members").child(mChatId);
@@ -113,7 +132,7 @@ public class ChatActivity extends AppCompatActivity {
             mChatMessageRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    long totalMessageCount =  dataSnapshot.getChildrenCount();
+                    long totalMessageCount = dataSnapshot.getChildrenCount();
                     mMessageEventListener.setTotalMessageCount(totalMessageCount);
                 }
 
@@ -128,18 +147,18 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private void initTotalunreadCount(){
+    private void initTotalunreadCount() {
         mChatRef.child("totalUnreadCount").setValue(0);
     }
 
     MessageEventListener mMessageEventListener = new MessageEventListener();
 
-    private void addChatListener(){
+    private void addChatListener() {
         mChatRef.child("title").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String title = dataSnapshot.getValue(String.class);
-                if ( title != null ) {
+                if (title != null) {
                     mToolbar.setTitle(title);
                 }
             }
@@ -152,7 +171,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    private void addMessageListener(){
+    private void addMessageListener() {
         mChatMessageRef.addChildEventListener(mMessageEventListener);
     }
 
@@ -184,8 +203,8 @@ public class ChatActivity extends AppCompatActivity {
             // chat_messages > {chat_id} > {message_id} >  unreadCount -= 1
             // readUserList에 내 uid 추가
             List<String> readUserUIDList = item.getReadUserList();
-            if ( readUserUIDList != null ) {
-                if ( !readUserUIDList.contains(mFirebaseUser.getUid())) {
+            if (readUserUIDList != null) {
+                if (!readUserUIDList.contains(mFirebaseUser.getUid())) {
                     // chat_messages > {chat_id} > {message_id} >  unreadCount -= 1
 
                     // messageRef.setValue();
@@ -200,16 +219,21 @@ public class ChatActivity extends AppCompatActivity {
                             mutabledReadUserList.add(mFirebaseUser.getUid());
                             int mutableUnreadCount = mutableMessage.getUnreadCount() - 1;
 
-                            if ( mutableMessage.getMessageType() == Message.MessageType.PHOTO) {
+                            if (mutableMessage.getMessageType() == Message.MessageType.PHOTO) {
                                 PhotoMessage mutablePhotoMessage = mutableData.getValue(PhotoMessage.class);
                                 mutablePhotoMessage.setReadUserList(mutabledReadUserList);
                                 mutablePhotoMessage.setUnreadCount(mutableUnreadCount);
                                 mutableData.setValue(mutablePhotoMessage);
-                            } else {
+                            } else if (mutableMessage.getMessageType() == Message.MessageType.TEXT) {
                                 TextMessage mutableTextMessage = mutableData.getValue(TextMessage.class);
                                 mutableTextMessage.setReadUserList(mutabledReadUserList);
                                 mutableTextMessage.setUnreadCount(mutableUnreadCount);
                                 mutableData.setValue(mutableTextMessage);
+                            } else if (mutableMessage.getMessageType() == Message.MessageType.LOCATION) {
+                                LocationMessage mutableLocationMessage = mutableData.getValue(LocationMessage.class);
+                                mutableLocationMessage.setReadUserList(mutabledReadUserList);
+                                mutableLocationMessage.setUnreadCount(mutableUnreadCount);
+                                mutableData.setValue(mutableLocationMessage);
                             }
                             return Transaction.success(mutableData);
                         }
@@ -230,17 +254,20 @@ public class ChatActivity extends AppCompatActivity {
             }
 
             // ui
-            if ( item.getMessageType() == Message.MessageType.TEXT ) {
+            if (item.getMessageType() == Message.MessageType.TEXT) {
                 TextMessage textMessage = dataSnapshot.getValue(TextMessage.class);
                 messageListAdapter.addItem(textMessage);
-            } else if ( item.getMessageType() == Message.MessageType.PHOTO ){
+            } else if (item.getMessageType() == Message.MessageType.PHOTO) {
                 PhotoMessage photoMessage = dataSnapshot.getValue(PhotoMessage.class);
                 messageListAdapter.addItem(photoMessage);
-            } else if ( item.getMessageType() == Message.MessageType.EXIT ){
+            } else if (item.getMessageType() == Message.MessageType.LOCATION) {
+                LocationMessage locationMessage = dataSnapshot.getValue(LocationMessage.class);
+                messageListAdapter.addItem(locationMessage);
+            } else if (item.getMessageType() == Message.MessageType.EXIT) {
                 messageListAdapter.addItem(item);
             }
 
-            if ( callCount >= totalMessageCount) {
+            if (callCount >= totalMessageCount) {
                 // 스크롤을 맨 마지막으로 내린다.
                 mChatRecyclerView.scrollToPosition(messageListAdapter.getItemCount() - 1);
             }
@@ -255,12 +282,15 @@ public class ChatActivity extends AppCompatActivity {
             // 알아낸 위치값을 이용해서 메세지 리스트의 값을 변경할 예정입니다.
             Message item = dataSnapshot.getValue(Message.class);
 
-            if ( item.getMessageType() == Message.MessageType.TEXT ) {
+            if (item.getMessageType() == Message.MessageType.TEXT) {
                 TextMessage textMessage = dataSnapshot.getValue(TextMessage.class);
                 messageListAdapter.updateItem(textMessage);
-            } else if ( item.getMessageType() == Message.MessageType.PHOTO ){
+            } else if (item.getMessageType() == Message.MessageType.PHOTO) {
                 PhotoMessage photoMessage = dataSnapshot.getValue(PhotoMessage.class);
                 messageListAdapter.updateItem(photoMessage);
+            } else if (item.getMessageType() == Message.MessageType.LOCATION) {
+                LocationMessage locationMessage = dataSnapshot.getValue(LocationMessage.class);
+                messageListAdapter.updateItem(locationMessage);
             }
         }
 
@@ -282,9 +312,9 @@ public class ChatActivity extends AppCompatActivity {
 
 
     @OnClick(R.id.senderBtn)
-    public void onSendEvent(View v){
+    public void onSendEvent(View v) {
 
-        if ( mChatId != null ) {
+        if (mChatId != null) {
             sendMessage();
         } else {
             createChat();
@@ -303,6 +333,66 @@ public class ChatActivity extends AppCompatActivity {
         startActivityForResult(intent, TAKE_PHOTO_REQUEST_CODE);
     }
 
+    private String mPhotoUrl = null;
+    private Message.MessageType mMessageType = Message.MessageType.TEXT;
+
+
+
+    @OnClick(R.id.loactionSend)
+    public void onLocationSendEvent(View v) {
+
+        final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(ChatActivity.this, new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION},
+            0);
+        } else {
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            String provider = location.getProvider();
+            double longitude = location.getLongitude();
+            double latitude = location.getLatitude();
+            double altitude = location.getAltitude();
+
+            locationText = "위치정보 : " + "위도 : " + longitude + " 경도 : " + latitude + " 고도 : " + altitude;
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, gpsLocationListener);
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, gpsLocationListener);
+        }
+        mMessageType = Message.MessageType.LOCATION;
+        if ( mChatId != null ) {
+            sendMessage();
+        } else {
+            createChat();
+        }
+    }
+
+    final LocationListener gpsLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            String provider = location.getProvider();
+            double longitude = location.getLongitude();
+            double latitude= location.getLatitude();
+            double altitude = location.getAltitude();
+
+            locationText = "위치정보 : " + "위도 : " + longitude + " 경도 : " + latitude + " 고도 : " + altitude;
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -318,9 +408,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
     }
-
-    private String mPhotoUrl = null;
-    private Message.MessageType mMessageType = Message.MessageType.TEXT;
 
     private void uploadImage(Uri data){
         if ( mImageStorageRef == null ) {
@@ -341,6 +428,17 @@ public class ChatActivity extends AppCompatActivity {
 
 
     private Message message = new Message();
+
+    /*public void onMapReady(@NonNull final NaverMap naverMap) {
+
+        naverMap.addOnLocationChangeListener(new NaverMap.OnLocationChangeListener() {
+            @Override
+            public void onLocationChange(@NonNull Location location) {
+                location_Latitude = location_Latitude;
+                location_Longitude= location_Longitude;
+            }
+        });
+    }*/
     private void sendMessage(){
         // 메세지 키 생성
         mChatMessageRef = mFirebaseDb.getReference("chat_messages").child(mChatId);
@@ -355,7 +453,6 @@ public class ChatActivity extends AppCompatActivity {
         else {
             PhotoUrl = "https://i.imgur.com/jCxAEpA.jpg";
         }
-
 
         final Bundle bundle = new Bundle();
         bundle.putString("me", mFirebaseUser.getEmail());
@@ -372,6 +469,10 @@ public class ChatActivity extends AppCompatActivity {
             message = new PhotoMessage();
             ((PhotoMessage)message).setPhotoUrl(mPhotoUrl);
             bundle.putString("messageType", Message.MessageType.PHOTO.toString());
+        } else if(mMessageType == Message.MessageType.LOCATION){
+            message = new LocationMessage();
+            ((LocationMessage)message).setLocationText(locationText);
+            bundle.putString("MessageType", Message.MessageType.LOCATION.toString());
         }
 
 
