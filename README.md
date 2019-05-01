@@ -1,6 +1,6 @@
 # LittletigersInit
-# 팀명 : 리틀타이거즈
-# 앱명 : 뚜벅(Ddubuk)
+@팀명 : 리틀타이거즈
+@앱명 : 뚜벅(Ddubuk)
 
 This app combines AR and SNS.
 이 앱은 AR과 SNS를 결합시킨 것입니다.
