@@ -7,10 +7,10 @@
     <ImageView
         android:id="@+id/image_logo"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="150dp"
         android:layout_above="@+id/email_area"
         android:layout_marginBottom="30dp"
-        android:src="@drawable/logo_title" />
+        android:src="@drawable/ddubuck_noback" />
     <!-- EditText - Email -->
 
     <!-- <android.support.design.widget.TextInputLayout

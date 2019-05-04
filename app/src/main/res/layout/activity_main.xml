@@ -15,21 +15,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!--<ImageView
+            <ImageView
                 android:id="@+id/toolbar_title_image"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/logo_title" />-->
-            <TextView
-                android:id="@+id/toolbar_title_image"
                 android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="로고미완성"
-                android:textScaleX="0.8"
-                android:textColor="@android:color/black"
-                android:textSize="25dp"/>
+                android:src="@drawable/ddubuck_noback" />
 
             <ImageView
                 android:layout_centerVertical="true"

@@ -17,9 +17,9 @@
         tools:replace="android:icon, android:label, android:theme, android:name,android:allowBackup"
         android:name=".app.AppController"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/icon_ddubuk"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/icon_ddubuk_round"
         android:supportsRtl="true"
         android:windowSoftInputMode="adjustResize|stateHidden"
         android:theme="@style/AppTheme">
