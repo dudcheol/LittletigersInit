@@ -1,0 +1,142 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 28
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
+    defaultConfig {
+        applicationId "com.example.parkyoungcheol.littletigersinit"
+        minSdkVersion 24
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
+        ndk {
+            abiFilters 'armeabi-v7a', 'x86'
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    aaptOptions {
+        noCompress = ['.unity3d', '.ress', '.resource', '.obb']
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    packagingOptions {
+        doNotStrip '*/armeabi-v7a/*.so'
+        doNotStrip '*/x86/*.so'
+    }
+
+}
+
+dependencies {
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation 'com.naver.maps.open:naver-map-api:2.1.2@aar'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
+
+    /*코드 추가*/
+
+    // 네이버 지도 SDK
+    implementation 'com.naver.maps:map-sdk:3.1.0'
+
+    //Material Design
+    implementation 'com.android.support:design:28.0.0'
+
+    //Recycler View
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+
+    //FaceBook 지원
+
+    //implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+
+    //파이어베이스 로그인 지원
+    implementation 'com.google.firebase:firebase-auth:12.0.0'
+
+    //파이어베이스 파일 스토리지
+    implementation 'com.google.firebase:firebase-storage:12.0.0'
+
+    //파이어베이스 파이어스토어 데이터베이스
+    implementation 'com.google.firebase:firebase-firestore:12.0.0'
+
+    //이미지 로더 라이브러리
+    implementation 'com.github.bumptech.glide:glide:4.0.0'
+
+    //구글 로그인 지원
+    implementation 'com.google.android.gms:play-services-auth:12.0.0'
+
+    //트위터 라이브러리
+    implementation 'com.twitter.sdk.android:twitter:3.1.1'
+
+    //푸시 알람 라이브러리
+    implementation 'com.google.firebase:firebase-messaging:12.0.0'
+
+    //Okhttp 라이브러리
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+
+    //Gson 라이브러리
+    implementation 'com.google.code.gson:gson:2.8.4'
+
+    //Volley 라이브러리
+    implementation 'com.android.volley:volley:1.1.0'
+    implementation 'com.google.android.gms:play-services-location:12.0.0'
+    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+
+
+    compileOnly 'org.projectlombok:lombok:1.16.16'
+    annotationProcessor 'org.projectlombok:lombok:1.16.16'
+    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
+
+    //firebase database
+    implementation 'com.google.firebase:firebase-database:12.0.0'
+
+    //버튼 라이브러리
+    implementation 'com.github.clans:fab:1.6.4'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+
+
+
+    // ar 구현을 위한 외부 라이브러리
+
+    //compile 'com.tsengvn:typekit:1.0.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'jp.wasabeef:picasso-transformations:2.1.0'
+
+    //  ui
+    compile 'com.sackcentury:shinebutton:0.2.0'
+    compile 'com.android.support:support-v4:28.0.0'
+    compile 'info.hoang8f:fbutton:1.0.5'
+    implementation 'com.github.florent37:materialtextfield:1.0.7'
+
+    implementation project(':littletigersAR-release')
+}
+apply plugin: 'com.google.gms.google-services'
