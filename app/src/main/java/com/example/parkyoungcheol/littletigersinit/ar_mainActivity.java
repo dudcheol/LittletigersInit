@@ -8,15 +8,14 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.parkyoungcheol.littletigersinit.Navigation.AR.AR_navigationActivity;
+import com.example.parkyoungcheol.littletigersinit.Navigation.AR.UnityPlayerActivity;
 import com.github.clans.fab.FloatingActionMenu;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
@@ -29,7 +28,6 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
-import com.test.littletigersAR.UnityPlayerActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -86,7 +84,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         about_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ar_mainActivity.this, UnityPlayerActivity.class);
+                Intent intent = new Intent(getApplicationContext(), UnityPlayerActivity.class);
                 startActivity(intent);
             }
         });
