@@ -85,6 +85,8 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), UnityPlayerActivity.class);
+                String a = "정정아식당";
+                intent.putExtra("local",a);
                 startActivity(intent);
             }
         });

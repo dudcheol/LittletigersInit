@@ -4,11 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.unity3d.player.UnityPlayer;
+
+import static com.unity3d.player.UnityPlayer.UnitySendMessage;
 
 public class UnityPlayerActivity extends Activity
 {
@@ -19,6 +24,19 @@ public class UnityPlayerActivity extends Activity
     {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        String msg1 = intent.getExtras().getString("local");
+
+        Toast.makeText(this, msg1, Toast.LENGTH_SHORT).show();
+
+        final Handler handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                UnitySendMessage("NewText", "revMsg1", msg1);
+            }
+        };
+        handler.sendEmptyMessageDelayed(0,1000);
 
         mUnityPlayer = new UnityPlayer(this);
         setContentView(mUnityPlayer);
