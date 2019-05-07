@@ -46,9 +46,6 @@ public class DataSource {
 
     // 리소스로부터 각 아이콘 생성
     public static void createIcons(Resources res) {
-
-        //todo - 이미지 넣어줘야함 2019.02.12 영철
-
         /*cafeIcon = BitmapFactory.decodeResource(res, R.drawable.ic_ar_cafe);
         busIcon = BitmapFactory.decodeResource(res,R.drawable.ic_ar_bus);
         restraurantIcon = BitmapFactory.decodeResource(res,R.drawable.ic_ar_restaurant);

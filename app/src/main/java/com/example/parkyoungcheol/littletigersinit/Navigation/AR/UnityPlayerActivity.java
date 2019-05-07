@@ -25,22 +25,28 @@ public class UnityPlayerActivity extends Activity
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
 
-        Intent intent = getIntent();
-        String msg1 = intent.getExtras().getString("local");
-
-        Toast.makeText(this, msg1, Toast.LENGTH_SHORT).show();
-
-        final Handler handler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                UnitySendMessage("NewText", "revMsg1", msg1);
-            }
-        };
-        handler.sendEmptyMessageDelayed(0,1000);
-
         mUnityPlayer = new UnityPlayer(this);
         setContentView(mUnityPlayer);
         mUnityPlayer.requestFocus();
+
+        // 이전 액티비티에서 받아온 인텐트에서 putExtra해서 받아온 것을 따로 저장함
+        Intent intent = getIntent();
+        String recieveMsg = intent.getExtras().getString("local");
+
+        // test
+        Toast.makeText(this, recieveMsg, Toast.LENGTH_SHORT).show();
+
+        /* 안드로이드에서 유니티로 넘어갈 때 로고가 뜨는 시간을 고려하여
+        안드로이드에서 유니티로 값 넘기는 메소드 실행에 딜레이 시간을 줌 (1초) */
+        //Todo : 단, 테스트한 기기가 갤S10이라 속도가 빨라서 1초만에 된 걸 수도 있어서 윤복이폰으로도 확인 필요함
+        final Handler handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                // s:게임오브젝트이름, s1:함수이름, s2:전달할string
+                UnitySendMessage("NewText", "revMsg1", recieveMsg);
+            }
+        };
+        handler.sendEmptyMessageDelayed(0,1000);
     }
 
     @Override protected void onNewIntent(Intent intent)

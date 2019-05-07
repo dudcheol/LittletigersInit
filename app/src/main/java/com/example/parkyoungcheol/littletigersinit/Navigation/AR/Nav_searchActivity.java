@@ -116,7 +116,6 @@ public class Nav_searchActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
                         Log.d("ERROR_RESPONSE =>", error.toString());
                         hidePDialog();
                         AlertDialog.Builder add = new AlertDialog.Builder(Nav_searchActivity.this);
