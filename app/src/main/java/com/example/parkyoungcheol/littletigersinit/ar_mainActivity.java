@@ -84,10 +84,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         about_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), UnityPlayerActivity.class);
-                String a = "정정아식당";
-                intent.putExtra("local",a);
-                startActivity(intent);
+
             }
         });
 
@@ -166,7 +163,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         naverMap.addOnLocationChangeListener(new NaverMap.OnLocationChangeListener() {
             @Override
             public void onLocationChange(@NonNull Location location) {
-                Toast.makeText(ar_mainActivity.this, location.getLatitude() + ", " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ar_mainActivity.this, location.getLatitude() + ", " + location.getLongitude(), Toast.LENGTH_SHORT).show();
                 // 카메라 이동
                 CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(location.getLatitude(), location.getLongitude()));
                 naverMap.moveCamera(cameraUpdate);

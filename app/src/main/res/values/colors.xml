@@ -4,7 +4,9 @@
     <color name="colorPrimaryDark">#e1e1e1</color>
     <color name="colorLightGray">#f1f1f1</color>
 
-    <color name="colorAccent">#FF4081</color>
+    <color name="mainColor">#FF2899FE</color>
+
+    <color name="colorAccent">#80C4FF</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorDivision">#e0e0e0</color>
     <color name="colorNavIcon">#1d1d1d</color>
