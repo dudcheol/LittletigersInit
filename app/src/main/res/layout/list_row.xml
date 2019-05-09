@@ -27,6 +27,14 @@
                 android:layout_marginRight="8dp"
                 android:textColor="#636363"/>
 
+            <TextView
+                android:id="@+id/roadAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dip"
+                android:textSize="15dp"
+                android:textColor="#333333"
+                android:fontFamily="sans-serif-condensed" />
             <!--<TextView
                 android:id="@+id/link"
                 android:layout_width="match_parent"
@@ -37,16 +45,7 @@
                 android:fontFamily="sans-serif-condensed"
                 />
 
-           <TextView
-                  android:id="@+id/roadAddress"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginTop="1dip"
-                  android:textSize="15dp"
-                  android:textColor="#575294"
-                  android:fontFamily="sans-serif-condensed"
-
-                  />-->
+         -->
 
             <!--<TextView
                 android:id="@+id/mapx"

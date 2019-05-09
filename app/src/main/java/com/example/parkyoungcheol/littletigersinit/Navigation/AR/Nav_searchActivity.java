@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -75,6 +76,24 @@ public class Nav_searchActivity extends AppCompatActivity {
             }
         });
 
+        searchEdit.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                //Enter key Action
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    keyword=searchEdit.getText().toString();
+
+                    pDialog = new ProgressDialog(Nav_searchActivity.this);
+                    // Showing progress dialog before making http request
+                    pDialog.setMessage("Loading...");
+                    pDialog.show();
+                    requestWithSomeHttpHeaders();
+                    return true;
+                }
+                return false;
+            }
+        });
+
     }
 
     public void requestWithSomeHttpHeaders() {
@@ -105,7 +124,7 @@ public class Nav_searchActivity extends AppCompatActivity {
                                 JSONObject obj = items.getJSONObject(i);
                                 DataSet dataSet = new DataSet();
                                 dataSet.setTitle(Html.fromHtml(obj.getString("title")).toString());
-                                dataSet.setLink(obj.getString("link"));
+                                dataSet.setRoadAddress(obj.getString("roadAddress"));
                                 dataSet.setMapx(obj.getInt("mapx"));
                                 dataSet.setMapy(obj.getInt("mapy"));
                                 list.add(dataSet);
@@ -119,13 +138,14 @@ public class Nav_searchActivity extends AppCompatActivity {
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                GeoPoint getGeoPoint = convertKATECtoWGS(list.get(position).getMapx(),list.get(position).getMapy());
+                                //GeoPoint getGeoPoint = convertKATECtoWGS(list.get(position).getMapx(),list.get(position).getMapy());
 
-                                Toast.makeText(Nav_searchActivity.this, String.valueOf(getGeoPoint.getX())+", "+String.valueOf(getGeoPoint.getY()), Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(Nav_searchActivity.this, String.valueOf(getGeoPoint.getX())+", "+String.valueOf(getGeoPoint.getY()), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Nav_searchActivity.this, list.get(position).getMapx()+","+list.get(position).getMapy(), Toast.LENGTH_SHORT).show();
 
                                 Intent resultIntent = new Intent();
-                                resultIntent.putExtra("getX",String.valueOf(getGeoPoint.getX()));
-                                resultIntent.putExtra("getY",String.valueOf(getGeoPoint.getY()));
+                                resultIntent.putExtra("getX",String.valueOf(list.get(position).getMapx()));
+                                resultIntent.putExtra("getY",String.valueOf(list.get(position).getMapy()));
                                 resultIntent.putExtra("getTitle",list.get(position).getTitle());
                                 setResult(RESULT_OK,resultIntent);
                                 finish();
@@ -141,7 +161,8 @@ public class Nav_searchActivity extends AppCompatActivity {
                         AlertDialog.Builder add = new AlertDialog.Builder(Nav_searchActivity.this);
                         add.setMessage(error.getMessage()).setCancelable(true);
                         AlertDialog alert = add.create();
-                        alert.setTitle("내용을 다시 입력해주세요.");
+                        alert.setTitle("<!>");
+                        alert.setMessage("검색 내용을 다시 입력해주세요.");
                         alert.show();
                     }
                 }

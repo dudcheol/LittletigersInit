@@ -45,6 +45,7 @@ class AddPhotoActivity : AppCompatActivity() {
             val photoPickerIntent = Intent(Intent.ACTION_PICK)
             photoPickerIntent.type = "image/*"
             startActivityForResult(photoPickerIntent, PICK_IMAGE_FROM_ALBUM)
+            overridePendingTransition(R.anim.push_up_in,R.anim.non_anim)
         }
 
         addphoto_btn_upload.setOnClickListener {
