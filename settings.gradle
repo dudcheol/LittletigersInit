@@ -1,1 +1,1 @@
-include ':app', ':ar_trace', ':littletigersAR-release'
+include ':app'

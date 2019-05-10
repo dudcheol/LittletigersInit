@@ -46,7 +46,7 @@
                     android:backgroundTint="@color/colorPrimary"
                     android:hint="Geocoding"
                     android:maxLines="1"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/common_google_signin_btn_text_dark"
                     android:textColorHint="#bdbdbd" />
 
             </android.support.design.widget.TextInputLayout>
@@ -73,9 +73,9 @@
         android:layout_gravity="bottom|end"
         android:paddingEnd="8dp"
         android:paddingBottom="8dp"
-        app:menu_colorNormal="@color/colorAccent"
-        app:menu_colorPressed="#5e35b1"
-        app:menu_colorRipple="#a183f4"
+        app:menu_colorNormal="#71BFFF"
+        app:menu_colorPressed="#FF2899FE"
+        app:menu_colorRipple="#71BCFF"
         app:menu_icon="@drawable/menu"
         app:menu_openDirection="up"
         app:menu_showShadow="true">
@@ -85,9 +85,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/info"
-            app:fab_colorNormal="@color/colorPrimary"
-            app:fab_colorPressed="#630073"
-            app:fab_colorRipple="#e45cfa"
+            app:fab_colorNormal="#969696"
+            app:fab_colorPressed="#FF2899FE"
+            app:fab_colorRipple="#71BCFF"
             app:fab_label="About"
             app:fab_size="mini" />
 
@@ -96,9 +96,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/map_marker"
-            app:fab_colorNormal="@color/colorPrimary"
-            app:fab_colorPressed="#630073"
-            app:fab_colorRipple="#e45cfa"
+            app:fab_colorNormal="#969696"
+            app:fab_colorPressed="#FF2899FE"
+            app:fab_colorRipple="#71BCFF"
             app:fab_label="POI Browser"
             app:fab_size="mini" />
 
@@ -107,9 +107,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/navigation"
-            app:fab_colorNormal="@color/colorPrimary"
-            app:fab_colorPressed="#630073"
-            app:fab_colorRipple="#e45cfa"
+            app:fab_colorNormal="#969696"
+            app:fab_colorPressed="#FF2899FE"
+            app:fab_colorRipple="#71BCFF"
             app:fab_label="AR Navigation"
             app:fab_size="mini" />
 

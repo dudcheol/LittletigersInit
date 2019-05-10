@@ -80,11 +80,14 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
         TextMessage textMessage = null;
         PhotoMessage photoMessage = null;
+        LocationMessage locationMessage = null;
 
         if (item instanceof TextMessage) {
             textMessage = (TextMessage) item;
         } else if (item instanceof PhotoMessage) {
             photoMessage = (PhotoMessage) item;
+        } else if (item instanceof LocationMessage){
+            locationMessage = (LocationMessage) item;
         }
 
         // 내가 보낸 메세지 인지, 받은 메세지 인지 판별 합니다.
@@ -104,6 +107,10 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
                 holder.sendTxt.setVisibility(View.GONE);
                 holder.sendImage.setVisibility(View.VISIBLE);
+            } else if (item.getMessageType() == Message.MessageType.LOCATION) {
+                holder.sendTxt.setText(locationMessage.getLocationText());
+                holder.sendTxt.setVisibility(View.VISIBLE);
+                holder.sendImage.setVisibility(View.GONE);
             }
 
             if (item.getUnreadCount() > 0) {
@@ -132,6 +139,10 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
                 holder.rcvTextView.setVisibility(View.GONE);
                 holder.rcvImage.setVisibility(View.VISIBLE);
+            } else if (item.getMessageType() == Message.MessageType.LOCATION){
+                holder.rcvTextView.setText(locationMessage.getLocationText());
+                holder.rcvTextView.setVisibility(View.VISIBLE);
+                holder.rcvImage.setVisibility(View.GONE);
             } else if (item.getMessageType() == Message.MessageType.EXIT) {
                 // #이름 님이 방에서 나가셨습니다.
                 holder.exitTextView.setText(String.format("%s님이 방에서 나가셨습니다.", item.getMessageUser().getName()));

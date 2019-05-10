@@ -2,12 +2,14 @@ package com.example.parkyoungcheol.littletigersinit.Navigation.AR;
 
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.parkyoungcheol.littletigersinit.Model.DataSource;
 import com.example.parkyoungcheol.littletigersinit.R;
@@ -44,17 +46,69 @@ public class AR_navigationActivity extends AppCompatActivity {
     // lon 경도 lat 위도
     private double start_lon, start_lat, end_lon, end_lat;
 
+    // Nav_searchActivity에서 받은 시작지, 도착지 경도X,위도Y
+    private String start_lon_X, start_lat_Y, dest_lon_X, dest_lat_Y;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(resultCode==RESULT_OK){
+            switch (requestCode){
+                case 1001:
+                    sourceResultText.setText(data.getStringExtra("getTitle"));
+                    start_lon_X=data.getStringExtra("getX");
+                    start_lat_Y=data.getStringExtra("getY");
+                    break;
+                case 2002:
+                    destResultText.setText(data.getStringExtra("getTitle"));
+                    dest_lon_X=data.getStringExtra("getX");
+                    dest_lat_Y=data.getStringExtra("getY");
+                    break;
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ar_navigation);
         ButterKnife.bind(this);
 
+        //초기화
+        start_lon_X=null;
+        start_lat_Y=null;
+        dest_lon_X=null;
+        dest_lat_Y=null;
+
+        // requestCode 1001이면 출발지, 2002이면 도착지
         sourcePickBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AR_navigationActivity.this, Nav_searchActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1001);
+            }
+        });
+
+        destPickBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AR_navigationActivity.this, Nav_searchActivity.class);
+                startActivityForResult(intent, 2002);
+            }
+        });
+
+        navStartBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(start_lon_X==null || start_lat_Y==null || dest_lon_X==null || dest_lat_Y == null){
+                    Toast.makeText(getApplicationContext(), "출발지와 목적지를 모두 선택해주세요.", Toast.LENGTH_SHORT).show();
+                }else{
+                    Intent intent = new Intent(getApplicationContext(), UnityPlayerActivity.class);
+                    intent.putExtra("startLonX",start_lon_X);
+                    intent.putExtra("startLatY",start_lat_Y);
+                    intent.putExtra("destLonX",dest_lon_X);
+                    intent.putExtra("destLatY",dest_lat_Y);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -116,23 +170,17 @@ public class AR_navigationActivity extends AppCompatActivity {
     }
 
     /*private void updateNaviStatus(String result) throws JSONException {
-
         //List<ARMarker> naviList = null;
         //final DataConvertor dataConvertor = new DataConvertor();
         //naviList =  dataConvertor.load(result, DataSource.DATASOURCE.NAVI, DataSource.DATAFORMAT.NAVI);
-
         final Intent naviBroadReceiver = new Intent();
         naviBroadReceiver.setAction("NAVI");
-
         String guide = parsingNaverNaviJson(result); // result에 있는 값은 NaverHttpHandler.에 url넣은거
-
         if(guide.equals("END")) {
             loopThread.interrupt();
         }
-
         naviBroadReceiver.putExtra("GUIDE", guide);
         mixContext.sendBroadcast(naviBroadReceiver);
-
     }*/
 
     private String parsingTmapJson(String naviStirng) throws JSONException {

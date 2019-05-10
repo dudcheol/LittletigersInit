@@ -2,13 +2,17 @@ package com.example.parkyoungcheol.littletigersinit.Navigation.AR;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -18,6 +22,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.parkyoungcheol.littletigersinit.Model.DataSet;
+import com.example.parkyoungcheol.littletigersinit.Model.GeoPoint;
+import com.example.parkyoungcheol.littletigersinit.Model.GeoTrans;
 import com.example.parkyoungcheol.littletigersinit.R;
 import com.example.parkyoungcheol.littletigersinit.util.CustomListAdapter;
 
@@ -33,11 +39,11 @@ import java.util.Map;
 public class Nav_searchActivity extends AppCompatActivity {
     String clientId = "28dMbtnQ2ce6ytQckJ6h";//애플리케이션 클라이언트 아이디값";
     String clientSecret = "ZNsxiYjwC2";//애플리케이션 클라이언트 시크릿값";
-    Button startSearchBtn, destSearchBtn;
-    EditText startEdit, destEdit;
+    Button searchBtn;
+    EditText searchEdit;
     private String keyword = "키워드값";
     public static StringBuilder sb;//
-    int display = 7; // 가져올 데이터의 수
+    int display = 10; // 가져올 데이터의 수
     String sort = "random"; // similar한 데이터를 가져옴
     private ListView listView;
     private CustomListAdapter adapter;
@@ -49,19 +55,17 @@ public class Nav_searchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_search);
 
-        startSearchBtn = (Button) findViewById(R.id.start_search);
-        destSearchBtn = (Button) findViewById(R.id.dest_search);
-        startEdit = (EditText) findViewById(R.id.start_edit);
-        destEdit = (EditText) findViewById(R.id.dest_edit);
+        searchBtn = (Button) findViewById(R.id.search_btn);
+        searchEdit = (EditText) findViewById(R.id.search_editText);
         listView = (ListView) findViewById(R.id.list);
         adapter = new CustomListAdapter(this, list);
         listView.setAdapter(adapter);
 
 
-        startSearchBtn.setOnClickListener(new View.OnClickListener() {
+        searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                keyword=startEdit.getText().toString();
+                keyword=searchEdit.getText().toString();
 
                 pDialog = new ProgressDialog(Nav_searchActivity.this);
                 // Showing progress dialog before making http request
@@ -70,6 +74,7 @@ public class Nav_searchActivity extends AppCompatActivity {
                 requestWithSomeHttpHeaders();
             }
         });
+
     }
 
     public void requestWithSomeHttpHeaders() {
@@ -99,11 +104,10 @@ public class Nav_searchActivity extends AppCompatActivity {
                             for (int i = 0; i < items.length(); i++) {
                                 JSONObject obj = items.getJSONObject(i);
                                 DataSet dataSet = new DataSet();
-                                dataSet.setTitle(obj.getString("title"));
+                                dataSet.setTitle(Html.fromHtml(obj.getString("title")).toString());
                                 dataSet.setLink(obj.getString("link"));
                                 dataSet.setMapx(obj.getInt("mapx"));
                                 dataSet.setMapy(obj.getInt("mapy"));
-                                dataSet.setRoadAddress(obj.getString("roadAddress"));
                                 list.add(dataSet);
                             }
                         } catch (JSONException e) {
@@ -111,18 +115,33 @@ public class Nav_searchActivity extends AppCompatActivity {
                         }
 
                         adapter.notifyDataSetChanged();
+
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                GeoPoint getGeoPoint = convertKATECtoWGS(list.get(position).getMapx(),list.get(position).getMapy());
+
+                                Toast.makeText(Nav_searchActivity.this, String.valueOf(getGeoPoint.getX())+", "+String.valueOf(getGeoPoint.getY()), Toast.LENGTH_SHORT).show();
+
+                                Intent resultIntent = new Intent();
+                                resultIntent.putExtra("getX",String.valueOf(getGeoPoint.getX()));
+                                resultIntent.putExtra("getY",String.valueOf(getGeoPoint.getY()));
+                                resultIntent.putExtra("getTitle",list.get(position).getTitle());
+                                setResult(RESULT_OK,resultIntent);
+                                finish();
+                            }
+                        });
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
                         Log.d("ERROR_RESPONSE =>", error.toString());
                         hidePDialog();
                         AlertDialog.Builder add = new AlertDialog.Builder(Nav_searchActivity.this);
                         add.setMessage(error.getMessage()).setCancelable(true);
                         AlertDialog alert = add.create();
-                        alert.setTitle("Error!!");
+                        alert.setTitle("내용을 다시 입력해주세요.");
                         alert.show();
                     }
                 }
@@ -150,5 +169,13 @@ public class Nav_searchActivity extends AppCompatActivity {
             pDialog.dismiss();
             pDialog = null;
         }
+    }
+
+    // 카텍좌표계를 WGS좌표계로 변환
+    private GeoPoint convertKATECtoWGS(int KATEC_X,int KATEC_Y){
+        GeoPoint geoPoint = new GeoPoint((double)KATEC_X,(double)KATEC_Y);
+        GeoPoint out_put = GeoTrans.convert(1,0,geoPoint);
+
+        return out_put;
     }
 }

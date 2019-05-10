@@ -48,17 +48,17 @@ public class CustomListAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.list_row, null);
 
         TextView title = (TextView) convertView.findViewById(R.id.title);
-        TextView link = (TextView) convertView.findViewById(R.id.link);
-        TextView roadAddress = (TextView) convertView.findViewById(R.id.roadAddress);
-        TextView mapx = (TextView) convertView.findViewById(R.id.mapx);
-        TextView mapy = (TextView) convertView.findViewById(R.id.mapy);
+        //TextView link = (TextView) convertView.findViewById(R.id.link);
+        //TextView roadAddress = (TextView) convertView.findViewById(R.id.roadAddress);
+        //TextView mapx = (TextView) convertView.findViewById(R.id.mapx);
+        //TextView mapy = (TextView) convertView.findViewById(R.id.mapy);
 
         DataSet m = DataList.get(position);
         title.setText(m.getTitle());
-        link.setText(String.valueOf(m.getLink()));
-        roadAddress.setText(String.valueOf(m.getRoadAddress()));
-        mapx.setText(String.valueOf(m.getMapx()));
-        mapy.setText(String.valueOf(m.getMapy()));
+        //link.setText(String.valueOf(m.getLink()));
+        //roadAddress.setText(String.valueOf(m.getRoadAddress()));
+        //mapx.setText(String.valueOf(m.getMapx()));
+        //mapy.setText(String.valueOf(m.getMapy()));
 
         return convertView;
     }

@@ -2,6 +2,7 @@ package com.example.parkyoungcheol.littletigersinit.Chat;
 
 import lombok.Data;
 
+
 @Data
 public class User {
     private String uid, email, name, profileUrl;
