@@ -1,10 +1,16 @@
 package com.example.parkyoungcheol.littletigersinit.Navigation.AR;
 
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.parkyoungcheol.littletigersinit.Model.DataSource;
+import com.example.parkyoungcheol.littletigersinit.Model.GeoPoint;
 import com.example.parkyoungcheol.littletigersinit.R;
 import com.google.gson.JsonArray;
 import com.nhn.android.maps.NMapLocationManager;
@@ -54,19 +61,19 @@ public class AR_navigationActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(resultCode==RESULT_OK){
-            switch (requestCode){
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
                 case 1001:
                     startTitle = data.getStringExtra("getTitle");
                     sourceResultText.setText(startTitle);
-                    start_lon_X=data.getStringExtra("getX");
-                    start_lat_Y=data.getStringExtra("getY");
+                    start_lon_X = data.getStringExtra("getX");
+                    start_lat_Y = data.getStringExtra("getY");
                     break;
                 case 2002:
                     destTitle = data.getStringExtra("getTitle");
                     destResultText.setText(destTitle);
-                    dest_lon_X=data.getStringExtra("getX");
-                    dest_lat_Y=data.getStringExtra("getY");
+                    dest_lon_X = data.getStringExtra("getX");
+                    dest_lat_Y = data.getStringExtra("getY");
                     break;
             }
         }
@@ -79,23 +86,23 @@ public class AR_navigationActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         // 전에 설정해두었던 시작지,도착지 기억
-        SharedPreferences sf = getSharedPreferences("sFile",MODE_PRIVATE);
-        String sourceResult = sf.getString("sourceResult",null);
-        startTitle=sourceResult;
-        String destResult = sf.getString("destResult",null);
-        destTitle=destResult;
-        start_lon_X = sf.getString("startLonX",null);
-        start_lat_Y = sf.getString("startLatY",null);
-        dest_lon_X = sf.getString("destLonX",null);
-        dest_lat_Y = sf.getString("destLatY",null);
-        if(sourceResult == null){
+        SharedPreferences sf = getSharedPreferences("sFile", MODE_PRIVATE);
+        String sourceResult = sf.getString("sourceResult", null);
+        startTitle = sourceResult;
+        String destResult = sf.getString("destResult", null);
+        destTitle = destResult;
+        start_lon_X = sf.getString("startLonX", null);
+        start_lat_Y = sf.getString("startLatY", null);
+        dest_lon_X = sf.getString("destLonX", null);
+        dest_lat_Y = sf.getString("destLatY", null);
+        if (sourceResult == null) {
             sourceResultText.setText("출발지를 선택해주세요.");
-        }else{
+        } else {
             sourceResultText.setText(sourceResult);
         }
-        if(destResult == null){
+        if (destResult == null) {
             destResultText.setText("도착지를 선택해주세요.");
-        }else {
+        } else {
             destResultText.setText(destResult);
         }
 
@@ -105,6 +112,7 @@ public class AR_navigationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(AR_navigationActivity.this, Nav_searchActivity.class);
                 startActivityForResult(intent, 1001);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
 
@@ -113,31 +121,40 @@ public class AR_navigationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(AR_navigationActivity.this, Nav_searchActivity.class);
                 startActivityForResult(intent, 2002);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
 
         navStartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(start_lon_X==null || start_lat_Y==null || dest_lon_X==null || dest_lat_Y == null){
+                if (start_lon_X == null || start_lat_Y == null || dest_lon_X == null || dest_lat_Y == null) {
                     //Toast.makeText(getApplicationContext(), "출발지와 목적지를 모두 선택해주세요.", Toast.LENGTH_SHORT).show();
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.nav_coord_layout),
                             "출발지와 목적지를 모두 선택해주세요.", Snackbar.LENGTH_SHORT);
                     mySnackbar.show();
-                }else{
+                } else {
                     /*Intent intent = new Intent(getApplicationContext(), UnityPlayerActivity.class);
                     intent.putExtra("startLonX",start_lon_X);
                     intent.putExtra("startLatY",start_lat_Y);
                     intent.putExtra("destLonX",dest_lon_X);
                     intent.putExtra("destLatY",dest_lat_Y);
                     startActivity(intent);*/
-                    Toast.makeText(AR_navigationActivity.this, TmapNaviJsonReceiver(start_lon_X,start_lat_Y,dest_lon_X,dest_lat_Y), Toast.LENGTH_SHORT).show();
-                    Log.i("TmapNaviJsonReceiver",TmapNaviJsonReceiver(start_lon_X,start_lat_Y,dest_lon_X,dest_lat_Y));
+                    Toast.makeText(AR_navigationActivity.this, TmapNaviJsonReceiver(start_lon_X, start_lat_Y, dest_lon_X, dest_lat_Y), Toast.LENGTH_SHORT).show();
+                    Log.i("TmapNaviJsonReceiver", TmapNaviJsonReceiver(start_lon_X, start_lat_Y, dest_lon_X, dest_lat_Y));
                 }
             }
         });
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        finish();
+        overridePendingTransition(R.anim.non_anim,R.anim.push_down_out);
     }
 
     @Override
@@ -194,6 +211,7 @@ public class AR_navigationActivity extends AppCompatActivity {
         return guide;
     }
 
+    // Todo : JSON으로 받아올때 오류시 대비는 어떻게 할 것인지? 인터넷이 안되는 상황에서 이 함수를 호출하면 에러를 반환함. 유니티는 반환받은 에러를 가지고 실행됨->오류
     private String TmapNaviJsonReceiver(String startLonX, String startLatY, String destLonX, String destLatY){
         StringBuffer sb=new StringBuffer();
         try {
@@ -218,7 +236,6 @@ public class AR_navigationActivity extends AppCompatActivity {
             String result = new TmapHttpHandler().execute(url).get();
             Log.i("TAG",result);
 
-            // Todo : Json 받아온 것 어떻게 처리할것인지
             Double coordinatesLon; //경도 126~
             Double coordinatesLat; //위도 37~
             JSONObject responseJSON = new JSONObject(result);

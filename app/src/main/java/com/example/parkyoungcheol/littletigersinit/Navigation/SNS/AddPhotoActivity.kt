@@ -75,6 +75,13 @@ class AddPhotoActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+
+        finish()
+        overridePendingTransition(R.anim.non_anim,R.anim.push_down_out)
+    }
+
     fun contentUpload(){
         progress_bar.visibility = View.VISIBLE
 
