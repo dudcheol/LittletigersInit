@@ -70,7 +70,6 @@ public class ChatLoginActivity extends AppCompatActivity implements GoogleApiCli
         mEmail_edittext = (EditText) findViewById(R.id.email_edittext);
         mPassword_edittext = (EditText) findViewById(R.id.password_edittext);
 
-
         GoogleSignInOptions mGoogleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()

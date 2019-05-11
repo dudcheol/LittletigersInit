@@ -23,6 +23,7 @@
                 android:layout_marginRight="10dp"
                 android:background="@drawable/rouned_your_chat_message"
                 android:id="@+id/rcvTxt"
+                android:autoLink="all"
                 android:padding="7dp"
                 android:textColor="#000"
                 android:layout_gravity="center_vertical"
@@ -43,6 +44,19 @@
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+
+        <ImageButton
+            android:maxWidth="230dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/rouned_your_chat_message"
+            android:id="@+id/rcvLocation"
+            android:visibility="gone"
+            android:padding="7dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ddubuck"/>
 
         <LinearLayout
                 android:padding="2dp"
@@ -136,6 +150,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:textSize="15dp"
+                android:autoLink="all"
                 android:layout_height="wrap_content"/>
 
         <ImageView
@@ -151,6 +166,19 @@
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+
+        <ImageButton
+            android:maxWidth="250dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:visibility="gone"
+            android:background="@drawable/rouned_my_chat_message"
+            android:id="@+id/sendLocation"
+            android:padding="7dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ddubuck"/>
 
 
 

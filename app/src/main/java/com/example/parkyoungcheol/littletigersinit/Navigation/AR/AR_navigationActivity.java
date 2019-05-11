@@ -1,8 +1,17 @@
 package com.example.parkyoungcheol.littletigersinit.Navigation.AR;
 
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +20,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.parkyoungcheol.littletigersinit.Chat.ChatActivity;
 import com.example.parkyoungcheol.littletigersinit.Model.DataSource;
 import com.example.parkyoungcheol.littletigersinit.R;
 import com.google.gson.JsonArray;
@@ -49,6 +59,8 @@ public class AR_navigationActivity extends AppCompatActivity {
     // Nav_searchActivity에서 받은 시작지, 도착지 경도X,위도Y
     private String start_lon_X, start_lat_Y, dest_lon_X, dest_lat_Y;
 
+    public String start = "출발지";
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(resultCode==RESULT_OK){
@@ -67,11 +79,64 @@ public class AR_navigationActivity extends AppCompatActivity {
         }
     }
 
+    final LocationListener gpsLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            String provider = location.getProvider();
+            double longitude = location.getLongitude();
+            double latitude= location.getLatitude();
+            double altitude = location.getAltitude();
+
+            start = "현재 위치정보 : " + " 경도 : " + longitude+ "위도 : " +latitude;
+        }
+
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ar_navigation);
         ButterKnife.bind(this);
+
+        Intent intent2  = new Intent(this.getIntent());
+        String destination = intent2.getStringExtra("destination");
+        if(destination != null){
+            final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(AR_navigationActivity.this, new String[]{
+                                Manifest.permission.ACCESS_FINE_LOCATION},
+                        0);
+            } else {
+                Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                String provider = location.getProvider();
+                double longitude = location.getLongitude();
+                double latitude = location.getLatitude();
+
+
+                start = longitude+ " , "+latitude;
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, gpsLocationListener);
+                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, gpsLocationListener);
+            }
+            sourceResultText.setText(start);
+            destResultText.setText(destination);
+        }
 
         //초기화
         start_lon_X=null;
