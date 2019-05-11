@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -54,6 +55,7 @@ public class Nav_searchActivity extends AppCompatActivity {
     private String keyword = "키워드값";
     public static StringBuilder sb;//
     int display = 10; // 가져올 데이터의 수
+    int count = 10; // 가져올 page 수
     String sort = "random"; // similar한 데이터를 가져옴
     private ListView listView;
     private CustomListAdapter adapter;
@@ -82,6 +84,7 @@ public class Nav_searchActivity extends AppCompatActivity {
             resultIntent.putExtra("getX", String.valueOf(myLocation.getX()));
             resultIntent.putExtra("getY", String.valueOf(myLocation.getY()));
             resultIntent.putExtra("getTitle", "현재 위치");
+            resultIntent.putExtra("coordiStyle","WGS");
             setResult(RESULT_OK, resultIntent);
             finish();
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -169,12 +172,12 @@ public class Nav_searchActivity extends AppCompatActivity {
                                 //GeoPoint getGeoPoint = convertKATECtoWGS(list.get(position).getMapx(),list.get(position).getMapy());
 
                                 //Toast.makeText(Nav_searchActivity.this, String.valueOf(getGeoPoint.getX())+", "+String.valueOf(getGeoPoint.getY()), Toast.LENGTH_SHORT).show();
-                                Toast.makeText(Nav_searchActivity.this, list.get(position).getMapx() + "," + list.get(position).getMapy(), Toast.LENGTH_SHORT).show();
-
+                                //Toast.makeText(Nav_searchActivity.this, list.get(position).getMapx() + "," + list.get(position).getMapy(), Toast.LENGTH_SHORT).show();
                                 Intent resultIntent = new Intent();
                                 resultIntent.putExtra("getX", String.valueOf(list.get(position).getMapx()));
                                 resultIntent.putExtra("getY", String.valueOf(list.get(position).getMapy()));
                                 resultIntent.putExtra("getTitle", list.get(position).getTitle());
+                                resultIntent.putExtra("coordiStyle","KATECH");
                                 setResult(RESULT_OK, resultIntent);
                                 finish();
                                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);

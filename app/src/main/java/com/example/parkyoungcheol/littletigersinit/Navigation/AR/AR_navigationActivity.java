@@ -2,12 +2,17 @@ package com.example.parkyoungcheol.littletigersinit.Navigation.AR;
 
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -19,6 +24,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.parkyoungcheol.littletigersinit.Model.DataSource;
 import com.example.parkyoungcheol.littletigersinit.Model.GeoPoint;
 import com.example.parkyoungcheol.littletigersinit.R;
@@ -30,6 +42,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
@@ -53,27 +67,76 @@ public class AR_navigationActivity extends AppCompatActivity {
     private NMapLocationManager nMapLocationManager;
     private NMapView nMapView;
     // lon 경도 lat 위도 _ 카텍좌표계임
-    private int start_lon, start_lat, end_lon, end_lat;
+    private double start_lon, start_lat, end_lon, end_lat;
 
     // Nav_searchActivity에서 받은 시작지, 도착지 경도X,위도Y
     private String start_lon_X, start_lat_Y, dest_lon_X, dest_lat_Y;
     private String startTitle, destTitle;
+    private String coordiStyle;
+    private GeoPoint resultGeoPoint = new GeoPoint();
+    private ProgressDialog pDialog;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case 1001:
-                    startTitle = data.getStringExtra("getTitle");
-                    sourceResultText.setText(startTitle);
-                    start_lon_X = data.getStringExtra("getX");
-                    start_lat_Y = data.getStringExtra("getY");
+                    coordiStyle = data.getStringExtra("coordiStyle");
+                    if(coordiStyle.equals("KATECH")){
+                        pDialog = new ProgressDialog(AR_navigationActivity.this);
+                        // Showing progress dialog before making http request
+                        pDialog.setMessage("Loading...");
+                        pDialog.show();
+                        transKTMtoWGS(data.getStringExtra("getX"),data.getStringExtra("getY"));
+
+                        final Handler handler = new Handler(){
+                            @Override
+                            public void handleMessage(Message msg) {
+                                hidePDialog();
+                                start_lon_X=resultGeoPoint.getX_s();
+                                start_lat_Y=resultGeoPoint.getY_s();
+                                startTitle = data.getStringExtra("getTitle");
+                                sourceResultText.setText(startTitle);
+                                Log.i("확인 카텍바꼇나",start_lon_X+start_lat_Y);
+                            }
+                        };
+                        handler.sendEmptyMessageDelayed(0,500);
+                    }else{
+                        start_lon_X = data.getStringExtra("getX");
+                        start_lat_Y = data.getStringExtra("getY");
+                        startTitle = data.getStringExtra("getTitle");
+                        sourceResultText.setText(startTitle);
+                        Log.i("확인 wgs",start_lon_X+start_lat_Y);
+                    }
                     break;
                 case 2002:
-                    destTitle = data.getStringExtra("getTitle");
-                    destResultText.setText(destTitle);
-                    dest_lon_X = data.getStringExtra("getX");
-                    dest_lat_Y = data.getStringExtra("getY");
+                    coordiStyle = data.getStringExtra("coordiStyle");
+                    if(coordiStyle.equals("KATECH")){
+                        pDialog = new ProgressDialog(AR_navigationActivity.this);
+                        // Showing progress dialog before making http request
+                        pDialog.setMessage("Loading...");
+                        pDialog.show();
+                        transKTMtoWGS(data.getStringExtra("getX"),data.getStringExtra("getY"));
+
+                        final Handler handler = new Handler(){
+                            @Override
+                            public void handleMessage(Message msg) {
+                                hidePDialog();
+                                dest_lon_X=resultGeoPoint.getX_s();
+                                dest_lat_Y=resultGeoPoint.getY_s();
+                                destTitle = data.getStringExtra("getTitle");
+                                destResultText.setText(destTitle);
+                                Log.i("확인 카텍바꼇나",dest_lon_X+dest_lat_Y);
+                            }
+                        };
+                        handler.sendEmptyMessageDelayed(0,1000);
+                    }else{
+                        dest_lon_X = data.getStringExtra("getX");
+                        dest_lat_Y = data.getStringExtra("getY");
+                        destTitle = data.getStringExtra("getTitle");
+                        destResultText.setText(destTitle);
+                        Log.i("확인 wgs",dest_lon_X+dest_lat_Y);
+                    }
                     break;
             }
         }
@@ -85,27 +148,36 @@ public class AR_navigationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ar_navigation);
         ButterKnife.bind(this);
 
-        // 전에 설정해두었던 시작지,도착지 기억
-        SharedPreferences sf = getSharedPreferences("sFile", MODE_PRIVATE);
-        String sourceResult = sf.getString("sourceResult", null);
-        startTitle = sourceResult;
-        String destResult = sf.getString("destResult", null);
-        destTitle = destResult;
-        start_lon_X = sf.getString("startLonX", null);
-        start_lat_Y = sf.getString("startLatY", null);
-        dest_lon_X = sf.getString("destLonX", null);
-        dest_lat_Y = sf.getString("destLatY", null);
-        if (sourceResult == null) {
-            sourceResultText.setText("출발지를 선택해주세요.");
-        } else {
-            sourceResultText.setText(sourceResult);
-        }
-        if (destResult == null) {
-            destResultText.setText("도착지를 선택해주세요.");
-        } else {
-            destResultText.setText(destResult);
-        }
+        final Handler handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                // 전에 설정해두었던 시작지,도착지 기억
+                SharedPreferences sf = getSharedPreferences("sFile", MODE_PRIVATE);
+                String sourceResult = sf.getString("sourceResult", null);
+                startTitle = sourceResult;
+                String destResult = sf.getString("destResult", null);
+                destTitle = destResult;
+                start_lon_X = sf.getString("startLonX", null);
+                start_lat_Y = sf.getString("startLatY", null);
+                dest_lon_X = sf.getString("destLonX", null);
+                dest_lat_Y = sf.getString("destLatY", null);
+                coordiStyle = sf.getString("coordiStyle",null);
 
+                if (sourceResult == null) {
+                    sourceResultText.setText("출발지를 선택해주세요.");
+                } else {
+                    sourceResultText.setText(sourceResult);
+                }
+                if (destResult == null) {
+                    destResultText.setText("도착지를 선택해주세요.");
+                } else {
+                    destResultText.setText(destResult);
+                }
+            }
+        };
+        handler.sendEmptyMessageDelayed(0,600);
+
+        // 출발지 선택 버튼
         // requestCode 1001이면 출발지, 2002이면 도착지
         sourcePickBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +188,7 @@ public class AR_navigationActivity extends AppCompatActivity {
             }
         });
 
+        // 도착지 선택 버튼
         destPickBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,23 +198,42 @@ public class AR_navigationActivity extends AppCompatActivity {
             }
         });
 
+        // AR 길안내 버튼
         navStartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (start_lon_X == null || start_lat_Y == null || dest_lon_X == null || dest_lat_Y == null) {
-                    //Toast.makeText(getApplicationContext(), "출발지와 목적지를 모두 선택해주세요.", Toast.LENGTH_SHORT).show();
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.nav_coord_layout),
                             "출발지와 목적지를 모두 선택해주세요.", Snackbar.LENGTH_SHORT);
                     mySnackbar.show();
+
                 } else {
-                    /*Intent intent = new Intent(getApplicationContext(), UnityPlayerActivity.class);
-                    intent.putExtra("startLonX",start_lon_X);
-                    intent.putExtra("startLatY",start_lat_Y);
-                    intent.putExtra("destLonX",dest_lon_X);
-                    intent.putExtra("destLatY",dest_lat_Y);
-                    startActivity(intent);*/
-                    Toast.makeText(AR_navigationActivity.this, TmapNaviJsonReceiver(start_lon_X, start_lat_Y, dest_lon_X, dest_lat_Y), Toast.LENGTH_SHORT).show();
-                    Log.i("TmapNaviJsonReceiver", TmapNaviJsonReceiver(start_lon_X, start_lat_Y, dest_lon_X, dest_lat_Y));
+                    pDialog = new ProgressDialog(AR_navigationActivity.this);
+                    // Showing progress dialog before making http request
+                    pDialog.setMessage("Loading...");
+                    pDialog.show();
+                    String result = TmapNaviJsonReceiver(start_lon_X, start_lat_Y, dest_lon_X, dest_lat_Y);
+                    final Handler handler = new Handler(){
+                        @Override
+                        public void handleMessage(Message msg) {
+                            hidePDialog();
+                            if(result.equals("Error")){
+                                AlertDialog.Builder add = new AlertDialog.Builder(AR_navigationActivity.this);
+                                AlertDialog alert = add.create();
+                                alert.setTitle("<!>");
+                                alert.setMessage("길안내 서비스가 지원되지 않는 구간이 설정되어있습니다.\n출발지나 목적지를 변경한 후 다시 시도해주세요.");
+                                alert.show();
+                            }else {
+                                Toast.makeText(AR_navigationActivity.this, result, Toast.LENGTH_SHORT).show();
+                                Log.i("TmapNaviJsonReceiver", TmapNaviJsonReceiver(start_lon_X, start_lat_Y, dest_lon_X, dest_lat_Y));
+                                Intent intent = new Intent(AR_navigationActivity.this,UnityPlayerActivity.class);
+                                intent.putExtra("TmapJSON",result);
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.non_anim, R.anim.push_down_out);
+                            }
+                        }
+                    };
+                    handler.sendEmptyMessageDelayed(0,1000);
                 }
             }
         });
@@ -173,25 +265,6 @@ public class AR_navigationActivity extends AppCompatActivity {
 
         editor.commit();
     }
-/*private void updateNaviStatus(String result) throws JSONException {
-
-        //List<ARMarker> naviList = null;
-        //final DataConvertor dataConvertor = new DataConvertor();
-        //naviList =  dataConvertor.load(result, DataSource.DATASOURCE.NAVI, DataSource.DATAFORMAT.NAVI);
-
-        final Intent naviBroadReceiver = new Intent();
-        naviBroadReceiver.setAction("NAVI");
-
-        String guide = parsingNaverNaviJson(result); // result에 있는 값은 NaverHttpHandler.에 url넣은거
-
-        if(guide.equals("END")) {
-            loopThread.interrupt();
-        }
-
-        naviBroadReceiver.putExtra("GUIDE", guide);
-        mixContext.sendBroadcast(naviBroadReceiver);
-
-    }*/
 
     private String parsingTmapJson(String naviStirng) throws JSONException {
         String guide;
@@ -211,24 +284,18 @@ public class AR_navigationActivity extends AppCompatActivity {
         return guide;
     }
 
-    // Todo : JSON으로 받아올때 오류시 대비는 어떻게 할 것인지? 인터넷이 안되는 상황에서 이 함수를 호출하면 에러를 반환함. 유니티는 반환받은 에러를 가지고 실행됨->오류
+    // Tmap에 출발지, 도착지 보내서 길안내 경로마다의 경위도를 받아서 파싱함
+    // 파싱하여 유니티로 넘겨줌
+    // 형태 : 경도,위도|경도,위도| ...
     private String TmapNaviJsonReceiver(String startLonX, String startLatY, String destLonX, String destLatY){
         StringBuffer sb=new StringBuffer();
         try {
-            // 현재 위치 받아옴
-            //NGeoPoint point = nMapLocationManager.getMyLocation();
-            // 현재 위치와 도착지 좌표를 url에 넣음
-            //String url = DataSource.createNaverMapRequestURL(126.733638, 37.340267,126.742849, 37.351813);
-            /*start_lon=126.733638;
-            start_lat=37.340267;
-            end_lon=126.742849;
-            end_lat=37.351813;*/
-            start_lon=Integer.parseInt(startLonX);
-            start_lat=Integer.parseInt(startLatY);
-            end_lon=Integer.parseInt(destLonX);
-            end_lat=Integer.parseInt(destLatY);
+            start_lon=Double.parseDouble(startLonX);
+            start_lat=Double.parseDouble(startLatY);
+            end_lon=Double.parseDouble(destLonX);
+            end_lat=Double.parseDouble(destLatY);
 
-            String url = DataSource.createTMapRequestURL_KATECH(start_lon, start_lat, end_lon, end_lat);
+            String url = DataSource.createTMapRequestURL_WGS84GEO(start_lon, start_lat, end_lon, end_lat);
             //String url = DataSource.createTMapRequestURL_WGS84GEO(start_lon, start_lat, end_lon, end_lat);
             Log.i("티맵 url 주소 생성", url);
 
@@ -236,30 +303,34 @@ public class AR_navigationActivity extends AppCompatActivity {
             String result = new TmapHttpHandler().execute(url).get();
             Log.i("TAG",result);
 
-            Double coordinatesLon; //경도 126~
-            Double coordinatesLat; //위도 37~
-            JSONObject responseJSON = new JSONObject(result);
-            JSONArray featuresAry =  new JSONArray(responseJSON.getString("features"));
-            for(int i = 0 ; i < featuresAry.length();i++){
-                JSONObject featuresObj = new JSONObject(featuresAry.get(i).toString());
-                JSONObject geometryObj = new JSONObject(featuresObj.getString("geometry"));
-                if(geometryObj.getString("type").equals("Point")){
-                    // geometry의 type이 Point인 경우
-                    JSONArray coordinatesAry = new JSONArray(geometryObj.getString("coordinates"));
+            if(result.equals("Error")){
+                sb.append("Error");
+            }else {
+                Double coordinatesLon; //경도 126~
+                Double coordinatesLat; //위도 37~
+                JSONObject responseJSON = new JSONObject(result);
+                JSONArray featuresAry = new JSONArray(responseJSON.getString("features"));
+                for (int i = 0; i < featuresAry.length(); i++) {
+                    JSONObject featuresObj = new JSONObject(featuresAry.get(i).toString());
+                    JSONObject geometryObj = new JSONObject(featuresObj.getString("geometry"));
+                    if (geometryObj.getString("type").equals("Point")) {
+                        // geometry의 type이 Point인 경우
+                        JSONArray coordinatesAry = new JSONArray(geometryObj.getString("coordinates"));
 
-                    for(int j=0;j<coordinatesAry.length();j++){
-                        if(j%2==0){
-                            coordinatesLon=(Double)coordinatesAry.get(j);
-                            sb.append(coordinatesAry.get(j)+",");
-                            Log.i("경도", coordinatesLon.toString());
-                        }else {
-                            coordinatesLat=(Double)coordinatesAry.get(j);
-                            sb.append(coordinatesAry.get(j)+"|");
-                            Log.i("위도", coordinatesLat.toString());
+                        for (int j = 0; j < coordinatesAry.length(); j++) {
+                            if (j % 2 == 0) {
+                                coordinatesLon = (Double) coordinatesAry.get(j);
+                                sb.append(coordinatesAry.get(j) + ",");
+                                Log.i("경도", coordinatesLon.toString());
+                            } else {
+                                coordinatesLat = (Double) coordinatesAry.get(j);
+                                sb.append(coordinatesAry.get(j) + "|");
+                                Log.i("위도", coordinatesLat.toString());
+                            }
                         }
+                    } else {
+                        // geometry의 type이 LineString인 경우
                     }
-                }else{
-                    // geometry의 type이 LineString인 경우
                 }
             }
         } catch (ExecutionException e) {
@@ -270,6 +341,68 @@ public class AR_navigationActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        Log.i("티맵api로 받은 길안내 결과",String.valueOf(sb));
         return String.valueOf(sb);
+    }
+
+    public void transKTMtoWGS(String lonX, String latY) {
+        final RequestQueue queue1 = Volley.newRequestQueue(this);
+        // 키워드받아서 검색, 검색결과갯수 display, 검색결과양식 sort=random이면 유사한 결과 출력
+        String kakaoURL = "https://dapi.kakao.com/v2/local/geo/transcoord.json?x="+lonX+"&y="+latY+"&input_coord=KTM&output_coord=WGS84";
+        JsonObjectRequest localRequest = new JsonObjectRequest(Request.Method.GET, kakaoURL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // response
+                        Log.d("리스폰스", response.toString());
+                        JSONArray documents = null;
+
+                        try {
+                            documents = response.getJSONArray("documents");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            for (int i = 0; i < documents.length(); i++) {
+                                JSONObject obj = documents.getJSONObject(i);
+                                String lonX=obj.getString("x");
+                                String latY=obj.getString("y");
+                                resultGeoPoint.setX_s(lonX);
+                                resultGeoPoint.setY_s(latY);
+                                Log.i("테스트3", obj.getString("x") + "," + obj.getString("y"));
+                                Log.i("테스트4", resultGeoPoint.getX_s() + "," + resultGeoPoint.getY_s());
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("ERROR_RESPONSE =>", error.toString());
+                        Toast.makeText(AR_navigationActivity.this, "통신에러", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap();
+                params.put("Authorization", "KakaoAK fcf32b28928096d6cf44be171f2a09b5");
+                //params.put("X-Naver-Client-Secret", clientSecret);
+                Log.d("getHedaer =>", "" + params);
+                return params;
+            }
+        };
+        queue1.add(localRequest);
+    }
+
+    private void hidePDialog() {
+        if (pDialog != null) {
+            pDialog.dismiss();
+            pDialog = null;
+        }
     }
 }

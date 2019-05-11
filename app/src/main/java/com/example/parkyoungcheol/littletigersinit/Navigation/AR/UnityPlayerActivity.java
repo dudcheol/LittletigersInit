@@ -31,13 +31,7 @@ public class UnityPlayerActivity extends Activity
 
         // 이전 액티비티에서 받아온 인텐트에서 putExtra해서 받아온 것을 따로 저장함
         Intent intent = getIntent();
-        String startLonX = intent.getStringExtra("startLonX");
-        String startLatY = intent.getStringExtra("startLatY");
-        String destLonX = intent.getStringExtra("destLonX");
-        String destLatY = intent.getStringExtra("destLatY");
-
-        // test
-        Toast.makeText(this, startLonX, Toast.LENGTH_SHORT).show();
+        String TmapJSON = intent.getStringExtra("TmapJSON");
 
         /* 안드로이드에서 유니티로 넘어갈 때 로고가 뜨는 시간을 고려하여
         안드로이드에서 유니티로 값 넘기는 메소드 실행에 딜레이 시간을 줌 (1초) */
@@ -46,7 +40,7 @@ public class UnityPlayerActivity extends Activity
             @Override
             public void handleMessage(Message msg) {
                 // s:게임오브젝트이름, s1:함수이름, s2:전달할string
-                UnitySendMessage("NewText", "revMsg1", startLonX);
+                UnitySendMessage("AR Session Origin", "RecvLocation", TmapJSON);
             }
         };
         handler.sendEmptyMessageDelayed(0,1000);
