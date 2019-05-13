@@ -46,17 +46,13 @@
                 android:layout_height="wrap_content"/>
 
         <ImageButton
-            android:maxWidth="230dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+
             android:background="@drawable/rouned_your_chat_message"
             android:id="@+id/rcvLocation"
             android:visibility="gone"
-            android:padding="7dp"
-            android:layout_gravity="center_vertical"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ddubuck"/>
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/nvnv"/>
 
         <LinearLayout
                 android:padding="2dp"
@@ -178,7 +174,7 @@
             android:layout_gravity="center_vertical"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/ddubuck"/>
+            android:src="@drawable/nvnv"/>
 
 
 

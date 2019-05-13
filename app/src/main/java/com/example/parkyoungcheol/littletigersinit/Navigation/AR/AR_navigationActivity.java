@@ -59,7 +59,7 @@ public class AR_navigationActivity extends AppCompatActivity {
     // Nav_searchActivity에서 받은 시작지, 도착지 경도X,위도Y
     private String start_lon_X, start_lat_Y, dest_lon_X, dest_lat_Y;
 
-    public String start = "출발지";
+    public String start = "현재위치 확인 실패";
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -124,15 +124,17 @@ public class AR_navigationActivity extends AppCompatActivity {
                         0);
             } else {
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if(location != null) {
+                    String provider = location.getProvider();
+                    double longitude = location.getLongitude();
+                    double latitude = location.getLatitude();
 
-                String provider = location.getProvider();
-                double longitude = location.getLongitude();
-                double latitude = location.getLatitude();
+                    start = longitude + " , " + latitude;
 
+                    lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, gpsLocationListener);
+                    lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, gpsLocationListener);
+                }
 
-                start = longitude+ " , "+latitude;
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, gpsLocationListener);
-                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, gpsLocationListener);
             }
             sourceResultText.setText(start);
             destResultText.setText(destination);

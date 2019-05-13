@@ -88,7 +88,7 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseAnalytics mFirebaseAnalytics;
     private ArrayList<Message> mMessageList;
 
-    public String locationText = "위치 예제";
+    public String locationText = "위치 전송 실패";
     public String longitude2= "";
     public String latitude2= "";
 
@@ -354,18 +354,20 @@ public class ChatActivity extends AppCompatActivity {
             0);
         } else {
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if(location != null) {
+                String provider = location.getProvider();
+                double longitude = location.getLongitude();
+                double latitude = location.getLatitude();
 
-            String provider = location.getProvider();
-            double longitude = location.getLongitude();
-            double latitude = location.getLatitude();
-
-            longitude2 = Double.toString(longitude);
-            latitude2 = Double.toString(latitude);
+                longitude2 = Double.toString(longitude);
+                latitude2 = Double.toString(latitude);
 
 
-            locationText = "현재 위치정보 : " + " 경도 : " + longitude+ "위도 : " +latitude;
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, gpsLocationListener);
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, gpsLocationListener);
+                locationText = "현재 위치정보 : " + " 경도 : " + longitude + "위도 : " + latitude;
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, gpsLocationListener);
+                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, gpsLocationListener);
+            }
+
         }
         mMessageType = Message.MessageType.LOCATION;
         if ( mChatId != null ) {
@@ -378,12 +380,14 @@ public class ChatActivity extends AppCompatActivity {
     final LocationListener gpsLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
+
             String provider = location.getProvider();
             double longitude = location.getLongitude();
             double latitude= location.getLatitude();
             double altitude = location.getAltitude();
 
             locationText = "현재 위치정보 : " + " 경도 : " + longitude+ "위도 : " +latitude;
+
         }
 
         @Override

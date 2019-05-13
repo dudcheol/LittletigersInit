@@ -28,6 +28,7 @@
         android:windowSoftInputMode="adjustResize|stateHidden"
         android:theme="@style/AppTheme">
         <activity android:name=".Chat.ChatActivity" />
+        <activity android:name=".CreateActivity" />
         <activity android:name=".Chat.ChatMainActivity"></activity>
         <activity android:name=".Chat.ChatLoginActivity">
             <intent-filter>

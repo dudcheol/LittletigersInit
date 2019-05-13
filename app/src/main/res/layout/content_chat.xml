@@ -17,7 +17,7 @@
 
         <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:background="@color/main_mint"
+                android:background="@color/mainColor"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize">
 
@@ -51,7 +51,7 @@
                 android:layout_height="48dp"/>
         <ImageView
             android:id="@+id/loactionSend"
-            android:src="@mipmap/handshake_round"
+            android:src="@drawable/nvnv"
             android:layout_gravity="center"
             android:layout_width="48dp"
             android:padding="8dp"

@@ -27,6 +27,10 @@ public class ChatMainActivity extends AppCompatActivity {
     @BindView(R.id.fab)
     FloatingActionButton mFabtn;
 
+    @BindView(R.id.addfriend)
+    FloatingActionButton mAddfriendbtn;
+
+
     @BindView(R.id.viewpager)
     ViewPager mViewPager;
 
@@ -42,12 +46,29 @@ public class ChatMainActivity extends AppCompatActivity {
         mTabLayout.setupWithViewPager(mViewPager);
         setUpViewPager();
 
+
+        mAddfriendbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment currentFragment = mPagerAdapter.getItem(mViewPager.getCurrentItem());
+                if(currentFragment instanceof ListOfFriendsFragment) {
+                    ((ListOfFriendsFragment) currentFragment).toggleSearchBar();
+                }
+                else{
+                    ListOfFriendsFragment listOfFriendsFragment = (ListOfFriendsFragment) mPagerAdapter.getItem(1);
+                    mViewPager.setCurrentItem(2, true);
+                    listOfFriendsFragment.toggleSearchBar();
+                }
+            }
+        });
+
         mFabtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Fragment currentFragment = mPagerAdapter.getItem(mViewPager.getCurrentItem());
                 if(currentFragment instanceof ListOfFriendsFragment){
-                    ((ListOfFriendsFragment) currentFragment).toggleSearchBar();
+                    ListOfFriendsFragment listOfFriendsFragment = (ListOfFriendsFragment) mPagerAdapter.getItem(1);
+                    listOfFriendsFragment.toggleSelectionMode();
                 }else {
                     // 친구 탭으로 이동
                     mViewPager.setCurrentItem(2, true); // 2번이 friend fragment, 부드럽게 가라고 true

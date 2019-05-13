@@ -13,10 +13,9 @@
         <com.example.parkyoungcheol.littletigersinit.Chat.RoundedImageView
                 android:id="@+id/thumb"
                 android:layout_width="@dimen/button_size"
-                android:padding="8dp"
                 android:layout_gravity="center"
                 android:layout_height="@dimen/button_size"
-                android:src="@mipmap/ic_launcher"/>
+                android:src="@drawable/ddubuck_noback"/>
 
         <LinearLayout
                 android:layout_width="0dp"

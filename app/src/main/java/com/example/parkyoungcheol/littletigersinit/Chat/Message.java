@@ -15,6 +15,8 @@ public class Message {
     private Date messageDate;
     private MessageType messageType;
     private List<String> readUserList;
+    private double longitudedb;
+    private double latitudedb;
 
     public enum MessageType{
         TEXT, PHOTO, LOCATION,EXIT
