@@ -2,6 +2,7 @@ package com.example.parkyoungcheol.littletigersinit.Navigation.AR;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -20,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -217,15 +219,15 @@ public class AR_navigationActivity extends AppCompatActivity {
                         @Override
                         public void handleMessage(Message msg) {
                             hidePDialog();
-                            if(result.equals("Error")){
+                            if(result.contains("Error")){
                                 AlertDialog.Builder add = new AlertDialog.Builder(AR_navigationActivity.this);
                                 AlertDialog alert = add.create();
                                 alert.setTitle("<!>");
                                 alert.setMessage("길안내 서비스가 지원되지 않는 구간이 설정되어있습니다.\n출발지나 목적지를 변경한 후 다시 시도해주세요.");
                                 alert.show();
                             }else {
-                                Toast.makeText(AR_navigationActivity.this, result, Toast.LENGTH_SHORT).show();
-                                Log.i("TmapNaviJsonReceiver", TmapNaviJsonReceiver(start_lon_X, start_lat_Y, dest_lon_X, dest_lat_Y));
+                                //Toast.makeText(AR_navigationActivity.this, result, Toast.LENGTH_SHORT).show();
+                                Log.i("TmapNaviJsonReceiver", result);
                                 Intent intent = new Intent(AR_navigationActivity.this,UnityPlayerActivity.class);
                                 intent.putExtra("TmapJSON",result);
                                 startActivity(intent);
@@ -294,6 +296,9 @@ public class AR_navigationActivity extends AppCompatActivity {
             start_lat=Double.parseDouble(startLatY);
             end_lon=Double.parseDouble(destLonX);
             end_lat=Double.parseDouble(destLatY);
+
+            // Tmap에서 반환해줄때 내가 입력한 출발지는 제외해서 반환하므로 따로 추가해줌
+            sb.append(startLonX+","+startLatY+"|");
 
             String url = DataSource.createTMapRequestURL_WGS84GEO(start_lon, start_lat, end_lon, end_lat);
             //String url = DataSource.createTMapRequestURL_WGS84GEO(start_lon, start_lat, end_lon, end_lat);

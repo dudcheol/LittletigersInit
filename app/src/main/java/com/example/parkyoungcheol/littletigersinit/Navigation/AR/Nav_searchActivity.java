@@ -1,6 +1,7 @@
 package com.example.parkyoungcheol.littletigersinit.Navigation.AR;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -54,7 +55,7 @@ public class Nav_searchActivity extends AppCompatActivity {
     EditText searchEdit;
     private String keyword = "키워드값";
     public static StringBuilder sb;//
-    int display = 10; // 가져올 데이터의 수
+    int display = 30; // 가져올 데이터의 수
     int count = 10; // 가져올 page 수
     String sort = "random"; // similar한 데이터를 가져옴
     private ListView listView;
@@ -74,11 +75,14 @@ public class Nav_searchActivity extends AppCompatActivity {
         adapter = new CustomListAdapter(this, list);
         listView.setAdapter(adapter);
 
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        imm.showSoftInput(searchEdit, 0);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
         current_location_btn.setOnClickListener(v -> {
             GeoPoint myLocation = findMyLocation();
+
+            InputMethodManager immhide = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+            immhide.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
             Intent resultIntent = new Intent();
             resultIntent.putExtra("getX", String.valueOf(myLocation.getX()));

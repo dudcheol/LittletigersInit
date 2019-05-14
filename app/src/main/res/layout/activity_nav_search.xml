@@ -35,7 +35,9 @@
             android:textColor="#222222"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:singleLine = "true"/>
+            android:singleLine = "true">
+            <requestFocus />
+        </EditText>
         <Button
             android:layout_alignParentRight="true"
             android:id="@+id/search_btn"
