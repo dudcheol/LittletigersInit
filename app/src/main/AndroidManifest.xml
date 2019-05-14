@@ -14,13 +14,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!--유니티에서 안드로이드 권한 스킵-->
-  <!--  <meta-data android:name="unityplayer.SkipPermissionsDialog" android:value="true" />
--->
+    <!--  <meta-data android:name="unityplayer.SkipPermissionsDialog" android:value="true" />
+  -->
     <application
         tools:replace="android:icon, android:label, android:theme, android:name,android:allowBackup"
         android:name=".app.AppController"
         android:allowBackup="true"
-
         android:icon="@mipmap/icon_ddubuk"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/icon_ddubuk_round"
@@ -28,12 +27,10 @@
         android:windowSoftInputMode="adjustResize|stateHidden"
         android:theme="@style/AppTheme">
         <activity android:name=".Chat.ChatActivity" />
-        <activity android:name=".CreateActivity" />
         <activity android:name=".Chat.ChatMainActivity"></activity>
         <activity android:name=".Chat.ChatLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -45,7 +42,6 @@
         <activity android:name=".Navigation.SNS.UserFragment" />
         <activity android:name=".Navigation.SNS.GridFragment" />
         <activity android:name=".Navigation.SNS.AddPhotoActivity" />
-
         <activity android:name=".Navigation.AR.UnityPlayerActivity">
             <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
         </activity>
@@ -54,7 +50,7 @@
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="0yfv84wqze" />
 
-        
+
         <activity android:name=".MainActivity" /> <!-- 안드로이드 8.0이상 푸시 처리 추가 코드 -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -62,14 +58,13 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
-    </application>
-
         <meta-data android:name="unity.tango-enable" android:value="True" />
         <meta-data android:name="unityplayer.SkipPermissionsDialog" android:value="true" />
         <meta-data android:name="unity.build-id" android:value="1cc11b07-c5af-433a-9649-8f94b23c2a08" />
         <meta-data android:name="unity.splash-mode" android:value="0" />
         <meta-data android:name="unity.splash-enable" android:value="True" />
         <meta-data android:name="com.google.ar.core" android:value="required" />
+    </application>
     <uses-feature android:glEsVersion="0x00020000" />
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
     <uses-feature android:name="android.hardware.location" android:required="false" />
@@ -77,4 +72,5 @@
     <uses-feature android:name="android.hardware.touchscreen.multitouch" android:required="false" />
     <uses-feature android:name="android.hardware.touchscreen.multitouch.distinct" android:required="false" />
     <uses-feature android:name="android.hardware.camera.ar" android:required="true" />
+
 </manifest>

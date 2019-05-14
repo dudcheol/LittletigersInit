@@ -78,6 +78,7 @@ public class Nav_searchActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
+        // 현재 위치 버튼
         current_location_btn.setOnClickListener(v -> {
             GeoPoint myLocation = findMyLocation();
 

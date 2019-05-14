@@ -7,7 +7,9 @@
 
     <color name="mainColor">#FF2899FE</color>
 
+    <!-- 사실 이게 메인 컬러임 -->
     <color name="colorAccent">#80C4FF</color>
+    <!---->
     <color name="colorWhite">#ffffff</color>
     <color name="colorDivision">#e0e0e0</color>
     <color name="colorNavIcon">#1d1d1d</color>

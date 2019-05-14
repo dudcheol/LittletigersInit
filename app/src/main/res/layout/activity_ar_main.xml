@@ -81,14 +81,14 @@
         app:menu_showShadow="true">
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/about_btn"
+            android:id="@+id/ar_message_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/info"
+            android:src="@drawable/ic_sms_black_24dp"
             app:fab_colorNormal="#969696"
             app:fab_colorPressed="#FF2899FE"
             app:fab_colorRipple="#71BCFF"
-            app:fab_label="About"
+            app:fab_label="AR 메시지 남기기"
             app:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
@@ -99,7 +99,7 @@
             app:fab_colorNormal="#969696"
             app:fab_colorPressed="#FF2899FE"
             app:fab_colorRipple="#71BCFF"
-            app:fab_label="POI Browser"
+            app:fab_label="AR 주변 검색"
             app:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
@@ -110,7 +110,7 @@
             app:fab_colorNormal="#969696"
             app:fab_colorPressed="#FF2899FE"
             app:fab_colorRipple="#71BCFF"
-            app:fab_label="AR Navigation"
+            app:fab_label="AR 네비게이션"
             app:fab_size="mini" />
 
     </com.github.clans.fab.FloatingActionMenu>

@@ -35,7 +35,7 @@ public class UnityPlayerActivity extends Activity
         Intent intent = getIntent();
         String TmapJSON = intent.getStringExtra("TmapJSON");
 
-        Toast.makeText(this, TmapJSON, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, TmapJSON, Toast.LENGTH_SHORT).show();
 
         /* 안드로이드에서 유니티로 넘어갈 때 로고가 뜨는 시간을 고려하여
         안드로이드에서 유니티로 값 넘기는 메소드 실행에 딜레이 시간을 줌 (1초) */
