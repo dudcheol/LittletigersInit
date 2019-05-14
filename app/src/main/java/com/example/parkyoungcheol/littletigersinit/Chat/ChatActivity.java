@@ -86,8 +86,11 @@ public class ChatActivity extends AppCompatActivity {
     private static final int TAKE_PHOTO_REQUEST_CODE = 201;
     private StorageReference mImageStorageRef;
     private FirebaseAnalytics mFirebaseAnalytics;
+    private ArrayList<Message> mMessageList;
 
-    public String locationText = "위치 예제";
+    public String locationText = "위치 전송 실패";
+    public String longitude2= "";
+    public String latitude2= "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,10 +111,12 @@ public class ChatActivity extends AppCompatActivity {
         } else {
             mChatRef = mFirebaseDb.getReference("users").child(mFirebaseUser.getUid()).child("chats");
         }
-        messageListAdapter = new MessageListAdapter();
+        mMessageList = new ArrayList<>();
+        messageListAdapter = new MessageListAdapter(getApplicationContext(),mMessageList);
         mChatRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mChatRecyclerView.setAdapter(messageListAdapter);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
     }
 
     @Override
@@ -349,15 +354,20 @@ public class ChatActivity extends AppCompatActivity {
             0);
         } else {
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if(location != null) {
+                String provider = location.getProvider();
+                double longitude = location.getLongitude();
+                double latitude = location.getLatitude();
 
-            String provider = location.getProvider();
-            double longitude = location.getLongitude();
-            double latitude = location.getLatitude();
-            double altitude = location.getAltitude();
+                longitude2 = Double.toString(longitude);
+                latitude2 = Double.toString(latitude);
 
-            locationText = "위치정보 : " + "위도 : " + longitude + " 경도 : " + latitude + " 고도 : " + altitude;
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, gpsLocationListener);
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, gpsLocationListener);
+
+                locationText = "현재 위치정보 : " + " 경도 : " + longitude + "위도 : " + latitude;
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, gpsLocationListener);
+                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, gpsLocationListener);
+            }
+
         }
         mMessageType = Message.MessageType.LOCATION;
         if ( mChatId != null ) {
@@ -370,12 +380,14 @@ public class ChatActivity extends AppCompatActivity {
     final LocationListener gpsLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
+
             String provider = location.getProvider();
             double longitude = location.getLongitude();
             double latitude= location.getLatitude();
             double altitude = location.getAltitude();
 
-            locationText = "위치정보 : " + "위도 : " + longitude + " 경도 : " + latitude + " 고도 : " + altitude;
+            locationText = "현재 위치정보 : " + " 경도 : " + longitude+ "위도 : " +latitude;
+
         }
 
         @Override
@@ -472,6 +484,8 @@ public class ChatActivity extends AppCompatActivity {
         } else if(mMessageType == Message.MessageType.LOCATION){
             message = new LocationMessage();
             ((LocationMessage)message).setLocationText(locationText);
+            ((LocationMessage)message).setLongitude(longitude2);
+            ((LocationMessage)message).setLatitude(latitude2);
             bundle.putString("MessageType", Message.MessageType.LOCATION.toString());
         }
 

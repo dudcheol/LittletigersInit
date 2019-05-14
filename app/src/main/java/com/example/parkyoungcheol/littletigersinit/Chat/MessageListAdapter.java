@@ -1,20 +1,30 @@
 package com.example.parkyoungcheol.littletigersinit.Chat;
 
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.parkyoungcheol.littletigersinit.Navigation.AR.AR_navigationActivity;
 import com.example.parkyoungcheol.littletigersinit.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,11 +38,19 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
     private String userId;
 
-    public MessageListAdapter() {
+    private Context mContext;
+
+    public String longitude= "";
+    public String latitude= "";
+    public String longitude2= "";
+    public String latitude2= "";
+
+    public MessageListAdapter(Context mContext, ArrayList<Message> mMessageList){
         mMessageList = new ArrayList<>();
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        this.mContext = mContext;
+        this.mMessageList = mMessageList;
     }
-
     public void addItem(Message item) {
         mMessageList.add(item);
         notifyDataSetChanged();
@@ -73,6 +91,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         return new MessageViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(MessageViewHolder holder, int position) {
         // 전달받은 뷰 홀터를 이용한 뷰 구현
@@ -81,6 +100,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         TextMessage textMessage = null;
         PhotoMessage photoMessage = null;
         LocationMessage locationMessage = null;
+
 
         if (item instanceof TextMessage) {
             textMessage = (TextMessage) item;
@@ -109,10 +129,11 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 holder.sendImage.setVisibility(View.VISIBLE);
             } else if (item.getMessageType() == Message.MessageType.LOCATION) {
                 holder.sendTxt.setText(locationMessage.getLocationText());
+
                 holder.sendTxt.setVisibility(View.VISIBLE);
                 holder.sendImage.setVisibility(View.GONE);
-            }
 
+            }
 
             if (item.getUnreadCount() > 0) {
                 holder.sendUnreadCount.setText(String.valueOf(item.getUnreadCount()));
@@ -127,7 +148,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         } else {
             // 상대방이 보낸 경우
             if (item.getMessageType() == Message.MessageType.TEXT) {
-
                 holder.rcvTextView.setText(textMessage.getMessageText());
                 holder.rcvTextView.setVisibility(View.VISIBLE);
                 holder.rcvImage.setVisibility(View.GONE);
@@ -142,8 +162,88 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 holder.rcvImage.setVisibility(View.VISIBLE);
             } else if (item.getMessageType() == Message.MessageType.LOCATION){
                 holder.rcvTextView.setText(locationMessage.getLocationText());
-                holder.rcvTextView.setVisibility(View.VISIBLE);
-                holder.rcvImage.setVisibility(View.GONE);
+                if(locationMessage.getLocationText().equals("위치 전송 실패")){
+                    holder.rcvTextView.setVisibility(View.VISIBLE);
+                    holder.rcvImage.setVisibility(View.GONE);
+                }
+                else {
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Message item = getItem(position);
+
+                            TextMessage textMessage = null;
+                            PhotoMessage photoMessage = null;
+                            LocationMessage locationMessage = null;
+
+
+                            if (item instanceof TextMessage) {
+                                textMessage = (TextMessage) item;
+                            } else if (item instanceof PhotoMessage) {
+                                photoMessage = (PhotoMessage) item;
+                            } else if (item instanceof LocationMessage) {
+                                locationMessage = (LocationMessage) item;
+                            }
+
+                            if (locationMessage.getLongitude().equals("")) {
+                                longitude = "";
+                                latitude = "";
+                                Toast.makeText(mContext, "position =" + position + " ", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(v.getContext(), AR_navigationActivity.class);
+                                intent.putExtra("dest_lon_X_from_chat", String.valueOf(longitude));
+                                intent.putExtra("dest_lat_Y_from_chat", String.valueOf(latitude));
+
+                                mContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                            } else {
+                                longitude = locationMessage.getLongitude();
+                                latitude = locationMessage.getLatitude();
+                                Toast.makeText(mContext, "position =" + position + " ", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(v.getContext(), AR_navigationActivity.class);
+                                intent.putExtra("dest_lon_X_from_chat", String.valueOf(longitude));
+                                intent.putExtra("dest_lat_Y_from_chat", String.valueOf(latitude));
+                                mContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                            }
+                        }
+                    });
+                    holder.rcvTextView.setVisibility(View.VISIBLE);
+                    holder.rcvImage.setVisibility(View.GONE);
+                }
+/*                holder.rcvLocation.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Message item = getItem(position);
+
+                            TextMessage textMessage = null;
+                            PhotoMessage photoMessage = null;
+                            LocationMessage locationMessage = null;
+
+
+                            if (item instanceof TextMessage) {
+                                textMessage = (TextMessage) item;
+                            } else if (item instanceof PhotoMessage) {
+                                photoMessage = (PhotoMessage) item;
+                            } else if (item instanceof LocationMessage) {
+                                locationMessage = (LocationMessage) item;
+                            }
+
+                            if (locationMessage.getLongitude().equals("")) {
+                                longitude = "";
+                                latitude = "";
+                                Toast.makeText(mContext, "position =" + position + " ", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(v.getContext(), AR_navigationActivity.class);
+                                intent.putExtra("destination", String.valueOf(longitude + " , " + latitude));
+                                mContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                            } else {
+                                longitude = locationMessage.getLongitude();
+                                latitude = locationMessage.getLatitude();
+                                Toast.makeText(mContext, "position =" + position + " ", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(v.getContext(), AR_navigationActivity.class);
+                                intent.putExtra("destination", String.valueOf(longitude + " , " + latitude));
+                                mContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                            }
+                        }
+                    });*/
+
             } else if (item.getMessageType() == Message.MessageType.EXIT) {
                 // #이름 님이 방에서 나가셨습니다.
                 holder.exitTextView.setText(String.format("%s님이 방에서 나가셨습니다.", item.getMessageUser().getName()));
@@ -172,6 +272,8 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 holder.sendArea.setVisibility(View.GONE);
             }
         }
+        longitude = "";
+        latitude = "";
     }
 
     @Override
@@ -202,6 +304,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         @BindView(R.id.rcvImage)
         ImageView rcvImage;
 
+
         @BindView(R.id.rcvUnreadCount)
         TextView rcvUnreadCount;
 
@@ -220,10 +323,11 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         @BindView(R.id.sendImage)
         ImageView sendImage;
 
-
         public MessageViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
         }
     }
+
+
 }

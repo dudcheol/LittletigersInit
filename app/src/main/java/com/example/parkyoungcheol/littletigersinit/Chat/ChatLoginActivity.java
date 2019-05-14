@@ -9,8 +9,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+
 import android.widget.Toast;
 
+import com.example.parkyoungcheol.littletigersinit.CreateActivity;
 import com.example.parkyoungcheol.littletigersinit.MainActivity;
 import com.example.parkyoungcheol.littletigersinit.R;
 import com.google.android.gms.auth.api.Auth;
@@ -39,6 +41,7 @@ public class ChatLoginActivity extends AppCompatActivity implements GoogleApiCli
     private SignInButton mGoogleSignInbtn; // 로그인 버튼
     private ProgressBar mProgressBar;
     private Button mEmailLoginbtn;
+    private Button mEmailCreatebtn;
     private EditText mEmail_edittext;
     private EditText mPassword_edittext;
 
@@ -64,11 +67,11 @@ public class ChatLoginActivity extends AppCompatActivity implements GoogleApiCli
 
         mGoogleSignInbtn = (SignInButton) findViewById(R.id.google_sign_in_button);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        mEmailLoginbtn = (Button) findViewById(R.id.sign_in_button);
+        mEmailLoginbtn = (Button) findViewById(R.id.email_login_button);
+        mEmailCreatebtn = (Button) findViewById(R.id.email_create_button);
 
         mEmail_edittext = (EditText) findViewById(R.id.email_edittext);
         mPassword_edittext = (EditText) findViewById(R.id.password_edittext);
-
 
         GoogleSignInOptions mGoogleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -107,8 +110,16 @@ public class ChatLoginActivity extends AppCompatActivity implements GoogleApiCli
                     Snackbar.make(mProgressBar, "이메일과 비밀번호를 입력해주세요.", Snackbar.LENGTH_SHORT).show();
                 } else {
                     mProgressBar.setVisibility(View.VISIBLE);
-                    createAndLoginEmail();
+                    signinEmail();
                 }
+            }
+        });
+
+        mEmailCreatebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChatLoginActivity.this, CreateActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -249,7 +260,7 @@ public class ChatLoginActivity extends AppCompatActivity implements GoogleApiCli
                 firebaseAuthWithGoogle(account); // 수신한 정보를 어플에 맞게 저장
             }
             else{
-                Toast.makeText(this, "이게 왜안돼 씨발", Toast.LENGTH_SHORT).show();
+
                 //구글 로그인 실패
             }
         }

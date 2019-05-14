@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/nav_coord_layout_in_main">
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -9,7 +16,8 @@
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -23,38 +31,38 @@
                 android:src="@drawable/ddubuck_noback" />
 
             <ImageView
-                android:layout_centerVertical="true"
-                android:layout_marginRight="15dp"
                 android:id="@+id/ARbtn"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
                 android:layout_toLeftOf="@+id/ChatBtn"
                 app:srcCompat="@drawable/ic_ar" />
 
             <ImageView
-                android:layout_centerVertical="true"
                 android:id="@+id/ChatBtn"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginRight="20dp"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
                 android:src="@drawable/paperw" />
 
-           <!-- <Button
+            <!-- <Button
                 android:id="@+id/ARbtn"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:text="AR"
                 android:layout_alignRight="@id/toolbar_title_image"/>-->
 
-           <!-- <Button
+            <!-- <Button
                 android:id="@+id/ChatBtn"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:text="CHAT"
                 android:layout_toLeftOf="@id/ARbtn"/>-->
 
-<!--
+            <!--
             <TextView
                 android:text="Littletigers"
                 android:layout_width="wrap_content"
@@ -68,22 +76,21 @@
                 android:id="@+id/toolbar_btn_back"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_arrow_back"
                 android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="22dp"
-                />
+                android:src="@drawable/ic_arrow_back" />
 
             <TextView
                 android:id="@+id/toolbar_username"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/toolbar_btn_back"
                 android:gravity="center"
                 android:textColor="@color/colorNavIcon"
                 android:textSize="16sp"
-                android:visibility="gone"
-                android:layout_toRightOf="@id/toolbar_btn_back" />
+                android:visibility="gone" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -134,3 +141,4 @@
         app:labelVisibilityMode="unlabeled" />
 
 </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

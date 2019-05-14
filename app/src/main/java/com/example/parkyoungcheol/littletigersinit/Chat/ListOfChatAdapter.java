@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.parkyoungcheol.littletigersinit.R;
 
 import java.text.SimpleDateFormat;
@@ -18,6 +19,7 @@ import butterknife.ButterKnife;
 
 public class ListOfChatAdapter extends RecyclerView.Adapter<ListOfChatAdapter.ChatHolder> {
     private ArrayList<Chat> mChatList;
+
     private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd\naa hh:mm");
     private ChatFragment mChatFragment;
 
@@ -77,7 +79,6 @@ public class ListOfChatAdapter extends RecyclerView.Adapter<ListOfChatAdapter.Ch
 
     @Override
     public void onBindViewHolder(ChatHolder holder, int position) {
-
         final Chat item = getItem(position);
 
         // chatThumbnailView

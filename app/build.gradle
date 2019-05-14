@@ -137,6 +137,24 @@ dependencies {
     compile 'info.hoang8f:fbutton:1.0.5'
     implementation 'com.github.florent37:materialtextfield:1.0.7'
 
-    implementation project(':littletigersAR-release')
+    //implementation project(':littletigersAR-release')
+
+    //implementation(name: 'android.arch.lifecycle.runtime-1.0.0', ext:'aar')
+    implementation(name: 'arcore_client', ext:'aar')
+    implementation(name: 'ARExtensions', ext:'aar')
+    /*implementation(name: 'com.android.support.support-compat-26.1.0', ext:'aar')
+    implementation(name: 'com.android.support.support-core-ui-26.1.0', ext:'aar')
+    implementation(name: 'com.android.support.support-core-utils-26.1.0', ext:'aar')
+    implementation(name: 'com.android.support.support-fragment-26.1.0', ext:'aar')
+    implementation(name: 'com.android.support.support-media-compat-26.1.0', ext:'aar')
+    implementation(name: 'com.android.support.support-v4-26.1.0', ext:'aar')*/
+    //implementation(name: 'com.google.android.gms.play-services-base-16.0.1', ext:'aar')
+    //implementation(name: 'com.google.android.gms.play-services-basement-16.0.1', ext:'aar')
+    //implementation(name: 'com.google.android.gms.play-services-location-16.0.0', ext:'aar')
+    //implementation(name: 'com.google.android.gms.play-services-places-placereport-16.0.0', ext:'aar')
+    //implementation(name: 'com.google.android.gms.play-services-tasks-16.0.1', ext:'aar')
+    implementation(name: 'natlocs-debug', ext:'aar')
+    implementation(name: 'unityandroidpermissions', ext:'aar')
+    implementation(name: 'UnityARCore', ext:'aar')
 }
 apply plugin: 'com.google.gms.google-services'
