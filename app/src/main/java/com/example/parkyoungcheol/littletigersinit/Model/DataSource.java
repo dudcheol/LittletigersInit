@@ -133,7 +133,7 @@ public class DataSource {
     // 각 정보들로 완성된 URL 리퀘스트를 생성
 
 
-    public static String createRequestCategoryURL(DATASOURCE source, double lat, double lon, double alt, float radius) {
+    public static String createRequestCategoryURL(String source, double lat, double lon, double alt, float radius) {
         String ret = "";    // 결과 스트링
 
         // 각 소스에 따른 URL 리퀘스트를 완성한다
@@ -141,44 +141,44 @@ public class DataSource {
 
             // Test URL(정왕역 좌표) : "http://map.naver.com/search2/interestSpot.nhn?type=CAFE&boundary=126.73278739132492%3B37.34197819069592%3B126.75278739132492%3B37.36197819069592&pageSize=5"
             // 네이버 웹페이지에서 가져오는 정보임
-            case CAFE:
+            case "CAFE":
                 ret = "http://map.naver.com/search2/interestSpot.nhn?type=CAFE&boundary=" + Double.toString(lon - 0.01) + "%3B" +
                         Double.toString(lat - 0.01) + "%3B" + Double.toString(lon + 0.01) +
                         "%3B" + Double.toString(lat + 0.01) + "&pageSize=5";
                 break;
 
-            case BUSSTOP: // 버스 정류장
+            case "BUSSTOP": // 버스 정류장
                 ret = "http://map.naver.com/search2/searchBusStopWithinRectangle.nhn?bounds="+ Double.toString(lon - 0.01) + "%3B" +
                         Double.toString(lat - 0.01) +"%3B" +  Double.toString(lon + 0.01) + "%3B"
                         + Double.toString(lat + 0.01) +"&count=100&level10";
                 break;
 
-            case Convenience: // 편의점
+            case "CONVENIENCE": // 편의점
                 ret = "http://map.naver.com/search2/interestSpot.nhn?type=STORE&boundary=" + Double.toString(lon - 0.01) + "%3B" +
                         Double.toString(lat - 0.01) + "%3B" + Double.toString(lon + 0.01) +
                         "%3B" + Double.toString(lat + 0.01) + "&pageSize=5";
                 break;
 
-            case Restaurant: //식당
+            case "RESTAURANT": //식당
                 ret =  "http://map.naver.com/search2/interestSpot.nhn?type=DINING_KOREAN&boundary=" + Double.toString(lon - 0.02) + "%3B" +
                         Double.toString(lat - 0.01) + "%3B" + Double.toString(lon + 0.01) +
                         "%3B" + Double.toString(lat + 0.01) + "&pageSize=5";
                 break;
 
 
-            case BANK: //은행
+            case "BANK": //은행
                 ret =  "http://map.naver.com/search2/interestSpot.nhn?type=BANK&boundary=" + Double.toString(lon - 0.01) + "%3B" +
                         Double.toString(lat - 0.01) + "%3B" + Double.toString(lon + 0.01) +
                         "%3B" + Double.toString(lat + 0.01) + "&pageSize=5";
                 break;
 
-            case ACCOMMODATION:
+            case "ACCOMMODATION":
                 ret =  "http://map.naver.com/search2/interestSpot.nhn?type=ACCOMMODATION&boundary=" + Double.toString(lon - 0.02) + "%3B" +
                         Double.toString(lat - 0.01) + "%3B" + Double.toString(lon + 0.01) +
                         "%3B" + Double.toString(lat + 0.01) + "&pageSize=5";
                 break;
 
-            case HOSPITAL:
+            case "HOSPITAL":
                 ret =  "http://map.naver.com/search2/interestSpot.nhn?type=HOSPITAL&boundary=" + Double.toString(lon - 0.02) + "%3B" +
                         Double.toString(lat - 0.01) + "%3B" + Double.toString(lon + 0.01) +
                         "%3B" + Double.toString(lat + 0.01) + "&pageSize=5";
