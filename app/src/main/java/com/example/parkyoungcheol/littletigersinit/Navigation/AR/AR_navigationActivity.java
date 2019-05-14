@@ -114,6 +114,7 @@ public class AR_navigationActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Intent intent2  = new Intent(this.getIntent());
+
         String destination = intent2.getStringExtra("destination");
         if(destination != null){
             final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

@@ -183,6 +183,8 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                             LocationMessage locationMessage = null;
 
 
+
+
                             if (item instanceof TextMessage) {
                                 textMessage = (TextMessage) item;
                             } else if (item instanceof PhotoMessage) {
@@ -277,8 +279,8 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             }
         }
 
-        longitude2 = longitude;
-        latitude2 = latitude;
+        longitude = "";
+        latitude = "";
     }
 
     @Override
