@@ -313,7 +313,7 @@ public class AR_navigationActivity extends AppCompatActivity {
             end_lat=Double.parseDouble(destLatY);
 
             // Tmap에서 반환해줄때 내가 입력한 출발지는 제외해서 반환하므로 따로 추가해줌
-            sb.append(startLonX+","+startLatY+"|");
+            // sb.append(startLonX+","+startLatY+"|");
 
             String url = DataSource.createTMapRequestURL_WGS84GEO(start_lon, start_lat, end_lon, end_lat);
             //String url = DataSource.createTMapRequestURL_WGS84GEO(start_lon, start_lat, end_lon, end_lat);
