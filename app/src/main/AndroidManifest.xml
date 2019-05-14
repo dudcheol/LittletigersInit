@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.parkyoungcheol.littletigersinit"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 반드시 추가 -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 인터넷활용시 추가 -->

@@ -161,7 +161,7 @@ public class AR_navigationActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sf.edit();
             editor.putString("destLonX",dest_lon_X_from_chat);
             editor.putString("destLatY",dest_lat_Y_from_chat);
-            editor.putString("destResult","채팅 상대방의 위치");
+            editor.putString("destResult","채팅 상대방이 보낸 위치");
             editor.commit();
         }
 
