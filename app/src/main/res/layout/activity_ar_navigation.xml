@@ -10,7 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <android.support.v7.widget.CardView
             android:layout_width="wrap_content"
@@ -48,7 +49,7 @@
                         android:layout_height="wrap_content"
                         android:paddingTop="4dp"
                         android:text="출발지"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"/>
 
                     <TextView
@@ -56,6 +57,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/source_select_text"
+                        android:textSize="16sp"
                         android:text="출발지를 선택해주세요." />
 
                 </LinearLayout>
@@ -108,7 +110,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="4dp"
-                        android:textSize="16sp"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         android:text="목적지"/>
 
@@ -117,6 +119,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/dest_select_text"
+                        android:textSize="16sp"
                         android:text="목적지를 선택해주세요."/>
 
                 </LinearLayout>

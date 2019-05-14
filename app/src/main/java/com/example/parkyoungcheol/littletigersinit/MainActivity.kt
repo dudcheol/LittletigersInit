@@ -3,12 +3,16 @@ package com.example.parkyoungcheol.littletigersinit
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -20,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_main.*
+import java.sql.PreparedStatement
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     val PICK_PROFILE_FROM_ALBUM = 10
@@ -44,11 +49,13 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         ARbtn.setOnClickListener {
             val intent_AR = Intent(this, ar_mainActivity::class.java)
             startActivity(intent_AR)
+            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
         }
 
         ChatBtn.setOnClickListener {
             val intent_CHAT = Intent(this,ChatMainActivity::class.java)
             startActivity(intent_CHAT)
+            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
         }
     }
 
@@ -71,8 +78,23 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             // 뒤로가기 버튼을 누른지 1.5초 이상 지난 경우
             finish()
         }
-        Toast.makeText(this, "'뒤로가기' 버튼을 한번 더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show()
+        val mySnackbar: Snackbar = Snackbar.make(findViewById(R.id.nav_coord_layout_in_main),
+                "'뒤로가기'버튼을 한번 더 누르면 종료됩니다.",Snackbar.LENGTH_SHORT)
+        mySnackbar.show()
+
+        //Toast.makeText(this, "'뒤로가기' 버튼을 한번 더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show()
         backKeyPressedTime = System.currentTimeMillis()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        val prefs: SharedPreferences = getSharedPreferences("sFile",0)
+        val editor: SharedPreferences.Editor = prefs.edit()
+        editor.clear()
+        editor.commit()
+
+        Log.i("destroy","SharedPreferences 데이터 삭제")
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -97,6 +119,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             R.id.action_add_photo -> {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     startActivity(Intent(this, AddPhotoActivity::class.java))
+                    overridePendingTransition(R.anim.push_up_in,R.anim.non_anim)
                 } else {
                     Toast.makeText(this, "스토리지 읽기 권한이 없습니다.", Toast.LENGTH_LONG).show()
                 }

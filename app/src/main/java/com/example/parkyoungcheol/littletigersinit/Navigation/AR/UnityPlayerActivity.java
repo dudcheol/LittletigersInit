@@ -1,6 +1,7 @@
 package com.example.parkyoungcheol.littletigersinit.Navigation.AR;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import static com.unity3d.player.UnityPlayer.UnitySendMessage;
 public class UnityPlayerActivity extends Activity
 {
     protected UnityPlayer mUnityPlayer; // don't change the name of this variable; referenced from native code
+    private ProgressDialog pDialog;
 
     // Setup activity layout
     @Override protected void onCreate(Bundle savedInstanceState)
@@ -31,25 +33,36 @@ public class UnityPlayerActivity extends Activity
 
         // 이전 액티비티에서 받아온 인텐트에서 putExtra해서 받아온 것을 따로 저장함
         Intent intent = getIntent();
-        String startLonX = intent.getStringExtra("startLonX");
-        String startLatY = intent.getStringExtra("startLatY");
-        String destLonX = intent.getStringExtra("destLonX");
-        String destLatY = intent.getStringExtra("destLatY");
+        String TmapJSON = intent.getStringExtra("TmapJSON");
 
-        // test
-        Toast.makeText(this, startLonX, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, TmapJSON, Toast.LENGTH_SHORT).show();
 
         /* 안드로이드에서 유니티로 넘어갈 때 로고가 뜨는 시간을 고려하여
         안드로이드에서 유니티로 값 넘기는 메소드 실행에 딜레이 시간을 줌 (1초) */
         //Todo : 단, 테스트한 기기가 갤S10이라 속도가 빨라서 1초만에 된 걸 수도 있어서 윤복이폰으로도 확인 필요함
+
+        pDialog = new ProgressDialog(UnityPlayerActivity.this);
+        // Showing progress dialog before making http request
+        pDialog.setMessage("AR Loading...");
+        pDialog.show();
         final Handler handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 // s:게임오브젝트이름, s1:함수이름, s2:전달할string
-                UnitySendMessage("NewText", "revMsg1", startLonX);
+                // ARnavigation을 받으면 AR 네비게이션 신이 실행됨
+                //UnitySendMessage("SceneType", "divScene", "ARnavigation");
+                // 길안내 경로 경위도 유니티로 전송
+                UnitySendMessage("reciveDataFromAndroid", "selectScene", "NAV");
+                UnitySendMessage("reciveDataFromAndroid", "RecvLocation", TmapJSON);
+
+                //로딩메시지제거
+                if (pDialog != null) {
+                    pDialog.dismiss();
+                    pDialog = null;
+                }
             }
         };
-        handler.sendEmptyMessageDelayed(0,1000);
+        handler.sendEmptyMessageDelayed(0,2000);
     }
 
     @Override protected void onNewIntent(Intent intent)

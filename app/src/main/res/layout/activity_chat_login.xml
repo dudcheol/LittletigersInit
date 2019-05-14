@@ -45,7 +45,8 @@
             android:hint="Email"
             android:textColor="#333"
             android:textCursorDrawable="@drawable/color_cursor"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:singleLine = "true"/>
     </com.github.florent37.materialtextfield.MaterialTextField>
 
     <com.github.florent37.materialtextfield.MaterialTextField
@@ -68,7 +69,8 @@
             android:inputType="textPassword"
             android:textColor="#333"
             android:textCursorDrawable="@drawable/color_cursor"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:singleLine = "true"/>
     </com.github.florent37.materialtextfield.MaterialTextField>
 
     <!-- EditText - Password -->

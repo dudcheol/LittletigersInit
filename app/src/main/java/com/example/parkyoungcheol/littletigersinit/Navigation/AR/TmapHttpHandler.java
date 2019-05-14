@@ -90,14 +90,13 @@ public class TmapHttpHandler extends AsyncTask<String, Void, String> {
                 reader.close();
             } else {
                 Log.i("통신 결과", conn.getResponseCode() + "에러");
+                receiveMsg="Error";
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return receiveMsg;
-
     }
 }
