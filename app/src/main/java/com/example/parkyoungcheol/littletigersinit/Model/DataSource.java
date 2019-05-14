@@ -139,6 +139,7 @@ public class DataSource {
         // 각 소스에 따른 URL 리퀘스트를 완성한다
         switch (source) {
 
+            // Test URL(정왕역 좌표) : "http://map.naver.com/search2/interestSpot.nhn?type=CAFE&boundary=126.73278739132492%3B37.34197819069592%3B126.75278739132492%3B37.36197819069592&pageSize=5"
             // 네이버 웹페이지에서 가져오는 정보
             case CAFE:
                 ret = "http://map.naver.com/search2/interestSpot.nhn?type=CAFE&boundary=" + Double.toString(lon - 0.01) + "%3B" +
