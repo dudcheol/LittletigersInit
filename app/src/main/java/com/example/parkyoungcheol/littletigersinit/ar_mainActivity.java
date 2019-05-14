@@ -263,15 +263,14 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
 
     // 카메라 권한 받아오기
     public void checkCameraAndLocationPermission(){
-        //int permissionCamera = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
+        int permissionCamera = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
         int permissionLocation = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION);
 
         if(permissionLocation == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(ar_mainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-        }//else if(permissionCamera == PackageManager.PERMISSION_DENIED) {
-            //ActivityCompat.requestPermissions(ar_mainActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA);
-        //}
-        else{
+        }else if(permissionCamera == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(ar_mainActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA);
+        }else{
 
         }
     }
@@ -297,7 +296,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
             }
         }
 
-        /*// 카메라 권한
+        // 카메라 권한
         if(requestCode==REQUEST_CAMERA){
             for (int i = 0; i < permissions.length; i++) {
                 String permission = permissions[i];
@@ -312,7 +311,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                     }
                 }
             }
-        }*/
+        }
     }
 
     // 사전설정
