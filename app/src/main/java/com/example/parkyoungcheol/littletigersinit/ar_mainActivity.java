@@ -34,6 +34,7 @@ import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
 
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.val;
@@ -171,7 +172,6 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         naverMap.addOnLocationChangeListener(new NaverMap.OnLocationChangeListener() {
             @Override
             public void onLocationChange(@NonNull Location location) {
-                //Toast.makeText(ar_mainActivity.this, location.getLatitude() + ", " + location.getLongitude(), Toast.LENGTH_SHORT).show();
                 // 카메라 이동
                 CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(location.getLatitude(), location.getLongitude()));
                 naverMap.moveCamera(cameraUpdate);

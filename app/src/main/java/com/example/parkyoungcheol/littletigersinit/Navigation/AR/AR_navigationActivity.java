@@ -78,6 +78,8 @@ public class AR_navigationActivity extends AppCompatActivity {
     private GeoPoint resultGeoPoint = new GeoPoint();
     private ProgressDialog pDialog;
 
+    public String start = "현재위치 확인 실패";
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
@@ -149,6 +151,18 @@ public class AR_navigationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ar_navigation);
         ButterKnife.bind(this);
+
+        // 채팅에서 받아오는 경,위도 값
+        Intent intent2  = new Intent(this.getIntent());
+        String dest_lon_X_from_chat = intent2.getStringExtra("dest_lon_X_from_chat");
+        String dest_lat_Y_from_chat = intent2.getStringExtra("dest_lat_Y_from_chat");
+        if(dest_lon_X_from_chat != null && dest_lat_Y_from_chat != null){
+            SharedPreferences sf = getSharedPreferences("sFile", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sf.edit();
+            editor.putString("destLonX",dest_lon_X_from_chat);
+            editor.putString("destLatY",dest_lat_Y_from_chat);
+            editor.commit();
+        }
 
         final Handler handler = new Handler(){
             @Override

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.dragon4.owo.ar_trace">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:windowSoftInputMode="adjustResize|stateHidden"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ARCore.Activity.GoogleSignActivity">
+
+        </activity>
+
+        <activity
+            android:name=".ARCore.MixView"
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape">
+        </activity>
+
+        <!-- Service Pacakage -->
+
+        <service
+            android:name=".FCM.FCMInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".FCM.FCMMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <activity android:name=".ARCore.Activity.DialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"/>
+
+        <activity android:name=".ARCore.Activity.WriteReviewActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"/>
+
+        <activity android:name=".ARCore.Activity.SearchKeywordListActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"/>
+
+        <activity android:name=".ARCore.Activity.SearchCategoryListActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"/>
+
+        <activity android:name=".ARCore.Activity.TraceActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"/>
+    </application>
+
+</manifest>
