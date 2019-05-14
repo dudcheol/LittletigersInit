@@ -54,6 +54,8 @@ public class UnityPlayerActivity extends Activity
                 // 길안내 경로 경위도 유니티로 전송
                 UnitySendMessage("reciveDataFromAndroid", "selectScene", "NAV");
                 UnitySendMessage("reciveDataFromAndroid", "RecvLocation", TmapJSON);
+
+                //로딩메시지제거
                 if (pDialog != null) {
                     pDialog.dismiss();
                     pDialog = null;
