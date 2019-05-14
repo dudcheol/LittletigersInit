@@ -153,7 +153,7 @@ public class AR_navigationActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         // 채팅에서 받아오는 경,위도 값
-        Intent intent2  = new Intent(this.getIntent());
+        Intent intent2  = getIntent();
         String dest_lon_X_from_chat = intent2.getStringExtra("dest_lon_X_from_chat");
         String dest_lat_Y_from_chat = intent2.getStringExtra("dest_lat_Y_from_chat");
         if(dest_lon_X_from_chat != null && dest_lat_Y_from_chat != null){
@@ -161,6 +161,7 @@ public class AR_navigationActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sf.edit();
             editor.putString("destLonX",dest_lon_X_from_chat);
             editor.putString("destLatY",dest_lat_Y_from_chat);
+            editor.putString("destResult","채팅 상대방의 위치");
             editor.commit();
         }
 

@@ -119,7 +119,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 holder.sendTxt.setText(textMessage.getMessageText());
                 holder.sendTxt.setVisibility(View.VISIBLE);
                 holder.sendImage.setVisibility(View.GONE);
-                holder.sendLocatoin.setVisibility(View.GONE);
 
             } else if (item.getMessageType() == Message.MessageType.PHOTO) {
                 Glide.with(holder.sendArea)
@@ -128,13 +127,11 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
                 holder.sendTxt.setVisibility(View.GONE);
                 holder.sendImage.setVisibility(View.VISIBLE);
-                holder.sendLocatoin.setVisibility(View.GONE);
             } else if (item.getMessageType() == Message.MessageType.LOCATION) {
                 holder.sendTxt.setText(locationMessage.getLocationText());
 
                 holder.sendTxt.setVisibility(View.VISIBLE);
                 holder.sendImage.setVisibility(View.GONE);
-                holder.sendLocatoin.setVisibility(View.GONE);
 
             }
 
@@ -154,7 +151,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 holder.rcvTextView.setText(textMessage.getMessageText());
                 holder.rcvTextView.setVisibility(View.VISIBLE);
                 holder.rcvImage.setVisibility(View.GONE);
-                holder.rcvLocation.setVisibility(View.GONE);
 
             } else if (item.getMessageType() == Message.MessageType.PHOTO) {
                 Glide
@@ -164,11 +160,9 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
                 holder.rcvTextView.setVisibility(View.GONE);
                 holder.rcvImage.setVisibility(View.VISIBLE);
-                holder.rcvLocation.setVisibility(View.GONE);
             } else if (item.getMessageType() == Message.MessageType.LOCATION){
                 holder.rcvTextView.setText(locationMessage.getLocationText());
                 if(locationMessage.getLocationText().equals("위치 전송 실패")){
-                    holder.rcvLocation.setVisibility(View.GONE);
                     holder.rcvTextView.setVisibility(View.VISIBLE);
                     holder.rcvImage.setVisibility(View.GONE);
                 }
@@ -196,19 +190,21 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                                 latitude = "";
                                 Toast.makeText(mContext, "position =" + position + " ", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(v.getContext(), AR_navigationActivity.class);
-                                intent.putExtra("destination", String.valueOf(longitude + " , " + latitude));
+                                intent.putExtra("dest_lon_X_from_chat", String.valueOf(longitude));
+                                intent.putExtra("dest_lat_Y_from_chat", String.valueOf(latitude));
+
                                 mContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                             } else {
                                 longitude = locationMessage.getLongitude();
                                 latitude = locationMessage.getLatitude();
                                 Toast.makeText(mContext, "position =" + position + " ", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(v.getContext(), AR_navigationActivity.class);
-                                intent.putExtra("destination", String.valueOf(longitude + " , " + latitude));
+                                intent.putExtra("dest_lon_X_from_chat", String.valueOf(longitude));
+                                intent.putExtra("dest_lat_Y_from_chat", String.valueOf(latitude));
                                 mContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                             }
                         }
                     });
-                    holder.rcvLocation.setVisibility(View.GONE);
                     holder.rcvTextView.setVisibility(View.VISIBLE);
                     holder.rcvImage.setVisibility(View.GONE);
                 }
@@ -276,9 +272,8 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 holder.sendArea.setVisibility(View.GONE);
             }
         }
-
-        longitude2 = longitude;
-        latitude2 = latitude;
+        longitude = "";
+        latitude = "";
     }
 
     @Override
@@ -309,8 +304,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         @BindView(R.id.rcvImage)
         ImageView rcvImage;
 
-        @BindView(R.id.rcvLocation)
-        ImageButton rcvLocation;
 
         @BindView(R.id.rcvUnreadCount)
         TextView rcvUnreadCount;
@@ -329,9 +322,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
         @BindView(R.id.sendImage)
         ImageView sendImage;
-
-        @BindView(R.id.sendLocation)
-        ImageButton sendLocatoin;
 
         public MessageViewHolder(View v) {
             super(v);
