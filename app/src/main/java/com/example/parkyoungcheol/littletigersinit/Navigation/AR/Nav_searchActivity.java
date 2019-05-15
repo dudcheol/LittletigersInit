@@ -75,6 +75,7 @@ public class Nav_searchActivity extends AppCompatActivity {
         adapter = new CustomListAdapter(this, list);
         listView.setAdapter(adapter);
 
+        // 키보드 올라오게 하기
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
@@ -82,13 +83,14 @@ public class Nav_searchActivity extends AppCompatActivity {
         current_location_btn.setOnClickListener(v -> {
             GeoPoint myLocation = findMyLocation();
 
+            // 키보드 내려가게 하기
             InputMethodManager immhide = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
             immhide.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
             Intent resultIntent = new Intent();
             resultIntent.putExtra("getX", String.valueOf(myLocation.getX()));
             resultIntent.putExtra("getY", String.valueOf(myLocation.getY()));
-            resultIntent.putExtra("getTitle", "현재 위치");
+            resultIntent.putExtra("getTitle", "현재위치");
             resultIntent.putExtra("coordiStyle","WGS");
             setResult(RESULT_OK, resultIntent);
             finish();

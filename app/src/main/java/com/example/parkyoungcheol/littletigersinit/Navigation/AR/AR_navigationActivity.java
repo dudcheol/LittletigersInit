@@ -10,13 +10,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +38,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.parkyoungcheol.littletigersinit.MainActivity;
 import com.example.parkyoungcheol.littletigersinit.Model.DataSource;
 import com.example.parkyoungcheol.littletigersinit.Model.GeoPoint;
 import com.example.parkyoungcheol.littletigersinit.R;
@@ -44,7 +50,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -80,6 +88,7 @@ public class AR_navigationActivity extends AppCompatActivity {
 
     public String start = "현재위치 확인 실패";
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
@@ -93,6 +102,8 @@ public class AR_navigationActivity extends AppCompatActivity {
                         pDialog.show();
                         transKTMtoWGS(data.getStringExtra("getX"),data.getStringExtra("getY"));
 
+                        // 핸들러가 있는 이유?
+                        // transKTMtoWGS에서 인터넷을 사용하기때문에 값을 반환받아 적용하는데 시간이 걸림
                         final Handler handler = new Handler(){
                             @Override
                             public void handleMessage(Message msg) {
@@ -101,10 +112,16 @@ public class AR_navigationActivity extends AppCompatActivity {
                                 start_lat_Y=resultGeoPoint.getY_s();
                                 startTitle = data.getStringExtra("getTitle");
                                 sourceResultText.setText(startTitle);
-                                Log.i("확인 카텍바꼇나",start_lon_X+start_lat_Y);
+                                Log.i("카텍변환확인",start_lon_X+start_lat_Y);
                             }
                         };
                         handler.sendEmptyMessageDelayed(0,500);
+                        hidePDialog();
+                        start_lon_X=resultGeoPoint.getX_s();
+                        start_lat_Y=resultGeoPoint.getY_s();
+                        startTitle = data.getStringExtra("getTitle");
+                        sourceResultText.setText(startTitle);
+                        Log.i("카텍변환확인",start_lon_X+start_lat_Y);
                     }else{
                         start_lon_X = data.getStringExtra("getX");
                         start_lat_Y = data.getStringExtra("getY");
@@ -122,6 +139,8 @@ public class AR_navigationActivity extends AppCompatActivity {
                         pDialog.show();
                         transKTMtoWGS(data.getStringExtra("getX"),data.getStringExtra("getY"));
 
+                        // 핸들러가 있는 이유?
+                        // transKTMtoWGS에서 인터넷을 사용하기때문에 값을 반환받아 적용하는데 시간이 걸림
                         final Handler handler = new Handler(){
                             @Override
                             public void handleMessage(Message msg) {
@@ -133,7 +152,7 @@ public class AR_navigationActivity extends AppCompatActivity {
                                 Log.i("확인 카텍바꼇나",dest_lon_X+dest_lat_Y);
                             }
                         };
-                        handler.sendEmptyMessageDelayed(0,1000);
+                        handler.sendEmptyMessageDelayed(0,500);
                     }else{
                         dest_lon_X = data.getStringExtra("getX");
                         dest_lat_Y = data.getStringExtra("getY");
@@ -165,7 +184,18 @@ public class AR_navigationActivity extends AppCompatActivity {
             editor.commit();
         }
 
-        final Handler handler = new Handler(){
+        SharedPreferences sf = getSharedPreferences("sFile", MODE_PRIVATE);
+        String sourceResult = sf.getString("sourceResult", null);
+        startTitle = sourceResult;
+        String destResult = sf.getString("destResult", null);
+        destTitle = destResult;
+        start_lon_X = sf.getString("startLonX", null);
+        start_lat_Y = sf.getString("startLatY", null);
+        dest_lon_X = sf.getString("destLonX", null);
+        dest_lat_Y = sf.getString("destLatY", null);
+        coordiStyle = sf.getString("coordiStyle",null);
+
+        /*final Handler handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 // 전에 설정해두었던 시작지,도착지 기억
@@ -179,20 +209,9 @@ public class AR_navigationActivity extends AppCompatActivity {
                 dest_lon_X = sf.getString("destLonX", null);
                 dest_lat_Y = sf.getString("destLatY", null);
                 coordiStyle = sf.getString("coordiStyle",null);
-
-                if (sourceResult == null) {
-                    sourceResultText.setText("출발지를 선택해주세요.");
-                } else {
-                    sourceResultText.setText(sourceResult);
-                }
-                if (destResult == null) {
-                    destResultText.setText("도착지를 선택해주세요.");
-                } else {
-                    destResultText.setText(destResult);
-                }
             }
         };
-        handler.sendEmptyMessageDelayed(0,600);
+        handler.sendEmptyMessageDelayed(0,500);*/
 
         // 출발지 선택 버튼
         // requestCode 1001이면 출발지, 2002이면 도착지
@@ -223,7 +242,6 @@ public class AR_navigationActivity extends AppCompatActivity {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.nav_coord_layout),
                             "출발지와 목적지를 모두 선택해주세요.", Snackbar.LENGTH_SHORT);
                     mySnackbar.show();
-
                 } else {
                     pDialog = new ProgressDialog(AR_navigationActivity.this);
                     // Showing progress dialog before making http request
@@ -256,6 +274,147 @@ public class AR_navigationActivity extends AppCompatActivity {
         });
 
 
+    }
+
+
+    // startActivityForResult() 메서드가 먼저 실행되고 onResume() 메서드가 나중 실행된다!
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // 핸들러가 있는 이유?
+        // startActivityForResult에서 인터넷을 통해서 값을 받아오는 것을 진행한 바람에
+        // 전역변수의 값이 나중에 바뀜
+        // 따라서 적어도 startActivityForResult보다는 늦게 실행되어야함
+        final Handler handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                if (startTitle == null) {
+                    sourceResultText.setText("출발지를 선택해주세요.");
+                } else {
+                    if (startTitle.contains("현재위치")) {
+                        findMyCurrentLocation(1);
+                    } else {
+                        sourceResultText.setText(startTitle);
+                    }
+                }
+
+                if (destTitle == null) {
+                    destResultText.setText("목적지를 선택해주세요.");
+                } else {
+                    if (destTitle.contains("현재위치")) {
+                        findMyCurrentLocation(2);
+                    } else {
+                        destResultText.setText(destTitle);
+                    }
+                }
+            }
+        };
+        handler.sendEmptyMessageDelayed(0,600);
+    }
+
+    // 현재 위치를 정확하게 받아오자
+    public void findMyCurrentLocation(int flag){
+        final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        double longitude=0,latitude=0;
+        if ( Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission( getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions( AR_navigationActivity.this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
+                    0 );
+        }
+        else{
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            //String provider = location.getProvider();
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+            //double altitude = location.getAltitude();
+
+            // 1이면 출발지 텍스트 변경
+            if (flag == 1) {
+                sourceResultText.setText("현재위치:"+geoCodingCoordiToAddress(longitude, latitude));
+                start_lon_X = String.valueOf(longitude);
+                start_lat_Y = String.valueOf(latitude);
+                //Toast.makeText(this, geoCodingCoordiToAddress(longitude, latitude), Toast.LENGTH_SHORT).show();
+                //Log.i("지오코딩",geoCodingCoordiToAddress(longitude, latitude));
+            }
+            // 2이면 목적지 텍스트 번경
+            if (flag == 2) {
+                destResultText.setText("현재위치:"+geoCodingCoordiToAddress(longitude, latitude));
+                dest_lon_X = String.valueOf(longitude);
+                dest_lat_Y = String.valueOf(latitude);
+                //Toast.makeText(this, geoCodingCoordiToAddress(longitude, latitude), Toast.LENGTH_SHORT).show();
+            }
+
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    3000,
+                    1,
+                    gpsLocationListener);
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                    3000,
+                    1,
+                    gpsLocationListener);
+        }
+    }
+
+    // 현재위치가 바뀔때마다 좌표를 바꾸는 리스너
+    final LocationListener gpsLocationListener = new LocationListener() {
+        public void onLocationChanged(Location location) {
+            //String provider = location.getProvider();
+            double longitude = location.getLongitude();
+            double latitude = location.getLatitude();
+            //double altitude = location.getAltitude();
+
+            if(startTitle!=null&&startTitle.contains("현재위치")){
+                sourceResultText.setText("현재위치:"+geoCodingCoordiToAddress(longitude, latitude));
+                start_lon_X = String.valueOf(longitude);
+                start_lat_Y = String.valueOf(latitude);
+                //Toast.makeText(AR_navigationActivity.this, geoCodingCoordiToAddress(longitude, latitude), Toast.LENGTH_SHORT).show();
+            }
+            if(destTitle!=null&&destTitle.contains("현재위치")){
+                destResultText.setText("현재위치:"+geoCodingCoordiToAddress(longitude, latitude));
+                dest_lon_X = String.valueOf(longitude);
+                dest_lat_Y = String.valueOf(latitude);
+                //Toast.makeText(AR_navigationActivity.this, geoCodingCoordiToAddress(longitude, latitude), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+        public void onProviderEnabled(String provider) {
+        }
+
+        public void onProviderDisabled(String provider) {
+        }
+    };
+
+    //구글 지오코딩. 좌표 -> 주소
+    public String geoCodingCoordiToAddress(double lon, double lat){
+        final Geocoder geocoder = new Geocoder(this);
+        List<Address> list = null;
+        String result=null;
+
+        try {
+            list = geocoder.getFromLocation(
+                    lat, // 위도
+                    lon, // 경도
+                    1); // 얻어올 값의 개수
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("test", "입출력 오류 - 서버에서 주소변환시 에러발생");
+            return "주소로 표시할 수 없음";
+        }
+
+        if (list != null) {
+            if (list.size() == 0) {
+                return "주소로 표시할 수 없음";
+            } else {
+                String address = list.get(0).getAddressLine(0);
+                result = address.substring(4);
+            }
+        }
+
+        return result;
     }
 
     @Override

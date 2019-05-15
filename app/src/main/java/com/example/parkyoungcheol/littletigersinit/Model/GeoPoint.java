@@ -7,6 +7,18 @@ public class GeoPoint {
     String x_s;
     String y_s;
 
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public void setZ(double z) {
+        this.z = z;
+    }
+
     public void setX_s(String x_s) {
         this.x_s = x_s;
     }
