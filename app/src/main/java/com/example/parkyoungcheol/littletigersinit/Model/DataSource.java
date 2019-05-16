@@ -133,7 +133,7 @@ public class DataSource {
     // 각 정보들로 완성된 URL 리퀘스트를 생성
 
 
-    public static String createRequestCategoryURL(String source, double lat, double lon, double alt, float radius) {
+    public static String createRequestCategoryURL(String source, double lon, double lat) {
         String ret = "";    // 결과 스트링
 
         // 각 소스에 따른 URL 리퀘스트를 완성한다

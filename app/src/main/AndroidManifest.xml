@@ -25,7 +25,8 @@
         android:roundIcon="@mipmap/icon_ddubuk_round"
         android:supportsRtl="true"
         android:windowSoftInputMode="adjustResize|stateHidden"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
         <activity android:name=".Chat.ChatActivity" />
         <activity android:name=".Chat.ChatMainActivity"></activity>
         <activity android:name=".Chat.ChatLoginActivity">

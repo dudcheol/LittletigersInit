@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.example.parkyoungcheol.littletigersinit.R;
 import com.unity3d.player.UnityPlayer;
 
 import static com.unity3d.player.UnityPlayer.UnitySendMessage;
@@ -33,36 +34,104 @@ public class UnityPlayerActivity extends Activity
 
         // 이전 액티비티에서 받아온 인텐트에서 putExtra해서 받아온 것을 따로 저장함
         Intent intent = getIntent();
-        String TmapJSON = intent.getStringExtra("TmapJSON");
-
-        //Toast.makeText(this, TmapJSON, Toast.LENGTH_SHORT).show();
-
-        /* 안드로이드에서 유니티로 넘어갈 때 로고가 뜨는 시간을 고려하여
-        안드로이드에서 유니티로 값 넘기는 메소드 실행에 딜레이 시간을 줌 (1초) */
-        //Todo : 단, 테스트한 기기가 갤S10이라 속도가 빨라서 1초만에 된 걸 수도 있어서 윤복이폰으로도 확인 필요함
-
         pDialog = new ProgressDialog(UnityPlayerActivity.this);
         // Showing progress dialog before making http request
         pDialog.setMessage("AR Loading...");
         pDialog.show();
-        final Handler handler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                // s:게임오브젝트이름, s1:함수이름, s2:전달할string
-                // ARnavigation을 받으면 AR 네비게이션 신이 실행됨
-                //UnitySendMessage("SceneType", "divScene", "ARnavigation");
-                // 길안내 경로 경위도 유니티로 전송
-                UnitySendMessage("reciveDataFromAndroid", "selectScene", "NAV");
-                UnitySendMessage("reciveDataFromAndroid", "RecvLocation", TmapJSON);
-
+        /*
+        *************************************************
+        SELECT 키 값에 따라 유니티로 전달하는 값 달라짐
+            1. AR navigation
+            2. AR POI
+            3. AR message
+        *************************************************
+        */
+        switch (intent.getIntExtra("SELECT",0)){
+            case 0:
                 //로딩메시지제거
                 if (pDialog != null) {
                     pDialog.dismiss();
                     pDialog = null;
                 }
-            }
-        };
-        handler.sendEmptyMessageDelayed(0,2000);
+                Toast.makeText(this, "잘못된 접근입니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                finish();
+                overridePendingTransition(R.anim.non_anim,R.anim.push_down_out);
+                break;
+            case 1:
+                String TmapJSON = intent.getStringExtra("TmapJSON");
+
+                /* 안드로이드에서 유니티로 넘어갈 때 로고가 뜨는 시간을 고려하여
+                   안드로이드에서 유니티로 값 넘기는 메소드 실행에 딜레이 시간을 줌 (1초) */
+                //Todo : 단, 테스트한 기기가 갤S10이라 속도가 빨라서 1초만에 된 걸 수도 있어서 윤복이폰으로도 확인 필요함
+                final Handler handler1 = new Handler(){
+                    @Override
+                    public void handleMessage(Message msg) {
+                        // s:게임오브젝트이름, s1:함수이름, s2:전달할string
+                        // ARnavigation을 받으면 AR 네비게이션 신이 실행됨
+                        //UnitySendMessage("SceneType", "divScene", "ARnavigation");
+                        // 길안내 경로 경위도 유니티로 전송
+                        UnitySendMessage("reciveDataFromAndroid", "selectScene", "NAV");
+
+                        UnitySendMessage("reciveDataFromAndroid", "RecvLocation", TmapJSON);
+
+                        //로딩메시지제거
+                        if (pDialog != null) {
+                            pDialog.dismiss();
+                            pDialog = null;
+                        }
+                    }
+                };
+                handler1.sendEmptyMessageDelayed(0,2000);
+                break;
+            case 2:
+                String CAFE = intent.getStringExtra("CAFE");
+                String BUSSTOP = intent.getStringExtra("BUSSTOP");
+                String CONVENIENCE = intent.getStringExtra("CONVENIENCE");
+                String RESTAURANT = intent.getStringExtra("RESTAURANT");
+                String BANK = intent.getStringExtra("BANK");
+                String ACCOMMODATION = intent.getStringExtra("ACCOMMODATION");
+                String HOSPITAL = intent.getStringExtra("HOSPITAL");
+
+                //Toast.makeText(this, CAFE, Toast.LENGTH_SHORT).show();
+
+                final Handler handler2 = new Handler(){
+                    @Override
+                    public void handleMessage(Message msg) {
+                        UnitySendMessage("reciveDataFromAndroid", "selectScene", "POI");
+
+                        UnitySendMessage("reciveDataFromAndroid", "CAFE", CAFE);
+                        UnitySendMessage("reciveDataFromAndroid", "BUSSTOP", BUSSTOP);
+                        UnitySendMessage("reciveDataFromAndroid", "CONVENIENCE", CONVENIENCE);
+                        UnitySendMessage("reciveDataFromAndroid", "RESTAURANT", RESTAURANT);
+                        UnitySendMessage("reciveDataFromAndroid", "BANK", BANK);
+                        UnitySendMessage("reciveDataFromAndroid", "ACCOMMODATION", ACCOMMODATION);
+                        UnitySendMessage("reciveDataFromAndroid", "HOSPITAL", HOSPITAL);
+
+                        //로딩메시지제거
+                        if (pDialog != null) {
+                            pDialog.dismiss();
+                            pDialog = null;
+                        }
+                    }
+                };
+                handler2.sendEmptyMessageDelayed(0,2000);
+                break;
+            case 3:
+                final Handler handler3 = new Handler(){
+                    @Override
+                    public void handleMessage(Message msg) {
+
+
+                        //로딩메시지제거
+                        if (pDialog != null) {
+                            pDialog.dismiss();
+                            pDialog = null;
+                        }
+                    }
+                };
+                handler3.sendEmptyMessageDelayed(0,2000);
+                break;
+        }
     }
 
     @Override protected void onNewIntent(Intent intent)

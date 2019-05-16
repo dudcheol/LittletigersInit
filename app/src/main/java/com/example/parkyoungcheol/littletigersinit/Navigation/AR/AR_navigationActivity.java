@@ -263,6 +263,7 @@ public class AR_navigationActivity extends AppCompatActivity {
                                 Log.i("TmapNaviJsonReceiver", result);
                                 Intent intent = new Intent(AR_navigationActivity.this,UnityPlayerActivity.class);
                                 intent.putExtra("TmapJSON",result);
+                                intent.putExtra("SELECT",1);
                                 startActivity(intent);
                                 overridePendingTransition(R.anim.non_anim, R.anim.push_down_out);
                             }
