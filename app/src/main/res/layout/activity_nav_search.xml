@@ -59,6 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
+            style="?android:attr/borderlessButtonStyle"
             android:id="@+id/current_location_btn"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
