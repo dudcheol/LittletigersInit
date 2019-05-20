@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -47,14 +48,20 @@ import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.NaverMapSdk;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
+import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.LocationOverlay;
+import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.Overlay;
+import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
+import com.naver.maps.map.util.MarkerIcons;
 
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -116,7 +123,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         });
 
         // ar 네비게이션으로 이동버튼
-       ar_nav_btn.setOnClickListener(new View.OnClickListener() {
+        ar_nav_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ar_mainActivity.this, AR_navigationActivity.class);
@@ -317,6 +324,45 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     // 사전설정
     @Override
     public void onMapReady(@NonNull final NaverMap naverMap) {
+        InfoWindow infoWindow = new InfoWindow();
+
+        //지하철 역 정보 까지 띄어주는 레이어그룹
+        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_TRANSIT, true);
+        //건물 내부정보까지 보여지게하는 옵션
+        naverMap.setIndoorEnabled(false);
+        naverMap.setOnMapClickListener((point, coord) ->
+                Toast.makeText(this, coord.latitude + ", " + coord.longitude, Toast.LENGTH_SHORT).show());
+
+        //마커 객체생성
+        Marker marker1 = new Marker();
+        Marker marker2 = new Marker();
+
+        marker1.setPosition(new LatLng(37.53298,127.12145));
+        //OverlayImage image = OverlayImage.fromResource(R.drawable.ic_home);
+        marker1.setIcon(MarkerIcons.BLACK);
+        infoWindow.open(marker1);
+        marker1.setCaptionText("영파여고");
+        marker1.setCaptionColor(Color.BLUE);
+        marker1.setCaptionHaloColor(Color.rgb(200, 255, 200));
+        marker1.setCaptionTextSize(16);
+        marker1.setMap(naverMap);
+
+        marker2.setPosition(new LatLng(37.53485,127.12725));
+        //OverlayImage image = OverlayImage.fromResource(R.drawable.ic_home);
+        marker2.setIcon(MarkerIcons.BLACK);
+        marker2.setCaptionText("성내시장");
+        marker2.setCaptionColor(Color.BLUE);
+        marker2.setCaptionHaloColor(Color.rgb(200, 255, 200));
+        marker2.setCaptionTextSize(16);
+        marker2.setMap(naverMap);
+        //정보창 안띄어짐
+/*        infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(context) {
+            @NonNull
+            @Override
+            public CharSequence getText(@NonNull InfoWindow infoWindow) {
+                return "정보 창 내용";
+            }
+        });*/
         // 사용자 현위치 버튼 활성화
         UiSettings uiSettings = naverMap.getUiSettings();
         uiSettings.setLocationButtonEnabled(true);

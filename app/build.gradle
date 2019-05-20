@@ -61,7 +61,7 @@ dependencies {
     /*코드 추가*/
 
     // 네이버 지도 SDK
-    implementation 'com.naver.maps:map-sdk:3.1.0'
+    implementation 'com.naver.maps:map-sdk:3.3.0'
 
     //Material Design
     implementation 'com.android.support:design:28.0.0'

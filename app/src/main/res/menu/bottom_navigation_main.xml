@@ -6,15 +6,20 @@
         android:icon="@drawable/ic_home"
         android:title="@string/home" />
     <item
+        android:id="@+id/action_armsg"
+        android:enabled="true"
+        android:icon="@drawable/ic_home"
+        android:title="@string/armsg" />
+    <item
         android:id="@+id/action_search"
         android:enabled="true"
         android:icon="@drawable/ic_photo"
         android:title="@string/search"/>
-    <item
+   <!-- <item
         android:id="@+id/action_add_photo"
         android:enabled="true"
         android:icon="@drawable/ic_add_a_photo"
-        android:title="@string/gallery" />
+        android:title="@string/gallery" />-->
     <item
         android:id="@+id/action_favorite_alarm"
         android:enabled="true"
