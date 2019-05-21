@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -34,6 +36,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.parkyoungcheol.littletigersinit.Model.ArmsgData;
 import com.example.parkyoungcheol.littletigersinit.Model.AppHelper;
 import com.example.parkyoungcheol.littletigersinit.Model.DataSet;
 import com.example.parkyoungcheol.littletigersinit.Model.DataSource;
@@ -42,7 +45,13 @@ import com.example.parkyoungcheol.littletigersinit.Model.ResultMSG;
 import com.example.parkyoungcheol.littletigersinit.Navigation.AR.AR_navigationActivity;
 import com.example.parkyoungcheol.littletigersinit.Navigation.AR.Nav_searchActivity;
 import com.example.parkyoungcheol.littletigersinit.Navigation.AR.UnityPlayerActivity;
+import com.example.parkyoungcheol.littletigersinit.util.ArmsgListAdapter;
 import com.github.clans.fab.FloatingActionMenu;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.JsonObject;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
@@ -53,14 +62,21 @@ import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.NaverMapSdk;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
+import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.LocationOverlay;
+import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.Overlay;
+import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
+import com.naver.maps.map.util.MarkerIcons;
 
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,6 +93,8 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     private FusedLocationSource locationSource;
     private Context context;
     private static final int REQUEST_CAMERA = 2000;
+    private FirebaseDatabase mFirebaseDb;
+    private DatabaseReference mARMessageRef;
 
     //private Button menu,ar_nav,info,poi;
     @BindView(R.id.fab_menu_btn)
@@ -133,7 +151,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         });
 
         // ar 네비게이션으로 이동버튼
-       ar_nav_btn.setOnClickListener(new View.OnClickListener() {
+        ar_nav_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ar_mainActivity.this, AR_navigationActivity.class);
@@ -220,7 +238,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                         //에러처리
 
                         StringBuffer sb = new StringBuffer();
-                        
+
                         // response
                         Log.d("리스폰스", response.toString());
                         JSONObject result;
@@ -396,6 +414,51 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     // 사전설정
     @Override
     public void onMapReady(@NonNull final NaverMap naverMap) {
+        InfoWindow infoWindow = new InfoWindow();
+        //정보창 안띄어짐
+        infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(ar_mainActivity.this) {
+            @NonNull
+            @Override
+            public CharSequence getText(@NonNull InfoWindow infoWindow) {
+                return "정보 창 내용";
+            }
+        });
+
+        mFirebaseDb = FirebaseDatabase.getInstance();
+        mARMessageRef = mFirebaseDb.getReference("ARMessages");
+
+
+        //지하철 역 정보 까지 띄어주는 레이어그룹
+        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_TRANSIT, true);
+        //건물 내부정보까지 보여지게하는 옵션
+        naverMap.setIndoorEnabled(false);
+        naverMap.setOnMapClickListener((point, coord) ->
+                Toast.makeText(this, coord.latitude + ", " + coord.longitude, Toast.LENGTH_SHORT).show());
+
+        ArrayList<ArmsgData> oData = new ArrayList<ArmsgData>();
+        ArmsgData oItem = new ArmsgData();
+        mARMessageRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                oData.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Marker marker = new Marker();
+                    ArmsgData abc = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
+                    marker.setPosition(new LatLng(abc.getLatitude(), abc.getLongitude()));
+                    marker.setCaptionText(abc.getLabel());
+                    marker.setCaptionColor(Color.BLUE);
+                    marker.setCaptionHaloColor(Color.rgb(200, 255, 200));
+                    marker.setCaptionTextSize(16);
+                    marker.setMap(naverMap);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         // 사용자 현위치 버튼 활성화
         UiSettings uiSettings = naverMap.getUiSettings();
         uiSettings.setLocationButtonEnabled(true);
@@ -409,6 +472,11 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
 
         naverMap.setLocationTrackingMode(LocationTrackingMode.Face);
 
+        // 카메라 이동
+        GeoPoint mGeo = findMyLocation();
+        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(mGeo.getY(), mGeo.getX()));
+        naverMap.moveCamera(cameraUpdate);
+
         /*
         Projection projection = naverMap.getProjection();
         // 화면의 100,100 지점을 지도 좌표로 변환
@@ -417,14 +485,15 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         PointF point = projection.toScreenLocation(new LatLng(37.5666102, 126.9783881));
         */
 
-        naverMap.addOnLocationChangeListener(new NaverMap.OnLocationChangeListener() {
+
+        /*naverMap.addOnLocationChangeListener(new NaverMap.OnLocationChangeListener() {
             @Override
             public void onLocationChange(@NonNull Location location) {
                 // 카메라 이동
                 CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(location.getLatitude(), location.getLongitude()));
                 naverMap.moveCamera(cameraUpdate);
             }
-        });
+        });*/
 
 
     }

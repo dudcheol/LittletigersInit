@@ -108,6 +108,14 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                         .commit()
                 return true
             }
+           R.id.action_armsg -> {
+
+                val armsgFragment = ArmsgFragment()
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_content, armsgFragment)
+                        .commit()
+                return true
+            }
             R.id.action_search -> {
                 val gridFragment = GridFragment()
                 supportFragmentManager
@@ -116,7 +124,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                         .commit()
                 return true
             }
-            R.id.action_add_photo -> {
+           /* R.id.action_add_photo -> {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     startActivity(Intent(this, AddPhotoActivity::class.java))
                     overridePendingTransition(R.anim.push_up_in,R.anim.non_anim)
@@ -124,7 +132,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                     Toast.makeText(this, "스토리지 읽기 권한이 없습니다.", Toast.LENGTH_LONG).show()
                 }
                 return true
-            }
+            }*/
             R.id.action_favorite_alarm -> {
                 val alarmFragment = AlarmFragment()
                 supportFragmentManager

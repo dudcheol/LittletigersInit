@@ -12,10 +12,12 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.content.pm.ResolveInfo;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -30,6 +32,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -51,6 +56,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +91,7 @@ public class AR_navigationActivity extends AppCompatActivity {
     private String coordiStyle;
     private GeoPoint resultGeoPoint = new GeoPoint();
     private ProgressDialog pDialog;
+
 
     public String start = "현재위치 확인 실패";
 
@@ -273,6 +280,38 @@ public class AR_navigationActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mapNavStartBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                double start_lon=Double.parseDouble(start_lon_X);
+                double start_lat=Double.parseDouble(start_lat_Y);
+                double end_lon=Double.parseDouble(dest_lon_X);
+                double end_lat=Double.parseDouble(dest_lat_Y);
+                String encTxt2 = "";
+                String strTxt2 = "";
+                try {
+                    String encTxt = URLEncoder.encode(destTitle, "UTF-8");
+                    String strTxt = URLEncoder.encode(startTitle, "UTF-8");
+                    encTxt2 = encTxt;
+                    strTxt2 = strTxt;
+                } catch (UnsupportedEncodingException ec) {
+
+                }
+                String url = "nmap://route/walk?slat="+start_lat+"&slng="+start_lon+"&sname="+strTxt2+"&dlat="+end_lat+"&dlng="+end_lon+"&dname="+encTxt2+"&appname={Littletigers}";
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+
+                List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                if (list == null || list.isEmpty()) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.nhn.android.nmap")));
+                } else {
+                    startActivity(intent);
+                }
+            }
+        });
+
 
 
     }

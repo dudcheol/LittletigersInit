@@ -42,8 +42,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
     public String longitude= "";
     public String latitude= "";
-    public String longitude2= "";
-    public String latitude2= "";
 
     public MessageListAdapter(Context mContext, ArrayList<Message> mMessageList){
         mMessageList = new ArrayList<>();
@@ -129,8 +127,8 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 holder.sendImage.setVisibility(View.VISIBLE);
             } else if (item.getMessageType() == Message.MessageType.LOCATION) {
                 holder.sendTxt.setText(locationMessage.getLocationText());
-
-                holder.sendTxt.setVisibility(View.VISIBLE);
+                holder.sendLocation.setVisibility(View.VISIBLE);
+                holder.sendTxt.setVisibility(View.GONE);
                 holder.sendImage.setVisibility(View.GONE);
 
             }
@@ -165,9 +163,12 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 if(locationMessage.getLocationText().equals("위치 전송 실패")){
                     holder.rcvTextView.setVisibility(View.VISIBLE);
                     holder.rcvImage.setVisibility(View.GONE);
+                    holder.rcvLocation.setVisibility(View.GONE);
                 }
                 else {
-                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    holder.rcvLocation.setVisibility(View.VISIBLE);
+                    holder.rcvTextView.setVisibility(View.GONE);
+                    holder.rcvLocation.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Message item = getItem(position);
@@ -188,7 +189,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                             if (locationMessage.getLongitude().equals("")) {
                                 longitude = "";
                                 latitude = "";
-                                Toast.makeText(mContext, "position =" + position + " ", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(v.getContext(), AR_navigationActivity.class);
                                 intent.putExtra("dest_lon_X_from_chat", String.valueOf(longitude));
                                 intent.putExtra("dest_lat_Y_from_chat", String.valueOf(latitude));
@@ -197,7 +197,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                             } else {
                                 longitude = locationMessage.getLongitude();
                                 latitude = locationMessage.getLatitude();
-                                Toast.makeText(mContext, "position =" + position + " ", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(v.getContext(), AR_navigationActivity.class);
                                 intent.putExtra("dest_lon_X_from_chat", String.valueOf(longitude));
                                 intent.putExtra("dest_lat_Y_from_chat", String.valueOf(latitude));
@@ -205,45 +204,8 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                             }
                         }
                     });
-                    holder.rcvTextView.setVisibility(View.VISIBLE);
                     holder.rcvImage.setVisibility(View.GONE);
                 }
-/*                holder.rcvLocation.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Message item = getItem(position);
-
-                            TextMessage textMessage = null;
-                            PhotoMessage photoMessage = null;
-                            LocationMessage locationMessage = null;
-
-
-                            if (item instanceof TextMessage) {
-                                textMessage = (TextMessage) item;
-                            } else if (item instanceof PhotoMessage) {
-                                photoMessage = (PhotoMessage) item;
-                            } else if (item instanceof LocationMessage) {
-                                locationMessage = (LocationMessage) item;
-                            }
-
-                            if (locationMessage.getLongitude().equals("")) {
-                                longitude = "";
-                                latitude = "";
-                                Toast.makeText(mContext, "position =" + position + " ", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(v.getContext(), AR_navigationActivity.class);
-                                intent.putExtra("destination", String.valueOf(longitude + " , " + latitude));
-                                mContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                            } else {
-                                longitude = locationMessage.getLongitude();
-                                latitude = locationMessage.getLatitude();
-                                Toast.makeText(mContext, "position =" + position + " ", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(v.getContext(), AR_navigationActivity.class);
-                                intent.putExtra("destination", String.valueOf(longitude + " , " + latitude));
-                                mContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                            }
-                        }
-                    });*/
-
             } else if (item.getMessageType() == Message.MessageType.EXIT) {
                 // #이름 님이 방에서 나가셨습니다.
                 holder.exitTextView.setText(String.format("%s님이 방에서 나가셨습니다.", item.getMessageUser().getName()));
@@ -304,6 +266,8 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         @BindView(R.id.rcvImage)
         ImageView rcvImage;
 
+        @BindView(R.id.rcvLocation)
+        ImageButton rcvLocation;
 
         @BindView(R.id.rcvUnreadCount)
         TextView rcvUnreadCount;
@@ -322,6 +286,9 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
         @BindView(R.id.sendImage)
         ImageView sendImage;
+
+        @BindView(R.id.sendLocation)
+        ImageButton sendLocation;
 
         public MessageViewHolder(View v) {
             super(v);
