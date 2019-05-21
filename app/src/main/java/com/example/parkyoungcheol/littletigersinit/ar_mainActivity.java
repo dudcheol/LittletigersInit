@@ -125,7 +125,10 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         ar_message_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(ar_mainActivity.this, UnityPlayerActivity.class);
+                intent.putExtra("SELECT", 3);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
             }
         });
 
