@@ -1,6 +1,8 @@
 package com.example.parkyoungcheol.littletigersinit.util;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,72 +15,51 @@ import android.widget.TextView;
 import com.example.parkyoungcheol.littletigersinit.Model.ArmsgData;
 import com.example.parkyoungcheol.littletigersinit.R;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
+import java.util.List;
 
-public class ArmsgListAdapter extends BaseAdapter
+public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.ViewHolder>
 {
-    LayoutInflater inflater = null;
-    private ArrayList<ArmsgData> m_oData = null;
-    private int nListCnt = 0;
+    private List<ArmsgData> mDataset;
 
-    public ArmsgListAdapter(ArrayList<ArmsgData> _oData)
-    {
-        m_oData = _oData;
-        nListCnt = m_oData.size();
+    public ArmsgListAdapter(List<ArmsgData> mBoardList) {
+        this.mDataset = mBoardList;
+
     }
 
-    @Override
-    public int getCount()
-    {
-        Log.i("TAG", "getCount");
-        return nListCnt;
-    }
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView oTextTitle;
+        TextView oTextDate;
+        Button oBtn;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
 
-    public void addItem(String label, Double latitude, Double longitude)
-    {
-        ArmsgData item = new ArmsgData();
-
-        item.setLabel(label);
-        item.setLatitude(latitude);
-        item.setLongitude(longitude);
-        m_oData.add(item);
-    }
-    @Override
-    public Object getItem(int position)
-    {
-        return m_oData.get(position);
-    }
-
-    @Override
-    public long getItemId(int position)
-    {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
-        if (convertView == null)
-        {
-            final Context context = parent.getContext();
-            if (inflater == null)
-            {
-                inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            }
-            convertView = inflater.inflate(R.layout.listview_item, parent, false);
+            oTextTitle = (TextView) itemView.findViewById(R.id.textTitle);
+            oTextDate = (TextView) itemView.findViewById(R.id.textDate);
+            oBtn = (Button) itemView.findViewById(R.id.btnSelector);
         }
-
-        TextView oTextTitle = (TextView) convertView.findViewById(R.id.textTitle);
-        TextView oTextDate = (TextView) convertView.findViewById(R.id.textDate);
-        Button oBtn = (Button) convertView.findViewById(R.id.btnSelector);
-
-        ArmsgData listViewItem  = m_oData.get(position);
-
-        oTextTitle.setText(listViewItem.getLabel());
-        oTextDate.setText(listViewItem.getLatitude() + " , " + listViewItem.getLongitude());
-
-
-        convertView.setTag(""+position);
-        return convertView;
     }
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.listview_item,viewGroup,false);
+        return new ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        ArmsgData data  = mDataset.get(i);
+
+        viewHolder.oTextTitle.setText(data.getLabel());
+        viewHolder.oTextDate.setText(data.getLatitude() + " , " + data.getLongitude());
+    }
+
+
+    @Override
+    public int getItemCount() {
+        return mDataset.size();
+    }
+
 }
