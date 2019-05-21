@@ -278,7 +278,7 @@ public class AR_navigationActivity extends AppCompatActivity {
                     encTxt2 = encTxt;
                     strTxt2 = strTxt;
                 } catch (UnsupportedEncodingException ec) {
-                   
+
                 }
                 String url = "nmap://route/walk?slat="+start_lat+"&slng="+start_lon+"&sname="+strTxt2+"&dlat="+end_lat+"&dlng="+end_lon+"&dname="+encTxt2+"&appname={Littletigers}";
 
