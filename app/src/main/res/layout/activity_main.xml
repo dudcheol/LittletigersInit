@@ -137,8 +137,8 @@
         app:itemBackground="@color/colorPrimary"
         app:itemIconTint="@drawable/selector_bottombar_item"
         app:itemTextColor="@drawable/selector_bottombar_item"
-        app:menu="@menu/bottom_navigation_main"
-        app:labelVisibilityMode="unlabeled" />
+        app:labelVisibilityMode="unlabeled"
+        app:menu="@menu/bottom_navigation_main" />
 
 </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

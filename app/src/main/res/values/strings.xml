@@ -22,6 +22,7 @@
 
     <!-- Bottom Navigation View -->
     <string name="home">Home</string>
+    <string name="armsg">ArMsg</string>
     <string name="search">Search</string>
     <string name="gallery">Gallery</string>
     <string name="favorite">Favorite</string>
