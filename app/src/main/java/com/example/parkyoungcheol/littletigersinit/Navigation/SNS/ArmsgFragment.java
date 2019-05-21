@@ -3,6 +3,8 @@ package com.example.parkyoungcheol.littletigersinit.Navigation.SNS;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,14 +26,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class ArmsgFragment extends Fragment implements View.OnClickListener {
-
+public class ArmsgFragment extends Fragment  {
+    private static List<ArmsgData> mBoardList;
     private FirebaseDatabase mFirebaseDb;
     private DatabaseReference mARMessageRef;
 
-    private ListView m_oListView = null;
+    private RecyclerView m_oListView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
+    public ArmsgFragment(){
+
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -40,22 +49,26 @@ public class ArmsgFragment extends Fragment implements View.OnClickListener {
         mFirebaseDb = FirebaseDatabase.getInstance();
         mARMessageRef = mFirebaseDb.getReference("ARMessages");
 
-
-        ArrayList<ArmsgData> oData = new ArrayList<ArmsgData>();
-        ArmsgData oItem = new ArmsgData();
+        mBoardList =  new ArrayList<>();
         mARMessageRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                oData.clear();
+                mBoardList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ArmsgData bbs = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
-                    m_oListView = (ListView) armsgView.findViewById(R.id.listView);
-                    ArmsgListAdapter oAdapter = new ArmsgListAdapter(oData);
-                    oAdapter.addItem(bbs.getLabel(), bbs.getLatitude(), bbs.getLongitude());
-                    m_oListView.setAdapter(oAdapter);
+                    mBoardList.add(bbs);
 
 
                 }
+
+                Collections.reverse(mBoardList);
+                m_oListView = (RecyclerView) armsgView.findViewById(R.id.listView);
+                mAdapter = new ArmsgListAdapter(mBoardList);
+                mAdapter.notifyDataSetChanged();
+                mLayoutManager = new LinearLayoutManager(armsgView.getContext());
+                m_oListView.setLayoutManager(mLayoutManager);
+                m_oListView.setAdapter(mAdapter);
+
             }
 
             @Override
@@ -67,20 +80,6 @@ public class ArmsgFragment extends Fragment implements View.OnClickListener {
 
 
         return armsgView;
-    }
-
-    public void onClick(View v) {
-        View oParentView = (View) v.getParent(); // 부모의 View를 가져온다. 즉, 아이템 View임.
-        TextView oTextTitle = (TextView) oParentView.findViewById(R.id.textTitle);
-        String position = (String) oParentView.getTag();
-
-        AlertDialog.Builder oDialog = new AlertDialog.Builder(getActivity());
-
-        String strMsg = "선택한 아이템의 position 은 " + position + " 입니다.\nTitle 텍스트 :" + oTextTitle.getText();
-        oDialog.setMessage(strMsg)
-                .setPositiveButton("확인", null)
-                .setCancelable(false) // 백버튼으로 팝업창이 닫히지 않도록 한다.
-                .show();
     }
 
 }
