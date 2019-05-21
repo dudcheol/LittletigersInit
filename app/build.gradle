@@ -122,26 +122,23 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-
-
-
     // ar 구현을 위한 외부 라이브러리
 
     //compile 'com.tsengvn:typekit:1.0.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'jp.wasabeef:picasso-transformations:2.1.0'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'jp.wasabeef:picasso-transformations:2.1.0'
 
     //  ui
-    compile 'com.sackcentury:shinebutton:0.2.0'
-    compile 'com.android.support:support-v4:28.0.0'
-    compile 'info.hoang8f:fbutton:1.0.5'
+    implementation 'com.sackcentury:shinebutton:0.2.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'info.hoang8f:fbutton:1.0.5'
     implementation 'com.github.florent37:materialtextfield:1.0.7'
 
     //implementation project(':littletigersAR-release')
 
     //implementation(name: 'android.arch.lifecycle.runtime-1.0.0', ext:'aar')
-    implementation(name: 'arcore_client', ext:'aar')
-    implementation(name: 'ARExtensions', ext:'aar')
+    implementation(name: 'arcore_client', ext: 'aar')
+    implementation(name: 'ARExtensions', ext: 'aar')
     /*implementation(name: 'com.android.support.support-compat-26.1.0', ext:'aar')
     implementation(name: 'com.android.support.support-core-ui-26.1.0', ext:'aar')
     implementation(name: 'com.android.support.support-core-utils-26.1.0', ext:'aar')
@@ -153,8 +150,24 @@ dependencies {
     //implementation(name: 'com.google.android.gms.play-services-location-16.0.0', ext:'aar')
     //implementation(name: 'com.google.android.gms.play-services-places-placereport-16.0.0', ext:'aar')
     //implementation(name: 'com.google.android.gms.play-services-tasks-16.0.1', ext:'aar')
-    implementation(name: 'natlocs-debug', ext:'aar')
-    implementation(name: 'unityandroidpermissions', ext:'aar')
-    implementation(name: 'UnityARCore', ext:'aar')
+    implementation(name: 'natlocs-debug', ext: 'aar')
+    implementation(name: 'unityandroidpermissions', ext: 'aar')
+    implementation(name: 'UnityARCore', ext: 'aar')
+
+    // 유니티 파이어베이스 연동
+    implementation(name: 'com.google.firebase.firebase-analytics-16.5.0', ext:'aar')
+    implementation(name: 'com.google.firebase.firebase-app-unity-6.0.0', ext:'aar')
+    implementation(name: 'com.google.firebase.firebase-auth-17.0.0', ext:'aar')
+    implementation(name: 'com.google.firebase.firebase-auth-interop-17.0.0', ext:'aar')
+    implementation(name: 'com.google.firebase.firebase-auth-unity-6.0.0', ext:'aar')
+    implementation(name: 'com.google.firebase.firebase-common-17.0.0', ext:'aar')
+    implementation(name: 'com.google.firebase.firebase-database-17.0.0', ext:'aar')
+    implementation(name: 'com.google.firebase.firebase-database-collection-16.0.1', ext:'aar')
+    implementation(name: 'com.google.firebase.firebase-database-unity-6.0.0', ext:'aar')
+    implementation(name: 'com.google.firebase.firebase-iid-17.1.2', ext:'aar')
+    implementation(name: 'com.google.firebase.firebase-iid-interop-16.0.1', ext:'aar')
+    implementation(name: 'com.google.firebase.firebase-measurement-connector-17.0.1', ext:'aar')
+    implementation project(':Firebase')
+
 }
 apply plugin: 'com.google.gms.google-services'

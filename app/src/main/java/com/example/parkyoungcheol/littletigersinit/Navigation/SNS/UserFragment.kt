@@ -100,6 +100,7 @@ class UserFragment : Fragment() {
                 //view.account_btn_follow_signout.setOnClickListener{ requestFollow() }
                 var mainActivity = (activity as MainActivity)
                 mainActivity.toolbar_title_image.visibility = View.GONE
+                mainActivity.ARmessageBtn.visibility = View.GONE
                 mainActivity.toolbar_btn_back.visibility = View.VISIBLE
                 mainActivity.toolbar_username.visibility = View.VISIBLE
 

@@ -23,12 +23,24 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
             <ImageView
                 android:id="@+id/toolbar_title_image"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_alignStart="@+id/toolbar_btn_back"
                 android:layout_centerVertical="true"
+                android:layout_marginStart="0dp"
                 android:src="@drawable/ddubuck_noback" />
+
+            <ImageView
+                android:id="@+id/ARmessageBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ar_message"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                />
 
             <ImageView
                 android:id="@+id/ARbtn"
@@ -79,7 +91,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="22dp"
-                android:src="@drawable/ic_arrow_back" />
+                android:src="@drawable/ic_arrow_back"/>
 
             <TextView
                 android:id="@+id/toolbar_username"

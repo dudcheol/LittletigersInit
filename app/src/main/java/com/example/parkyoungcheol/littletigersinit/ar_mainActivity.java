@@ -446,6 +446,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                     ArmsgData abc = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
                     marker.setPosition(new LatLng(abc.getLatitude(), abc.getLongitude()));
                     marker.setCaptionText(abc.getLabel());
+
                     marker.setCaptionColor(Color.BLUE);
                     marker.setCaptionHaloColor(Color.rgb(200, 255, 200));
                     marker.setCaptionTextSize(16);
@@ -472,10 +473,12 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
 
         naverMap.setLocationTrackingMode(LocationTrackingMode.Face);
 
-        // 카메라 이동
-        GeoPoint mGeo = findMyLocation();
-        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(mGeo.getY(), mGeo.getX()));
-        naverMap.moveCamera(cameraUpdate);
+        // 카메라 이동 .. 단, 위치 퍼미션이 허가되어있을 때만
+        if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED) {
+            GeoPoint mGeo = findMyLocation();
+            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(mGeo.getY(), mGeo.getX()));
+            naverMap.moveCamera(cameraUpdate);
+        }
 
         /*
         Projection projection = naverMap.getProjection();

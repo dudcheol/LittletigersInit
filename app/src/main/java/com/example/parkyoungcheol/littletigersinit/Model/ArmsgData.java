@@ -13,6 +13,16 @@ public class ArmsgData
     public String label;
     public Double latitude;
     public Double longitude;
+    public String address;
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
     public View.OnClickListener onClickListener;
 
 

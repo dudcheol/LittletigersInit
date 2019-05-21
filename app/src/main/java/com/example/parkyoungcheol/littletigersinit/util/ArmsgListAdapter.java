@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.parkyoungcheol.littletigersinit.Model.ArmsgData;
 import com.example.parkyoungcheol.littletigersinit.R;
@@ -53,7 +54,13 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
         ArmsgData data  = mDataset.get(i);
 
         viewHolder.oTextTitle.setText(data.getLabel());
-        viewHolder.oTextDate.setText(data.getLatitude() + " , " + data.getLongitude());
+        viewHolder.oTextDate.setText(data.getAddress());
+        viewHolder.oBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(v.getContext(), data.getLabel(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
