@@ -155,7 +155,9 @@ dependencies {
     implementation(name: 'UnityARCore', ext: 'aar')
 
     // 유니티 파이어베이스 연동
-    implementation(name: 'com.google.firebase.firebase-analytics-16.5.0', ext:'aar')
+
+
+}/*implementation(name: 'com.google.firebase.firebase-analytics-16.5.0', ext:'aar')
     implementation(name: 'com.google.firebase.firebase-app-unity-6.0.0', ext:'aar')
     implementation(name: 'com.google.firebase.firebase-auth-17.0.0', ext:'aar')
     implementation(name: 'com.google.firebase.firebase-auth-interop-17.0.0', ext:'aar')
@@ -168,6 +170,4 @@ dependencies {
     implementation(name: 'com.google.firebase.firebase-iid-interop-16.0.1', ext:'aar')
     implementation(name: 'com.google.firebase.firebase-measurement-connector-17.0.1', ext:'aar')
     implementation project(':Firebase')
-
-}
 apply plugin: 'com.google.gms.google-services'

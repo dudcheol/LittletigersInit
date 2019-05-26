@@ -446,9 +446,11 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                     ArmsgData abc = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
                     marker.setPosition(new LatLng(abc.getLatitude(), abc.getLongitude()));
                     marker.setCaptionText(abc.getLabel());
-
-                    marker.setCaptionColor(Color.BLUE);
-                    marker.setCaptionHaloColor(Color.rgb(200, 255, 200));
+                    marker.setWidth(80);
+                    marker.setHeight(80);
+                    marker.setIcon(OverlayImage.fromResource(R.drawable.ar_marker));
+                    marker.setCaptionColor(Color.WHITE);
+                    marker.setCaptionHaloColor(Color.BLACK);
                     marker.setCaptionTextSize(16);
                     marker.setMap(naverMap);
                 }
