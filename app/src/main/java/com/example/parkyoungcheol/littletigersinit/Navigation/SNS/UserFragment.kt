@@ -143,9 +143,11 @@ class UserFragment : Fragment() {
 
                     if (documentSnapshot?.data != null) {
                         val url = documentSnapshot?.data!!["image"]
-                        Glide.with(activity)
-                                .load(url)
-                                .apply(RequestOptions().circleCrop()).into(fragmentView!!.account_iv_profile)
+                        activity?.let {
+                            Glide.with(it)
+                                    .load(url)
+                                    .apply(RequestOptions().circleCrop()).into(fragmentView!!.account_iv_profile)
+                        }
                     }else{
                         cover_account_iv_profile.setImageResource(R.drawable.ic_account)
                     }

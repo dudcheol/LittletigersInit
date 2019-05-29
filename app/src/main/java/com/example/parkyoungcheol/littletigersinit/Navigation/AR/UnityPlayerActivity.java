@@ -120,6 +120,9 @@ public class UnityPlayerActivity extends Activity
                 final Handler handler3 = new Handler(){
                     @Override
                     public void handleMessage(Message msg) {
+
+                        UnitySendMessage("reciveDataFromAndroid", "selectScene", "MSG");
+
                         //로딩메시지제거
                         if (pDialog != null) {
                             pDialog.dismiss();

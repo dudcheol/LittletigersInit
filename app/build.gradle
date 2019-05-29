@@ -23,6 +23,7 @@ android {
         ndk {
             abiFilters 'armeabi-v7a', 'x86'
         }
+        multiDexEnabled true
     }
 
     lintOptions {
@@ -54,7 +55,7 @@ dependencies {
     })
     implementation 'com.naver.maps.open:naver-map-api:2.1.2@aar'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.10"
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
 
@@ -74,38 +75,38 @@ dependencies {
     //implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
 
     //파이어베이스 로그인 지원
-    implementation 'com.google.firebase:firebase-auth:12.0.0'
+    implementation 'com.google.firebase:firebase-auth:17.0.0'
 
     //파이어베이스 파일 스토리지
-    implementation 'com.google.firebase:firebase-storage:12.0.0'
+    implementation 'com.google.firebase:firebase-storage:17.0.0'
 
     //파이어베이스 파이어스토어 데이터베이스
-    implementation 'com.google.firebase:firebase-firestore:12.0.0'
+    implementation 'com.google.firebase:firebase-firestore:19.0.0'
 
     //이미지 로더 라이브러리
-    implementation 'com.github.bumptech.glide:glide:4.0.0'
+    implementation 'com.github.bumptech.glide:glide:4.6.1'
 
     //구글 로그인 지원
-    implementation 'com.google.android.gms:play-services-auth:12.0.0'
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
 
     //트위터 라이브러리
     implementation 'com.twitter.sdk.android:twitter:3.1.1'
 
     //푸시 알람 라이브러리
-    implementation 'com.google.firebase:firebase-messaging:12.0.0'
+    //implementation 'com.google.firebase:firebase-messaging:18.0.0'
 
     //Okhttp 라이브러리
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
 
     //Gson 라이브러리
-    implementation 'com.google.code.gson:gson:2.8.4'
+    implementation 'com.google.code.gson:gson:2.8.5'
 
     //Volley 라이브러리
     implementation 'com.android.volley:volley:1.1.0'
-    implementation 'com.google.android.gms:play-services-location:12.0.0'
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.android.support:cardview-v7:28.0.0'
-    implementation 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
 
     compileOnly 'org.projectlombok:lombok:1.16.16'
@@ -113,14 +114,14 @@ dependencies {
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
 
     //firebase database
-    implementation 'com.google.firebase:firebase-database:12.0.0'
+    implementation 'com.google.firebase:firebase-database:17.0.0'
 
     //버튼 라이브러리
     implementation 'com.github.clans:fab:1.6.4'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     // ar 구현을 위한 외부 라이브러리
 
@@ -156,18 +157,19 @@ dependencies {
 
     // 유니티 파이어베이스 연동
 
-
-}/*implementation(name: 'com.google.firebase.firebase-analytics-16.5.0', ext:'aar')
-    implementation(name: 'com.google.firebase.firebase-app-unity-6.0.0', ext:'aar')
-    implementation(name: 'com.google.firebase.firebase-auth-17.0.0', ext:'aar')
-    implementation(name: 'com.google.firebase.firebase-auth-interop-17.0.0', ext:'aar')
-    implementation(name: 'com.google.firebase.firebase-auth-unity-6.0.0', ext:'aar')
-    implementation(name: 'com.google.firebase.firebase-common-17.0.0', ext:'aar')
-    implementation(name: 'com.google.firebase.firebase-database-17.0.0', ext:'aar')
-    implementation(name: 'com.google.firebase.firebase-database-collection-16.0.1', ext:'aar')
-    implementation(name: 'com.google.firebase.firebase-database-unity-6.0.0', ext:'aar')
-    implementation(name: 'com.google.firebase.firebase-iid-17.1.2', ext:'aar')
-    implementation(name: 'com.google.firebase.firebase-iid-interop-16.0.1', ext:'aar')
-    implementation(name: 'com.google.firebase.firebase-measurement-connector-17.0.1', ext:'aar')
+    implementation(name: 'com.google.firebase.firebase-app-unity-6.0.0', ext: 'aar')
+    implementation(name: 'com.google.firebase.firebase-auth-unity-6.0.0', ext: 'aar')
+    implementation(name: 'com.google.firebase.firebase-database-unity-6.0.0', ext: 'aar')
+    //implementation(name: 'com.google.firebase.firebase-analytics-16.5.0', ext: 'aar')
+    //implementation(name: 'com.google.firebase.firebase-auth-17.0.0', ext: 'aar')
+    //implementation(name: 'com.google.firebase.firebase-auth-interop-17.0.0', ext: 'aar')
+    //implementation(name: 'com.google.firebase.firebase-common-17.0.0', ext: 'aar')
+    //implementation(name: 'com.google.firebase.firebase-database-17.0.0', ext: 'aar')
+    //implementation(name: 'com.google.firebase.firebase-database-collection-16.0.1', ext: 'aar')
+    //implementation(name: 'com.google.firebase.firebase-iid-17.1.2', ext: 'aar')
+    //implementation(name: 'com.google.firebase.firebase-iid-interop-16.0.1', ext: 'aar')
+    //implementation(name: 'com.google.firebase.firebase-measurement-connector-17.0.1', ext: 'aar')
     implementation project(':Firebase')
+    implementation 'com.google.firebase:firebase-core:16.0.9'
+}
 apply plugin: 'com.google.gms.google-services'

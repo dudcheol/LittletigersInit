@@ -12,6 +12,7 @@ import com.example.parkyoungcheol.littletigersinit.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_add_photo.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -96,7 +97,8 @@ class AddPhotoActivity : AppCompatActivity() {
             Toast.makeText(this, getString(R.string.upload_success),
                     Toast.LENGTH_SHORT).show()
 
-            val uri = taskSnapshot.downloadUrl
+            //val uri = taskSnapshot.downloadUrl
+            val uri = FirebaseStorage.getInstance().reference.downloadUrl
             //디비에 바인딩 할 위치 생성 및 컬렉션(테이블)에 데이터 집합 생성
 
 

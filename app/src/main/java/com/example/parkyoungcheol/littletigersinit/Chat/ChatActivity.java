@@ -436,7 +436,9 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if ( task.isSuccessful() ) {
-                    mPhotoUrl = task.getResult().getDownloadUrl().toString();
+                    //mPhotoUrl = task.getResult().getDownloadUrl().toString();
+                    mPhotoUrl = FirebaseStorage.getInstance().getReference().getDownloadUrl().toString();
+
                     mMessageType = Message.MessageType.PHOTO;
                     sendMessage();
                 }
