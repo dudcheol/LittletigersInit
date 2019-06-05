@@ -82,6 +82,7 @@ public class ChatFragment extends Fragment {
                 Intent chatIntent = new Intent(getActivity(), ChatActivity.class);
                 chatIntent.putExtra("chat_id", chat.getChatId());
                 startActivityForResult(chatIntent, JOIN_ROOM_REQUEST_CODE);
+                getActivity().overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
             }
         }));
         mContext = getActivity();

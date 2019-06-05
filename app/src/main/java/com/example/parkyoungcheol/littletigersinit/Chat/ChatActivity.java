@@ -128,6 +128,13 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         if (mChatId != null) {
@@ -429,7 +436,9 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if ( task.isSuccessful() ) {
-                    mPhotoUrl = task.getResult().getDownloadUrl().toString();
+                    //mPhotoUrl = task.getResult().getDownloadUrl().toString();
+                    mPhotoUrl = FirebaseStorage.getInstance().getReference().getDownloadUrl().toString();
+
                     mMessageType = Message.MessageType.PHOTO;
                     sendMessage();
                 }
