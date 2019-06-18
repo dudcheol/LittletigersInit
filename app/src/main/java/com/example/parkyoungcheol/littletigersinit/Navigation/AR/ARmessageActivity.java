@@ -122,7 +122,7 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
 
                 Collections.reverse(mBoardList);
                 m_oListView = (RecyclerView)findViewById(R.id.listView);
-                mAdapter = new ArmsgListAdapter(mBoardList);
+                mAdapter = new ArmsgListAdapter(ARmessageActivity.this, mBoardList);
                 mAdapter.notifyDataSetChanged();
                 mLayoutManager = new LinearLayoutManager(ARmessageActivity.this);
                 m_oListView.setLayoutManager(mLayoutManager);
