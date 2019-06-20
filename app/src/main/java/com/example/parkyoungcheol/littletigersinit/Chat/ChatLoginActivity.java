@@ -36,6 +36,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public class ChatLoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private SignInButton mGoogleSignInbtn; // 로그인 버튼
@@ -119,73 +121,10 @@ public class ChatLoginActivity extends AppCompatActivity implements GoogleApiCli
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ChatLoginActivity.this, CreateActivity.class);
-                startActivity(intent);
+                startActivity(intent.addFlags(FLAG_ACTIVITY_NEW_TASK));
             }
         });
     }
-
-    private void createAndLoginEmail(){
-        mAuth.createUserWithEmailAndPassword(mEmail_edittext.getText().toString(), mPassword_edittext.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        mProgressBar.setVisibility(View.GONE);
-                        if (task.isSuccessful()) {
-                            FirebaseUser firebaseUser = task.getResult().getUser();
-                            final User user = new User(); // 데이터 변경 방지 final
-
-                            //-- data set
-                            user.setEmail(firebaseUser.getEmail());
-                            if (firebaseUser.getDisplayName() != null)
-                                user.setName(firebaseUser.getDisplayName());
-                            else
-                                user.setName("홍길동");
-                            user.setUid(firebaseUser.getUid());
-
-                            if (firebaseUser.getPhotoUrl() != null)
-                                user.setProfileUrl(firebaseUser.getPhotoUrl().toString());
-                            else
-                                user.setProfileUrl("https://i.imgur.com/jCxAEpA.jpg");
-
-                            mUserRef.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    // 데이터가 존재하지 않을 때만 데이터를 새로 생성
-                                    if(!dataSnapshot.exists()){
-                                        mUserRef.child(user.getUid()).setValue(user, new DatabaseReference.CompletionListener() {
-                                            @Override
-                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                if (databaseError == null) {
-                                                    startActivity(new Intent(ChatLoginActivity.this, MainActivity.class)); // 로그인 성공 시, 메인으로
-                                                    finish(); // 로그인 인증은 꺼줌
-                                                }
-                                            }
-                                        });
-                                    }else{
-                                        startActivity(new Intent(ChatLoginActivity.this,MainActivity.class));
-                                        finish();
-                                    }
-
-                                    Bundle eventBundle = new Bundle();
-                                    eventBundle.putString("email", user.getEmail());
-                                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, eventBundle);
-                                    Snackbar.make(mProgressBar, "로그인에 성공하였습니다.", Snackbar.LENGTH_SHORT).show();
-
-                                }
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-
-                        } else {
-                            signinEmail();
-                        }
-                    }
-                });
-
-    }
-
 
     private void signinEmail(){
         mAuth.signInWithEmailAndPassword(mEmail_edittext.getText().toString(), mPassword_edittext.getText().toString())

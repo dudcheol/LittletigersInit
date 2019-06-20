@@ -1,6 +1,7 @@
 package com.example.parkyoungcheol.littletigersinit.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,7 +14,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.parkyoungcheol.littletigersinit.Chat.LocationMessage;
+import com.example.parkyoungcheol.littletigersinit.Chat.Message;
+import com.example.parkyoungcheol.littletigersinit.Chat.PhotoMessage;
+import com.example.parkyoungcheol.littletigersinit.Chat.TextMessage;
 import com.example.parkyoungcheol.littletigersinit.Model.ArmsgData;
+import com.example.parkyoungcheol.littletigersinit.Navigation.AR.AR_navigationActivity;
 import com.example.parkyoungcheol.littletigersinit.R;
 
 import org.w3c.dom.Text;
@@ -24,10 +30,11 @@ import java.util.List;
 public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.ViewHolder>
 {
     private List<ArmsgData> mDataset;
+    private Context mContext;
 
-    public ArmsgListAdapter(List<ArmsgData> mBoardList) {
+    public ArmsgListAdapter(Context mContext, List<ArmsgData> mBoardList) {
+        this.mContext = mContext;
         this.mDataset = mBoardList;
-
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -58,7 +65,18 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
         viewHolder.oBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), data.getLabel(), Toast.LENGTH_SHORT).show();
+                String longitude = Double.toString(data.getLongitude());
+                String latitude = Double.toString(data.getLongitude());
+
+
+                Intent intent = new Intent(v.getContext(), AR_navigationActivity.class);
+                intent.putExtra("dest_lon_X_from_armessage", String.valueOf(longitude));
+                intent.putExtra("dest_lat_Y_from_armessage", String.valueOf(latitude));
+                intent.putExtra("dest_label_from_armessage", String.valueOf(data.getLabel()));
+
+
+                mContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+
             }
         });
     }

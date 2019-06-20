@@ -29,7 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 public class CreateActivity extends AppCompatActivity {
     private Button mCreatebtn;
     private Button mCancelbtn;
-    EditText mEmail_edittext, mPassword_edittext, mPassword_check;
+    EditText mEmail_edittext, mNickname_edittext, mPassword_edittext, mPassword_check;
 
 
     private FirebaseAuth mAuth;
@@ -45,6 +45,7 @@ public class CreateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create);
 
         mEmail_edittext = (EditText) findViewById(R.id.email_edittext);
+        mNickname_edittext = (EditText) findViewById(R.id.nickname_edittext);
         mPassword_edittext = (EditText) findViewById(R.id.password_edittext);
         mPassword_check = (EditText) findViewById(R.id.password_check);
         mCreatebtn = (Button) findViewById(R.id.create_button);
@@ -88,7 +89,7 @@ public class CreateActivity extends AppCompatActivity {
                                 if (firebaseUser.getDisplayName() != null)
                                     user.setName(firebaseUser.getDisplayName());
                                 else
-                                    user.setName("홍길동");
+                                    user.setName(mNickname_edittext.getText().toString());
                                 user.setUid(firebaseUser.getUid());
 
                                 if (firebaseUser.getPhotoUrl() != null)

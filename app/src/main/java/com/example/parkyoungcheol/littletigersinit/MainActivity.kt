@@ -121,14 +121,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                         .commit()
                 return true
             }
-           /*R.id.action_armsg -> {
-
-                val armsgFragment = ArmsgFragment()
-                supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_content, armsgFragment)
-                        .commit()
-                return true
-            }*/
             R.id.action_search -> {
                 val gridFragment = GridFragment()
                 supportFragmentManager
