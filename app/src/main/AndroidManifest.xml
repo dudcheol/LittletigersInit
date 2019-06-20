@@ -47,6 +47,7 @@
         <activity android:name=".Navigation.AR.ARmessageActivity"></activity>
         <activity android:name=".Chat.ChatActivity" />
         <activity android:name=".Chat.ChatMainActivity" />
+        <activity android:name=".CreateActivity" />
         <activity android:name=".Chat.ChatLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

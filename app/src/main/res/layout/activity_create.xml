@@ -33,10 +33,33 @@
     </com.github.florent37.materialtextfield.MaterialTextField>
 
     <com.github.florent37.materialtextfield.MaterialTextField
-        android:id="@+id/password_area"
+        android:id="@+id/nickname"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/email_area"
+        android:layout_centerHorizontal="true"
+        app:mtf_backgroundColor="@color/colorPrimary"
+        app:mtf_cardCollapsedHeight="4dp"
+        app:mtf_image="@drawable/email"
+        app:mtf_labelColor="#666"
+        app:mtf_openKeyboardOnFocus="true">
+
+
+    <EditText
+            android:id="@+id/nickname_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nickname"
+            android:textColor="#333"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:textSize="15sp" />
+    </com.github.florent37.materialtextfield.MaterialTextField>
+
+    <com.github.florent37.materialtextfield.MaterialTextField
+        android:id="@+id/password_area"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nickname"
         android:layout_centerHorizontal="true"
         app:mtf_backgroundColor="@color/colorPrimary"
         app:mtf_cardCollapsedHeight="4dp"
@@ -78,7 +101,6 @@
             android:textCursorDrawable="@drawable/color_cursor"
             android:textSize="15sp" />
     </com.github.florent37.materialtextfield.MaterialTextField>
-
 
     <Button
         android:id="@+id/create_button"
