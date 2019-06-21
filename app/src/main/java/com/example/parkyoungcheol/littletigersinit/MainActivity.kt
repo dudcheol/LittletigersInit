@@ -33,6 +33,7 @@ import java.sql.PreparedStatement
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     val PICK_PROFILE_FROM_ALBUM = 10
     var backKeyPressedTime = 0L
+    val map = HashMap<String, Any>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -178,11 +179,13 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                     .child(uid)
                     .putFile(imageUri!!)
                     .addOnCompleteListener { task ->
-                        //val url = task.result!!.downloadUrl.toString()
-                        val url = FirebaseStorage.getInstance().reference.downloadUrl.toString()
-                        val map = HashMap<String, Any>()
-                        map["image"] = url
-                        FirebaseFirestore.getInstance().collection("profileImages").document(uid).set(map)
+
+                        val uri = task.result!!.metadata!!.reference!!.downloadUrl.addOnSuccessListener { Uri ->
+                            val url = Uri.toString()
+                            val map = HashMap<String, Any>()
+                            map["image"] = url
+                            FirebaseFirestore.getInstance().collection("profileImages").document(uid).set(map)
+                        }
                     }
         }
 
