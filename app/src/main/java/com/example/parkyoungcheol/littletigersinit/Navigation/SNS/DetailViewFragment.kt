@@ -85,7 +85,10 @@ class DetailViewFragment : Fragment() {
 
         fun getCotents(followers: MutableMap<String, Boolean>?) {
             val uid = FirebaseAuth.getInstance().currentUser!!.uid
-            imagesSnapshot = firestore?.collection("images")?.orderBy("timestamp", Query.Direction.DESCENDING)?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            imagesSnapshot = firestore
+                    ?.collection("images")
+                    ?.orderBy("timestamp", Query.Direction.DESCENDING)
+                    ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 contentDTOs.clear()
                 contentUidList.clear()
                 if (querySnapshot == null) return@addSnapshotListener
@@ -93,7 +96,6 @@ class DetailViewFragment : Fragment() {
                     var item = snapshot.toObject(ContentDTO::class.java)!!
                     println(item.uid)
 
-                    //Todo 자기가 게시한 게시글도 볼 수 있게 하자
                     if (followers?.keys?.contains(item.uid)!! || item.uid==uid) {
                         contentDTOs.add(item)
                         contentUidList.add(snapshot.id)

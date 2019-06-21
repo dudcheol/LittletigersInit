@@ -1,5 +1,6 @@
 package com.example.parkyoungcheol.littletigersinit.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -59,6 +60,7 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         ArmsgData data  = mDataset.get(i);
+        Activity mActivity = (Activity)viewHolder.itemView.getContext();
 
         viewHolder.oTextTitle.setText(data.getLabel());
         viewHolder.oTextDate.setText(data.getAddress());
@@ -74,9 +76,8 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
                 intent.putExtra("dest_lat_Y_from_armessage", String.valueOf(latitude));
                 intent.putExtra("dest_label_from_armessage", String.valueOf(data.getLabel()));
 
-
                 mContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-
+                mActivity.overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
             }
         });
     }

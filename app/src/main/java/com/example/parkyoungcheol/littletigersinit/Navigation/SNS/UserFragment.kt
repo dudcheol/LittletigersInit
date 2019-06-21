@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutCompat
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -275,7 +276,6 @@ class UserFragment : Fragment() {
 
 
     inner class UserFragmentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
         val contentDTOs: ArrayList<ContentDTO>
 
         init {
@@ -286,16 +286,15 @@ class UserFragment : Fragment() {
             recyclerListenerRegistration = firestore
                     ?.collection("images")
                     ?.whereEqualTo("uid", uid)
+                    ?.orderBy("timestamp", Query.Direction.DESCENDING)
                     ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 contentDTOs.clear()
                 if (querySnapshot == null) return@addSnapshotListener
                 for (snapshot in querySnapshot!!.documents) {
                     contentDTOs.add(snapshot.toObject(ContentDTO::class.java)!!)
                 }
-
                 account_tv_post_count.text = contentDTOs.size.toString()
                 notifyDataSetChanged()
-
             }
 
         }
@@ -316,6 +315,20 @@ class UserFragment : Fragment() {
                     .load(contentDTOs[position].imageUrl)
                     .apply(RequestOptions().centerCrop())
                     .into(imageview)
+
+            imageview.setOnClickListener {
+                val fragment = UserDetailViewFragment()
+                val bundle = Bundle()
+
+                //Todo 왜 여기서는 contentDTOs에 접근이 되질 않나 ㅠㅠ
+                Log.v("bundle test2",contentDTOs[1].imageUrl)
+                bundle.putString("imageUrl", contentDTOs[position].imageUrl)
+
+                fragment.arguments = bundle
+                activity!!.supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_content, fragment)
+                        .commit()
+            }
         }
 
         override fun getItemCount(): Int {
