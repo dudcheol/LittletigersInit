@@ -170,6 +170,7 @@ class DetailViewFragment : Fragment() {
                 intent.putExtra("contentUid", contentUidList[position])
                 intent.putExtra("destinationUid", contentDTOs[position].uid)
                 startActivity(intent)
+                activity!!.overridePendingTransition(R.anim.slide_in_right,R.anim.non_anim)
             }
 
         }

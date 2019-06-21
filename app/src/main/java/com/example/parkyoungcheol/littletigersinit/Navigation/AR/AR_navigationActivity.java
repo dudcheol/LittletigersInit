@@ -191,6 +191,21 @@ public class AR_navigationActivity extends AppCompatActivity {
             editor.commit();
         }
 
+        //AR메시지액티비티에서 받아오는 경,위도 값
+        Intent intent3  = getIntent();
+        String dest_lon_X_from_armessage = intent3.getStringExtra("dest_lon_X_from_armessage");
+        String dest_lat_Y_from_armessage = intent3.getStringExtra("dest_lat_Y_from_armessage");
+        String dest_label_from_armessage = intent3.getStringExtra("dest_label_from_armessage");
+
+        if(dest_lon_X_from_armessage != null && dest_lat_Y_from_armessage != null){
+            SharedPreferences sf = getSharedPreferences("sFile", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sf.edit();
+            editor.putString("destLonX",dest_lon_X_from_armessage);
+            editor.putString("destLatY",dest_lat_Y_from_armessage);
+            editor.putString("destResult",dest_label_from_armessage);
+            editor.commit();
+        }
+
         SharedPreferences sf = getSharedPreferences("sFile", MODE_PRIVATE);
         String sourceResult = sf.getString("sourceResult", null);
         startTitle = sourceResult;
@@ -284,30 +299,36 @@ public class AR_navigationActivity extends AppCompatActivity {
         mapNavStartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                double start_lon=Double.parseDouble(start_lon_X);
-                double start_lat=Double.parseDouble(start_lat_Y);
-                double end_lon=Double.parseDouble(dest_lon_X);
-                double end_lat=Double.parseDouble(dest_lat_Y);
-                String encTxt2 = "";
-                String strTxt2 = "";
-                try {
-                    String encTxt = URLEncoder.encode(destTitle, "UTF-8");
-                    String strTxt = URLEncoder.encode(startTitle, "UTF-8");
-                    encTxt2 = encTxt;
-                    strTxt2 = strTxt;
-                } catch (UnsupportedEncodingException ec) {
-
-                }
-                String url = "nmap://route/walk?slat="+start_lat+"&slng="+start_lon+"&sname="+strTxt2+"&dlat="+end_lat+"&dlng="+end_lon+"&dname="+encTxt2+"&appname={Littletigers}";
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                intent.addCategory(Intent.CATEGORY_BROWSABLE);
-
-                List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-                if (list == null || list.isEmpty()) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.nhn.android.nmap")));
+                if (start_lon_X == null || start_lat_Y == null || dest_lon_X == null || dest_lat_Y == null) {
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.nav_coord_layout),
+                            "출발지와 목적지를 모두 선택해주세요.", Snackbar.LENGTH_SHORT);
+                    mySnackbar.show();
                 } else {
-                    startActivity(intent);
+                    double start_lon = Double.parseDouble(start_lon_X);
+                    double start_lat = Double.parseDouble(start_lat_Y);
+                    double end_lon = Double.parseDouble(dest_lon_X);
+                    double end_lat = Double.parseDouble(dest_lat_Y);
+                    String encTxt2 = "";
+                    String strTxt2 = "";
+                    try {
+                        String encTxt = URLEncoder.encode(destTitle, "UTF-8");
+                        String strTxt = URLEncoder.encode(startTitle, "UTF-8");
+                        encTxt2 = encTxt;
+                        strTxt2 = strTxt;
+                    } catch (UnsupportedEncodingException ec) {
+
+                    }
+                    String url = "nmap://route/walk?slat=" + start_lat + "&slng=" + start_lon + "&sname=" + strTxt2 + "&dlat=" + end_lat + "&dlng=" + end_lon + "&dname=" + encTxt2 + "&appname={Littletigers}";
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+
+                    List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                    if (list == null || list.isEmpty()) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.nhn.android.nmap")));
+                    } else {
+                        startActivity(intent);
+                    }
                 }
             }
         });

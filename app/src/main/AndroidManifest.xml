@@ -47,6 +47,7 @@
         <activity android:name=".Navigation.AR.ARmessageActivity"></activity>
         <activity android:name=".Chat.ChatActivity" />
         <activity android:name=".Chat.ChatMainActivity" />
+        <activity android:name=".CreateActivity" />
         <activity android:name=".Chat.ChatLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -61,7 +62,6 @@
         <activity android:name=".Navigation.SNS.CommentActivity" />
         <activity android:name=".Navigation.SNS.UserFragment" />
         <activity android:name=".Navigation.SNS.GridFragment" />
-        <activity android:name=".Navigation.SNS.ArmsgFragment" />
         <activity android:name=".Navigation.SNS.AddPhotoActivity" />
         <activity android:name=".Navigation.AR.UnityPlayerActivity">
             <meta-data

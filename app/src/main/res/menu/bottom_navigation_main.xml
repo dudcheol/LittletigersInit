@@ -5,11 +5,7 @@
         android:enabled="true"
         android:icon="@drawable/ic_home"
         android:title="@string/home" />
-    <!--<item
-        android:id="@+id/action_armsg"
-        android:enabled="true"
-        android:icon="@drawable/ic_home"
-        android:title="@string/armsg" />-->
+
     <item
         android:id="@+id/action_search"
         android:enabled="true"
