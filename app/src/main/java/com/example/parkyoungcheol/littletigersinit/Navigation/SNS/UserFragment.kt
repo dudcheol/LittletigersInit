@@ -27,6 +27,7 @@ import com.example.parkyoungcheol.littletigersinit.util.FcmPush
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.fragment_user.view.*
@@ -166,7 +167,6 @@ class UserFragment : Fragment() {
 
 
     fun getFollower() {
-
         followListenerRegistration = firestore?.collection("users")?.document(uid!!)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
             val followDTO = documentSnapshot?.toObject(FollowDTO::class.java)
             if (followDTO == null) return@addSnapshotListener
@@ -283,10 +283,13 @@ class UserFragment : Fragment() {
             contentDTOs = ArrayList()
 
             // 나의 사진만 찾기
-            recyclerListenerRegistration = firestore?.collection("images")?.whereEqualTo("uid", uid)?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            recyclerListenerRegistration = firestore
+                    ?.collection("images")
+                    ?.whereEqualTo("uid", uid)
+                    ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 contentDTOs.clear()
                 if (querySnapshot == null) return@addSnapshotListener
-                for (snapshot in querySnapshot?.documents!!) {
+                for (snapshot in querySnapshot!!.documents) {
                     contentDTOs.add(snapshot.toObject(ContentDTO::class.java)!!)
                 }
 
@@ -331,5 +334,4 @@ class UserFragment : Fragment() {
         imageprofileListenerRegistration?.remove()
         recyclerListenerRegistration?.remove()
     }
-
 }

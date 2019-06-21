@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.Snackbar
@@ -53,26 +54,26 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         ARbtn.setOnClickListener {
             val intent_AR = Intent(this, ar_mainActivity::class.java)
             startActivity(intent_AR)
-            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
 
         ChatBtn.setOnClickListener {
-            val intent_CHAT = Intent(this,ChatMainActivity::class.java)
+            val intent_CHAT = Intent(this, ChatMainActivity::class.java)
             startActivity(intent_CHAT)
-            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
 
         ARmessageBtn.setOnClickListener {
-            val intent_ARmsg = Intent(this,ARmessageActivity::class.java)
+            val intent_ARmsg = Intent(this, ARmessageActivity::class.java)
             startActivity(intent_ARmsg)
-            overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         }
     }
 
-    fun registerPushToken(){
+    fun registerPushToken() {
         var pushToken = FirebaseInstanceId.getInstance().token
         var uid = FirebaseAuth.getInstance().currentUser?.uid
-        var map = mutableMapOf<String,Any>()
+        var map = mutableMapOf<String, Any>()
         map["pushtoken"] = pushToken!!
         FirebaseFirestore.getInstance().collection("pushtokens").document(uid!!).set(map)
     }
@@ -87,12 +88,12 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     override fun onBackPressed() {
-        if(System.currentTimeMillis() - backKeyPressedTime < 1500){
+        if (System.currentTimeMillis() - backKeyPressedTime < 1500) {
             // 뒤로가기 버튼을 누른지 1.5초 이상 지난 경우
             finish()
         }
         val mySnackbar: Snackbar = Snackbar.make(findViewById(R.id.nav_coord_layout_in_main),
-                "'뒤로가기'버튼을 한번 더 누르면 종료됩니다.",Snackbar.LENGTH_SHORT)
+                "'뒤로가기'버튼을 한번 더 누르면 종료됩니다.", Snackbar.LENGTH_SHORT)
         mySnackbar.show()
 
         //Toast.makeText(this, "'뒤로가기' 버튼을 한번 더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show()
@@ -102,12 +103,12 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     override fun onDestroy() {
         super.onDestroy()
 
-        val prefs: SharedPreferences = getSharedPreferences("sFile",0)
+        val prefs: SharedPreferences = getSharedPreferences("sFile", 0)
         val editor: SharedPreferences.Editor = prefs.edit()
         editor.clear()
         editor.commit()
 
-        Log.i("destroy","SharedPreferences 데이터 삭제")
+        Log.i("destroy", "SharedPreferences 데이터 삭제")
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -132,7 +133,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             R.id.action_add_photo -> {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     startActivity(Intent(this, AddPhotoActivity::class.java))
-                    overridePendingTransition(R.anim.push_up_in,R.anim.non_anim)
+                    overridePendingTransition(R.anim.push_up_in, R.anim.non_anim)
                 } else {
                     Toast.makeText(this, "스토리지 읽기 권한이 없습니다.", Toast.LENGTH_LONG).show()
                 }
@@ -179,10 +180,12 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                     .putFile(imageUri!!)
                     .addOnCompleteListener { task ->
                         //val url = task.result!!.downloadUrl.toString()
-                        val url = FirebaseStorage.getInstance().reference.downloadUrl.toString()
-                        val map = HashMap<String, Any>()
-                        map["image"] = url
-                        FirebaseFirestore.getInstance().collection("profileImages").document(uid).set(map)
+                        val uri = task.result!!.metadata!!.reference!!.downloadUrl.addOnSuccessListener { Uri ->
+                            val url = Uri.toString()
+                            val map = HashMap<String, Any>()
+                            map["image"] = url
+                            FirebaseFirestore.getInstance().collection("profileImages").document(uid).set(map)
+                        }
                     }
         }
 
