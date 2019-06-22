@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -43,6 +44,7 @@ import com.example.parkyoungcheol.littletigersinit.Model.DataSource;
 import com.example.parkyoungcheol.littletigersinit.Model.GeoPoint;
 import com.example.parkyoungcheol.littletigersinit.Model.ResultMSG;
 import com.example.parkyoungcheol.littletigersinit.Navigation.AR.AR_navigationActivity;
+import com.example.parkyoungcheol.littletigersinit.Navigation.AR.ARmessageActivity;
 import com.example.parkyoungcheol.littletigersinit.Navigation.AR.Nav_searchActivity;
 import com.example.parkyoungcheol.littletigersinit.Navigation.AR.UnityPlayerActivity;
 import com.example.parkyoungcheol.littletigersinit.util.ArmsgListAdapter;
@@ -95,6 +97,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     private static final int REQUEST_CAMERA = 2000;
     private FirebaseDatabase mFirebaseDb;
     private DatabaseReference mARMessageRef;
+    private AlertDialog.Builder alertDialogBuilder;
 
     //private Button menu,ar_nav,info,poi;
     @BindView(R.id.fab_menu_btn)
@@ -103,10 +106,6 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     com.github.clans.fab.FloatingActionButton ar_nav_btn;
     @BindView(R.id.poi_browser_btn)
     com.github.clans.fab.FloatingActionButton poi_browser_btn;
-    @BindView(R.id.decode_box)
-    EditText decode_editText;
-    @BindView(R.id.decode_btn)
-    Button decode_button;
     @BindView(R.id.ar_message_btn)
     com.github.clans.fab.FloatingActionButton ar_message_btn;
 
@@ -432,20 +431,25 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_TRANSIT, true);
         //건물 내부정보까지 보여지게하는 옵션
         naverMap.setIndoorEnabled(false);
-        naverMap.setOnMapClickListener((point, coord) ->
-                Toast.makeText(this, coord.latitude + ", " + coord.longitude, Toast.LENGTH_SHORT).show());
 
         ArrayList<ArmsgData> oData = new ArrayList<ArmsgData>();
         ArmsgData oItem = new ArmsgData();
         mARMessageRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                String msg;
+
                 oData.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Marker marker = new Marker();
                     ArmsgData abc = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
                     marker.setPosition(new LatLng(abc.getLatitude(), abc.getLongitude()));
-                    marker.setCaptionText(abc.getLabel());
+                    /*if(abc.getLabel().length()>=10){
+                        msg = abc.getLabel().substring(0,10)+"...";
+                    }else{
+                        msg = abc.getLabel();
+                    }
+                    marker.setCaptionText(msg);*/
                     marker.setWidth(80);
                     marker.setHeight(80);
                     marker.setIcon(OverlayImage.fromResource(R.drawable.ar_marker));
@@ -453,6 +457,28 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                     marker.setCaptionHaloColor(Color.BLACK);
                     marker.setCaptionTextSize(16);
                     marker.setMap(naverMap);
+                    marker.setOnClickListener(new Overlay.OnClickListener() {
+                        @Override
+                        public boolean onClick(@NonNull Overlay overlay) {
+                            alertDialogBuilder = new AlertDialog.Builder(ar_mainActivity.this);
+
+                            alertDialogBuilder.setTitle("AR 메시지 내용");
+                            alertDialogBuilder
+                                    .setMessage(abc.getLabel())
+                                    .setCancelable(true)
+                                    .setPositiveButton("확인",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+                            alertDialog.show();
+                            return false;
+                        }
+                    });
                 }
             }
 

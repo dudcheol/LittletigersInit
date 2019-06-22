@@ -450,7 +450,7 @@ public class AR_navigationActivity extends AppCompatActivity {
     };
 
     //구글 지오코딩. 좌표 -> 주소
-    public String geoCodingCoordiToAddress(double lon, double lat){
+    private String geoCodingCoordiToAddress(double lon, double lat){
         final Geocoder geocoder = new Geocoder(this);
         List<Address> list = null;
         String result=null;

@@ -145,4 +145,9 @@ class CommentActivity : AppCompatActivity() {
         private inner class CustomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+        overridePendingTransition(R.anim.non_anim,R.anim.slide_out_right)
+    }
 }

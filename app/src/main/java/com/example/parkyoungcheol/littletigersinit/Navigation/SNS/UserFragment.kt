@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutCompat
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,7 @@ import com.example.parkyoungcheol.littletigersinit.util.FcmPush
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.fragment_user.view.*
@@ -101,6 +103,8 @@ class UserFragment : Fragment() {
                 var mainActivity = (activity as MainActivity)
                 mainActivity.toolbar_title_image.visibility = View.GONE
                 mainActivity.ARmessageBtn.visibility = View.GONE
+                mainActivity.ChatBtn.visibility = View.GONE
+                mainActivity.ARbtn.visibility = View.GONE
                 mainActivity.toolbar_btn_back.visibility = View.VISIBLE
                 mainActivity.toolbar_username.visibility = View.VISIBLE
 
@@ -166,7 +170,6 @@ class UserFragment : Fragment() {
 
 
     fun getFollower() {
-
         followListenerRegistration = firestore?.collection("users")?.document(uid!!)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
             val followDTO = documentSnapshot?.toObject(FollowDTO::class.java)
             if (followDTO == null) return@addSnapshotListener
@@ -275,24 +278,29 @@ class UserFragment : Fragment() {
 
 
     inner class UserFragmentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
         val contentDTOs: ArrayList<ContentDTO>
+        val contentUidList: ArrayList<String>
 
         init {
 
             contentDTOs = ArrayList()
+            contentUidList = ArrayList()
 
             // 나의 사진만 찾기
-            recyclerListenerRegistration = firestore?.collection("images")?.whereEqualTo("uid", uid)?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                contentDTOs.clear()
+            contentDTOs.clear()
+            contentUidList.clear()
+            recyclerListenerRegistration = firestore
+                    ?.collection("images")
+                    ?.orderBy("timestamp", Query.Direction.DESCENDING)
+                    ?.whereEqualTo("uid", uid)
+                    ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 if (querySnapshot == null) return@addSnapshotListener
-                for (snapshot in querySnapshot?.documents!!) {
+                for (snapshot in querySnapshot!!.documents) {
                     contentDTOs.add(snapshot.toObject(ContentDTO::class.java)!!)
+                    contentUidList.add(snapshot.id)
                 }
-
                 account_tv_post_count.text = contentDTOs.size.toString()
                 notifyDataSetChanged()
-
             }
 
         }
@@ -313,6 +321,21 @@ class UserFragment : Fragment() {
                     .load(contentDTOs[position].imageUrl)
                     .apply(RequestOptions().centerCrop())
                     .into(imageview)
+
+            imageview.setOnClickListener {
+                val fragment = UserDetailViewFragment()
+                val bundle = Bundle()
+
+                // UserDetailViewFragment로 해당 정보(해당 게시글 이미지 url, 해당 게시글을 게시한 유저의 uid) 전송
+                bundle.putString("imageUrl", contentDTOs[position].imageUrl)
+                bundle.putString("uid", contentDTOs[position].uid)
+                bundle.putString("contentUid", contentUidList[position])
+
+                fragment.arguments = bundle
+                activity!!.supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_content, fragment)
+                        .commit()
+            }
         }
 
         override fun getItemCount(): Int {
@@ -331,5 +354,4 @@ class UserFragment : Fragment() {
         imageprofileListenerRegistration?.remove()
         recyclerListenerRegistration?.remove()
     }
-
 }

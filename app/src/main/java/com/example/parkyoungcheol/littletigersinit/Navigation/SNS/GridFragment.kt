@@ -40,7 +40,6 @@ class GridFragment : Fragment() {
         imagesSnapshot?.remove()
     }
 
-
     inner class GridFragmentRecyclerViewAdatper : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         var contentDTOs: ArrayList<ContentDTO>

@@ -8,41 +8,56 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="75"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingRight="10dp">
 
                 <TextView
                     android:id="@+id/textTitle"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:text="제목"
+                    android:textSize="20dp"
                     android:layout_weight="60"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dp"
                     android:textStyle="bold"
-                    android:textColor="#33aabb"
+                    android:textColor="#000000"
+                    android:layout_marginTop="10dp"
+                    android:maxLines="1"
+                    android:maxLength="50"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     />
                 <TextView
                     android:id="@+id/textDate"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:text="주소"
+                    android:textSize="12dp"
                     android:layout_weight="40"
                     android:gravity="center_vertical"
-                    android:paddingLeft="10dp"
+                    android:paddingLeft="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:maxLines="1"
+                    android:maxLength="50"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     />
 
         </LinearLayout>
+
         <Button
             android:id="@+id/btnSelector"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="선택"
-            android:layout_weight="20"
-            />
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="5"
-            />
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_bg"
+            android:drawableTop="@drawable/navigation"
+            android:padding="10dp"
+            android:text="길안내"
+            android:textSize="10dp"
+
+            android:textColor="#FFF" />
 
 </LinearLayout>

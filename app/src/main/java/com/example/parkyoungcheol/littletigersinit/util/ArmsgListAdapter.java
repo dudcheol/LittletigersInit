@@ -1,5 +1,7 @@
 package com.example.parkyoungcheol.littletigersinit.util;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -20,6 +22,7 @@ import com.example.parkyoungcheol.littletigersinit.Chat.PhotoMessage;
 import com.example.parkyoungcheol.littletigersinit.Chat.TextMessage;
 import com.example.parkyoungcheol.littletigersinit.Model.ArmsgData;
 import com.example.parkyoungcheol.littletigersinit.Navigation.AR.AR_navigationActivity;
+import com.example.parkyoungcheol.littletigersinit.Navigation.AR.ARmessageActivity;
 import com.example.parkyoungcheol.littletigersinit.R;
 
 import org.w3c.dom.Text;
@@ -59,10 +62,11 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         ArmsgData data  = mDataset.get(i);
+        Activity mActivity = (Activity)viewHolder.itemView.getContext();
 
         viewHolder.oTextTitle.setText(data.getLabel());
         viewHolder.oTextDate.setText(data.getAddress());
-        viewHolder.oBtn.setOnClickListener(new View.OnClickListener() {
+        /*viewHolder.oBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String longitude = Double.toString(data.getLongitude());
@@ -72,13 +76,12 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
                 Intent intent = new Intent(v.getContext(), AR_navigationActivity.class);
                 intent.putExtra("dest_lon_X_from_armessage", String.valueOf(longitude));
                 intent.putExtra("dest_lat_Y_from_armessage", String.valueOf(latitude));
-                intent.putExtra("dest_label_from_armessage", String.valueOf(data.getLabel()));
-
+                intent.putExtra("dest_label_from_armessage", String.valueOf(data.getAddress()));
 
                 mContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-
+                mActivity.overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
             }
-        });
+        });*/
     }
 
 

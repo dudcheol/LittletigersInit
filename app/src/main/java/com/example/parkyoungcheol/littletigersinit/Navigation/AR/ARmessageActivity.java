@@ -1,7 +1,10 @@
 package com.example.parkyoungcheol.littletigersinit.Navigation.AR;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -21,13 +24,18 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.parkyoungcheol.littletigersinit.Chat.RecyclerViewItemClickListener;
 import com.example.parkyoungcheol.littletigersinit.Model.ArmsgData;
 import com.example.parkyoungcheol.littletigersinit.Model.GeoPoint;
 import com.example.parkyoungcheol.littletigersinit.R;
 import com.example.parkyoungcheol.littletigersinit.ar_mainActivity;
 import com.example.parkyoungcheol.littletigersinit.util.ArmsgListAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,6 +55,8 @@ import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,10 +75,38 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
     private RecyclerView.LayoutManager mLayoutManager;
     private com.github.clans.fab.FloatingActionButton ar_message_btn;
 
+    private ProgressDialog pDialog;
+
+    private AlertDialog.Builder alertDialogBuilder;
+
+    Double sLat, sLng;
+    public TextView txtView, current_mylocation_text;
+    String msg;//현재위치 지오코딩결과
+    Button change_list;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_armessage);
+
+        change_list = (Button) findViewById(R.id.change_list);
+        txtView = (TextView) findViewById(R.id.result);
+        current_mylocation_text = (TextView) findViewById(R.id.current_location_text);
+
+        change_list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowDialog();
+            }
+        });
+
+        findMyLocation();
+        if(geoCodingCoordiToAddress(sLng,sLat).length()>=15){
+            msg = geoCodingCoordiToAddress(sLng,sLat).substring(0,15)+"...";
+        }else{
+            msg = geoCodingCoordiToAddress(sLng,sLat);
+        }
+        current_mylocation_text.setText(msg);
 
         // 위치권한 받아오기
         int permissionLocation = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION);
@@ -127,6 +165,46 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                 mLayoutManager = new LinearLayoutManager(ARmessageActivity.this);
                 m_oListView.setLayoutManager(mLayoutManager);
                 m_oListView.setAdapter(mAdapter);
+                m_oListView.addOnItemTouchListener(new RecyclerViewItemClickListener(ARmessageActivity.this, new RecyclerViewItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        ArmsgData armsgData = mBoardList.get(position);
+
+                        alertDialogBuilder = new AlertDialog.Builder(ARmessageActivity.this);
+
+                        alertDialogBuilder.setTitle("AR 메시지 내용");
+                        alertDialogBuilder
+                                .setMessage(armsgData.getLabel())
+                                .setCancelable(true)
+                                .setPositiveButton("확인",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                            }
+                                        })
+                                .setNegativeButton("여기로 길안내 받기",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                String longitude = Double.toString(armsgData.getLongitude());
+                                                String latitude = Double.toString(armsgData.getLongitude());
+
+
+                                                Intent intent = new Intent(ARmessageActivity.this, AR_navigationActivity.class);
+                                                intent.putExtra("dest_lon_X_from_armessage", String.valueOf(longitude));
+                                                intent.putExtra("dest_lat_Y_from_armessage", String.valueOf(latitude));
+                                                intent.putExtra("dest_label_from_armessage", String.valueOf(armsgData.getAddress()));
+
+                                                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                                overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
+                                            }
+                                        });
+
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
+                    }
+                }));
 
             }
 
@@ -138,7 +216,7 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     //구글 지오코딩. 좌표 -> 주소
-    public String geoCodingCoordiToAddress(double lon, double lat){
+    private String geoCodingCoordiToAddress(double lon, double lat){
         final Geocoder geocoder = new Geocoder(this);
         List<Address> list = null;
         String result=null;
@@ -193,20 +271,25 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
         naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_TRANSIT, true);
         //건물 내부정보까지 보여지게하는 옵션
         naverMap.setIndoorEnabled(false);
-        naverMap.setOnMapClickListener((point, coord) ->
-                Toast.makeText(this, coord.latitude + ", " + coord.longitude, Toast.LENGTH_SHORT).show());
 
         ArrayList<ArmsgData> oData = new ArrayList<ArmsgData>();
         ArmsgData oItem = new ArmsgData();
         mARMessageRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                String msg;
+
                 oData.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Marker marker = new Marker();
                     ArmsgData abc = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
                     marker.setPosition(new LatLng(abc.getLatitude(), abc.getLongitude()));
-                    marker.setCaptionText(abc.getLabel());
+                    if(abc.getLabel().length()>=10){
+                        msg = abc.getLabel().substring(0,10)+"...";
+                    }else{
+                        msg = abc.getLabel();
+                    }
+                    marker.setCaptionText(msg);
                     marker.setWidth(80);
                     marker.setHeight(80);
                     marker.setIcon(OverlayImage.fromResource(R.drawable.ar_marker));
@@ -261,6 +344,8 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
             Double lon_X = location.getLongitude();
             Double lat_Y = location.getLatitude();
 
+            sLat = lat_Y;
+            sLng = lon_X;
             myGeo = new GeoPoint(lon_X, lat_Y);
         }
         return myGeo;
@@ -286,5 +371,134 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                 }
             }
         }
+    }
+
+    public static double calcDistance(double lat1, double lon1, double lat2, double lon2){
+        double EARTH_R, Rad, radLat1, radLat2, radDist;
+        double distance, ret;
+
+        EARTH_R = 6371000.0;
+        Rad = Math.PI/180;
+        radLat1 = Rad * lat1;
+        radLat2 = Rad * lat2;
+        radDist = Rad * (lon1 - lon2);
+
+        distance = Math.sin(radLat1) * Math.sin(radLat2);
+        distance = distance + Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radDist);
+        ret = EARTH_R * Math.acos(distance);
+
+        double rslt = Math.round(Math.round(ret) / 1000);
+        //String result = rslt + " km";
+        //if(rslt == 0) result = Math.round(ret) +" m";
+
+        return rslt;
+    }
+
+    public void ShowDialog()
+    {
+
+        final AlertDialog.Builder popDialog = new AlertDialog.Builder(this);
+        final SeekBar seek = new SeekBar(this);
+        seek.setMax(200);
+        //popDialog.setIcon(android.R.drawable.btn_star_big_on);
+        popDialog.setTitle("AR 메시지 검색 범위 설정(km)\n");
+        popDialog.setView(seek);
+        seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                txtView.setText(String.valueOf(progress));
+                if(txtView.getText().equals("200"))
+                {
+                    txtView.setText("전체");
+                }
+            }
+            public void onStartTrackingTouch(SeekBar arg0) {
+            }
+
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        popDialog.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (txtView.getText().equals("전체"))
+                        {
+                            mARMessageRef.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    mBoardList.clear();
+                                    int i=0;
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        ArmsgData bbs = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
+                                        mBoardList.add(bbs);
+                                        mBoardList.get(i).setAddress(geoCodingCoordiToAddress(mBoardList.get(i).getLongitude(), mBoardList.get(i).getLatitude()));
+                                        i++;
+
+                                    }
+
+                                    Collections.reverse(mBoardList);
+                                    m_oListView = (RecyclerView)findViewById(R.id.listView);
+                                    mAdapter = new ArmsgListAdapter(ARmessageActivity.this, mBoardList);
+                                    mAdapter.notifyDataSetChanged();
+                                    mLayoutManager = new LinearLayoutManager(ARmessageActivity.this);
+                                    m_oListView.setLayoutManager(mLayoutManager);
+                                    m_oListView.setAdapter(mAdapter);
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+                            dialog.dismiss();
+                        }
+                        else {
+                            mARMessageRef.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    findMyLocation();
+                                    if(geoCodingCoordiToAddress(sLng,sLat).length()>=15){
+                                        msg = geoCodingCoordiToAddress(sLng,sLat).substring(0,15)+"...";
+                                    }else{
+                                        msg = geoCodingCoordiToAddress(sLng,sLat);
+                                    }
+                                    current_mylocation_text.setText(msg);
+                                    mBoardList.clear();
+                                    int i=0;
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        ArmsgData bbs = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
+                                        if(calcDistance(sLat, sLng, bbs.getLatitude(), bbs.getLongitude()) <= Integer.parseInt(txtView.getText().toString())) {
+                                            mBoardList.add(bbs);
+                                            mBoardList.get(i).setAddress(geoCodingCoordiToAddress(mBoardList.get(i).getLongitude(), mBoardList.get(i).getLatitude()));
+                                            i++;
+                                        }
+                                        else {
+                                        }
+                                    }
+
+                                    Collections.reverse(mBoardList);
+                                    m_oListView = (RecyclerView)findViewById(R.id.listView);
+                                    mAdapter = new ArmsgListAdapter(ARmessageActivity.this, mBoardList);
+                                    mAdapter.notifyDataSetChanged();
+                                    mLayoutManager = new LinearLayoutManager(ARmessageActivity.this);
+                                    m_oListView.setLayoutManager(mLayoutManager);
+                                    m_oListView.setAdapter(mAdapter);
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+                            dialog.dismiss();
+                        }
+                    }
+                });
+        popDialog.create();
+        popDialog.show();
     }
 }
