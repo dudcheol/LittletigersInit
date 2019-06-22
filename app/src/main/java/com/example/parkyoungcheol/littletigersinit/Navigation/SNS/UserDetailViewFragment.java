@@ -1,6 +1,10 @@
 package com.example.parkyoungcheol.littletigersinit.Navigation.SNS;
 
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,9 +24,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.parkyoungcheol.littletigersinit.MainActivity;
 import com.example.parkyoungcheol.littletigersinit.Model.AlarmDTO;
 import com.example.parkyoungcheol.littletigersinit.Model.ContentDTO;
+import com.example.parkyoungcheol.littletigersinit.Navigation.AR.UnityPlayerActivity;
 import com.example.parkyoungcheol.littletigersinit.R;
 import com.example.parkyoungcheol.littletigersinit.util.FcmPush;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -63,6 +70,7 @@ public class UserDetailViewFragment extends Fragment {
     private TextView userId, like, explain;
     private ImageView userProfileImage, detailImage;
     private ShineButton likeBtn;
+    Button deleteBtn;
     int likeCount=0;
     int cnt=0;
 
@@ -73,6 +81,7 @@ public class UserDetailViewFragment extends Fragment {
         // Required empty public constructor
     }
 
+    private ProgressDialog pDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,6 +94,7 @@ public class UserDetailViewFragment extends Fragment {
         userProfileImage = view.findViewById(R.id.detailviewitem_profile_image);
         detailImage = view.findViewById(R.id.detailviewitem_imageview_content);
         likeBtn = view.findViewById(R.id.detailviewitem_favorite_imageview);
+        deleteBtn=view.findViewById(R.id.deleteBtn);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
@@ -115,27 +125,100 @@ public class UserDetailViewFragment extends Fragment {
         backBtn.setVisibility(View.VISIBLE);
         mainText.setVisibility(View.VISIBLE);
 
-        mainText.setText(user.getEmail()+"님의 게시글");
-
         backBtn.setOnClickListener(v->{
             navigationView.setSelectedItemId(R.id.action_home);
         });
 
+        ImageView commentBtn = view.findViewById(R.id.detailviewitem_comment_imageview);
+        commentBtn.setOnClickListener(v->{
+            Intent intent = new Intent(getActivity(), CommentActivity.class);
+            intent.putExtra("contentUid", contentUid);
+            intent.putExtra("destinationUid", destinationUid);
+            startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.slide_in_right,R.anim.non_anim);
+        });
+
+        deleteBtn.setVisibility(View.VISIBLE);
+
+        // 내 게시글일 경우 삭제버튼이 보이게 하고
+        if(currentUid!=null && currentUid.equals(destinationUid)){
+            deleteBtn.setVisibility(View.VISIBLE);
+        }else{
+            // 내 게시글이 아닐 경우 삭제버튼 안보이게함
+            deleteBtn.setVisibility(View.GONE);
+        }
+
+        // 게시글 삭제
+        deleteBtn.setOnClickListener(v->{
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+
+            alertDialogBuilder.setTitle("<!>");
+            alertDialogBuilder
+                    .setMessage("정말 삭제할건가요?")
+                    .setCancelable(false)
+                    .setPositiveButton("예",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    pDialog = new ProgressDialog(getActivity());
+                                    // Showing progress dialog before making http request
+                                    pDialog.setMessage("AR Loading...");
+                                    pDialog.show();
+                                    //파이어베이스에서 삭제
+                                    firestore
+                                            .collection("images")
+                                            .document(contentUid)
+                                            .delete()
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(mainActivity, "삭제 성공", Toast.LENGTH_SHORT).show();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Toast.makeText(mainActivity, "삭제 실패, 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                    //로딩메시지제거
+                                    if (pDialog != null) {
+                                        pDialog.dismiss();
+                                        pDialog = null;
+                                    }
+                                    navigationView.setSelectedItemId(R.id.action_account);
+                                }
+                            })
+                    .setNegativeButton("아니요",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        });
 
 
-        //프로필 이미지 가져오기
+        // 프로필 이미지 가져오기
         firestore
                 .collection("profileImages")
                 .document(destinationUid)
                 .get()
-                .addOnCompleteListener( task -> {
+                .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        String url = task.getResult().get("image").toString();
-                        Glide.with(view)
-                                .load(url)
-                                .apply(RequestOptions.circleCropTransform())
-                                .into(userProfileImage);
-                    } else{
+                        if (task.getResult().get("image") != null) {
+                            String url = task.getResult().get("image").toString();
+                            Glide.with(view)
+                                    .load(url)
+                                    .apply(RequestOptions.circleCropTransform())
+                                    .into(userProfileImage);
+                        } else {
+                            userProfileImage.setImageResource(R.drawable.ic_account);
+                        }
+                    } else {
                         getActivity().onBackPressed();
                         Toast.makeText(getActivity(), "다시 시도해주세요.", Toast.LENGTH_SHORT).show();
                     }
@@ -161,6 +244,7 @@ public class UserDetailViewFragment extends Fragment {
                                 Glide.with(view)
                                         .load(contentDTO.getImageUrl())
                                         .into(detailImage);
+                                mainText.setText(contentDTO.getUserId()+"님의 게시글");
                             }
 
                             // 좋아요 버튼 설정

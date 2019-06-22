@@ -104,73 +104,18 @@
                 tools:text="사진 내용"/>
         </LinearLayout>
     </LinearLayout>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-        <LinearLayout
-            android:id="@+id/toolbar_division"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorDivision"
-            android:orientation="horizontal" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/comment_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/toolbar_division"
-            android:layout_marginBottom="65dp"
-            android:layout_marginTop="8dp" />
-
-        <LinearLayout
-            android:id="@+id/write_area"
-            android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+        <Button
+            android:layout_alignParentRight="true"
+            android:id="@+id/deleteBtn"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/colorPrimary">
-
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="5"
-                android:background="@drawable/rectangle">
-
-                <EditText
-                    android:layout_marginTop="8dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginBottom="8dp"
-                    android:id="@+id/comment_edit_message"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="댓글 달기"
-                    android:textColor="#90000000"
-                    android:textSize="15dp"
-                    android:background="@null"
-                    android:textCursorDrawable="@drawable/color_cursor"/>
-
-                <ImageButton
-                    android:id="@+id/comment_btn_send"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/comment_recyclerview"
-                    android:layout_weight="4"
-                    app:srcCompat="@drawable/ic_pencil"
-                    android:layout_marginTop="6dp"
-                    android:layout_alignParentRight="true"
-                    android:background="@null"
-                    android:layout_marginLeft="20dp"
-                    android:scaleType="fitCenter"/>
-            </LinearLayout>
-        </LinearLayout>
-
+            android:background="@drawable/rectangle_btn_default"
+            android:textColor="#000000"
+            android:text="게시글 삭제"
+            style="?android:attr/borderlessButtonStyle"/>
     </RelativeLayout>
 </LinearLayout>
