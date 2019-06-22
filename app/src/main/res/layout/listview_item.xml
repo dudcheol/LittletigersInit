@@ -16,7 +16,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:text="제목"
-                    android:textSize="18dp"
+                    android:textSize="20dp"
                     android:layout_weight="60"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dp"
@@ -25,6 +25,8 @@
                     android:layout_marginTop="10dp"
                     android:maxLines="1"
                     android:maxLength="50"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     />
                 <TextView
                     android:id="@+id/textDate"
@@ -36,8 +38,10 @@
                     android:gravity="center_vertical"
                     android:paddingLeft="5dp"
                     android:layout_marginBottom="10dp"
-                    android:maxLines="2"
+                    android:maxLines="1"
                     android:maxLength="50"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     />
 
         </LinearLayout>
