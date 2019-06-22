@@ -94,7 +94,6 @@ class DetailViewFragment : Fragment() {
                 if (querySnapshot == null) return@addSnapshotListener
                 for (snapshot in querySnapshot!!.documents) {
                     var item = snapshot.toObject(ContentDTO::class.java)!!
-                    println(item.uid)
 
                     if (followers?.keys?.contains(item.uid)!! || item.uid==uid) {
                         contentDTOs.add(item)

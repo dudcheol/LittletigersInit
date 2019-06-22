@@ -103,6 +103,8 @@ class UserFragment : Fragment() {
                 var mainActivity = (activity as MainActivity)
                 mainActivity.toolbar_title_image.visibility = View.GONE
                 mainActivity.ARmessageBtn.visibility = View.GONE
+                mainActivity.ChatBtn.visibility = View.GONE
+                mainActivity.ARbtn.visibility = View.GONE
                 mainActivity.toolbar_btn_back.visibility = View.VISIBLE
                 mainActivity.toolbar_username.visibility = View.VISIBLE
 
@@ -277,21 +279,25 @@ class UserFragment : Fragment() {
 
     inner class UserFragmentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val contentDTOs: ArrayList<ContentDTO>
+        val contentUidList: ArrayList<String>
 
         init {
 
             contentDTOs = ArrayList()
+            contentUidList = ArrayList()
 
             // 나의 사진만 찾기
+            contentDTOs.clear()
+            contentUidList.clear()
             recyclerListenerRegistration = firestore
                     ?.collection("images")
-                    ?.whereEqualTo("uid", uid)
                     ?.orderBy("timestamp", Query.Direction.DESCENDING)
+                    ?.whereEqualTo("uid", uid)
                     ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                contentDTOs.clear()
                 if (querySnapshot == null) return@addSnapshotListener
                 for (snapshot in querySnapshot!!.documents) {
                     contentDTOs.add(snapshot.toObject(ContentDTO::class.java)!!)
+                    contentUidList.add(snapshot.id)
                 }
                 account_tv_post_count.text = contentDTOs.size.toString()
                 notifyDataSetChanged()
@@ -320,9 +326,10 @@ class UserFragment : Fragment() {
                 val fragment = UserDetailViewFragment()
                 val bundle = Bundle()
 
-                //Todo 왜 여기서는 contentDTOs에 접근이 되질 않나 ㅠㅠ
-                Log.v("bundle test2",contentDTOs[1].imageUrl)
+                // UserDetailViewFragment로 해당 정보(해당 게시글 이미지 url, 해당 게시글을 게시한 유저의 uid) 전송
                 bundle.putString("imageUrl", contentDTOs[position].imageUrl)
+                bundle.putString("uid", contentDTOs[position].uid)
+                bundle.putString("contentUid", contentUidList[position])
 
                 fragment.arguments = bundle
                 activity!!.supportFragmentManager.beginTransaction()

@@ -74,7 +74,7 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
                 Intent intent = new Intent(v.getContext(), AR_navigationActivity.class);
                 intent.putExtra("dest_lon_X_from_armessage", String.valueOf(longitude));
                 intent.putExtra("dest_lat_Y_from_armessage", String.valueOf(latitude));
-                intent.putExtra("dest_label_from_armessage", String.valueOf(data.getLabel()));
+                intent.putExtra("dest_label_from_armessage", String.valueOf(data.getAddress()));
 
                 mContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 mActivity.overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
