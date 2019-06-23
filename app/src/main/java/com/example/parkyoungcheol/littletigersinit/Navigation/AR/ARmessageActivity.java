@@ -188,7 +188,7 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 String longitude = Double.toString(armsgData.getLongitude());
-                                                String latitude = Double.toString(armsgData.getLongitude());
+                                                String latitude = Double.toString(armsgData.getLatitude());
 
 
                                                 Intent intent = new Intent(ARmessageActivity.this, AR_navigationActivity.class);
