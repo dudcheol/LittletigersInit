@@ -43,14 +43,12 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView oTextTitle;
         TextView oTextDate;
-        TextView oTextDistance;
         Button oBtn;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             oTextTitle = (TextView) itemView.findViewById(R.id.textTitle);
             oTextDate = (TextView) itemView.findViewById(R.id.textDate);
-            oTextDistance = (TextView) itemView.findViewById(R.id.distance);
             oBtn = (Button) itemView.findViewById(R.id.btnSelector);
         }
     }
@@ -68,7 +66,7 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
 
         viewHolder.oTextTitle.setText(data.getLabel());
         viewHolder.oTextDate.setText(data.getAddress());
-        viewHolder.oTextDistance.setText(data.getDistance().toString()+"km");
+        viewHolder.oBtn.setText(data.getDistance().toString()+"km");
         /*viewHolder.oBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +83,6 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
                 mActivity.overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
             }
         });*/
-
     }
 
 
