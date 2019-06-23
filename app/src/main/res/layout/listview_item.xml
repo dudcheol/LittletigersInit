@@ -43,8 +43,18 @@
                     android:singleLine="true"
                     android:ellipsize="end"
                     />
-
         </LinearLayout>
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:padding="10dp"
+            android:text="길안내"
+            android:textSize="10dp"
+
+            android:textColor="#070707" />
 
         <Button
             android:id="@+id/btnSelector"
