@@ -60,6 +60,7 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ARmessageActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -150,16 +151,23 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mBoardList.clear();
-
+                findMyLocation();
                 int i=0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ArmsgData bbs = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
                     mBoardList.add(bbs);
                     mBoardList.get(i).setAddress(geoCodingCoordiToAddress(mBoardList.get(i).getLongitude(),mBoardList.get(i).getLatitude()));
+                    mBoardList.get(i).setDistance(calcDistance2(sLat, sLng, bbs.getLatitude(), bbs.getLongitude())/1000);
                     i++;
                 }
 
-                Collections.reverse(mBoardList);
+                //Collections.reverse(mBoardList);
+                Collections.sort(mBoardList, new Comparator<ArmsgData>() {
+                    @Override
+                    public int compare(ArmsgData o1, ArmsgData o2) {
+                        return o1.getDistance().compareTo(o2.getDistance());
+                    }
+                });
                 m_oListView = (RecyclerView)findViewById(R.id.listView);
                 mAdapter = new ArmsgListAdapter(ARmessageActivity.this, mBoardList);
                 mAdapter.notifyDataSetChanged();
@@ -394,7 +402,26 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
 
         return rslt;
     }
+    public static double calcDistance2(double lat1, double lon1, double lat2, double lon2){
+        double EARTH_R, Rad, radLat1, radLat2, radDist;
+        double distance, ret;
 
+        EARTH_R = 6371000.0;
+        Rad = Math.PI/180;
+        radLat1 = Rad * lat1;
+        radLat2 = Rad * lat2;
+        radDist = Rad * (lon1 - lon2);
+
+        distance = Math.sin(radLat1) * Math.sin(radLat2);
+        distance = distance + Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radDist);
+        ret = EARTH_R * Math.acos(distance);
+
+        double rslt = Math.round(Math.round(ret) / 1);
+        //String result = rslt + " km";
+        //if(rslt == 0) result = Math.round(ret) +" m";
+
+        return rslt;
+    }
     public void ShowDialog()
     {
 
@@ -433,11 +460,17 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                                         ArmsgData bbs = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
                                         mBoardList.add(bbs);
                                         mBoardList.get(i).setAddress(geoCodingCoordiToAddress(mBoardList.get(i).getLongitude(), mBoardList.get(i).getLatitude()));
+                                        mBoardList.get(i).setDistance(calcDistance2(sLat, sLng, bbs.getLatitude(), bbs.getLongitude())/1000);
                                         i++;
 
                                     }
 
-                                    Collections.reverse(mBoardList);
+                                    Collections.sort(mBoardList, new Comparator<ArmsgData>() {
+                                        @Override
+                                        public int compare(ArmsgData o1, ArmsgData o2) {
+                                            return o1.getDistance().compareTo(o2.getDistance());
+                                        }
+                                    });
                                     m_oListView = (RecyclerView)findViewById(R.id.listView);
                                     mAdapter = new ArmsgListAdapter(ARmessageActivity.this, mBoardList);
                                     mAdapter.notifyDataSetChanged();
@@ -473,13 +506,19 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                                         if(calcDistance(sLat, sLng, bbs.getLatitude(), bbs.getLongitude()) <= Integer.parseInt(txtView.getText().toString())) {
                                             mBoardList.add(bbs);
                                             mBoardList.get(i).setAddress(geoCodingCoordiToAddress(mBoardList.get(i).getLongitude(), mBoardList.get(i).getLatitude()));
+                                            mBoardList.get(i).setDistance(calcDistance2(sLat, sLng, bbs.getLatitude(), bbs.getLongitude())/1000);
                                             i++;
                                         }
                                         else {
                                         }
                                     }
 
-                                    Collections.reverse(mBoardList);
+                                    Collections.sort(mBoardList, new Comparator<ArmsgData>() {
+                                        @Override
+                                        public int compare(ArmsgData o1, ArmsgData o2) {
+                                            return o1.getDistance().compareTo(o2.getDistance());
+                                        }
+                                    });
                                     m_oListView = (RecyclerView)findViewById(R.id.listView);
                                     mAdapter = new ArmsgListAdapter(ARmessageActivity.this, mBoardList);
                                     mAdapter.notifyDataSetChanged();

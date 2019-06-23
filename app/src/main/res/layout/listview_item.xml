@@ -43,9 +43,7 @@
                     android:singleLine="true"
                     android:ellipsize="end"
                     />
-
         </LinearLayout>
-
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="80dp">
