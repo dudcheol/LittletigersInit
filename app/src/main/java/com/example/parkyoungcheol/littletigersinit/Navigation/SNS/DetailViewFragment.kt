@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,8 +77,14 @@ class DetailViewFragment : Fragment() {
             firestore?.collection("users")?.document(uid!!)?.get()?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     var userDTO = task.result?.toObject(FollowDTO::class.java)
-                    if (userDTO?.followings != null) {
+                    if (!userDTO?.followings.toString().equals("{}")) {
                         getCotents(userDTO?.followings)
+                        sad.visibility = View.GONE
+                        no_alarm.visibility = View.GONE
+                        Log.v("팔로잉", userDTO?.followings.toString())
+                    }else{
+                        sad.visibility = View.VISIBLE
+                        no_alarm.visibility = View.VISIBLE
                     }
                 }
             }
