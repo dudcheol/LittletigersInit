@@ -29,17 +29,30 @@
                 android:text="AR message"
                 android:textColor="#000000"
                 android:textSize="40dp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+
             <TextView
+                android:id="@+id/List"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/AR_message_text"
                 android:text="List"
                 android:textColor="#000000"
                 android:textSize="20dp"
-                android:textStyle="bold"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="10dp"
                 android:layout_toRightOf="@+id/AR_message_text"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"/>
+                android:background="#dadada"
+                android:clickable="true"
+                android:text="전체" />
         </RelativeLayout>
 
         <LinearLayout
@@ -49,11 +62,13 @@
             android:layout_above="@id/map"
             android:background="#000000"
             android:orientation="horizontal" />
+
         <fragment
             android:id="@+id/map"
             android:name="com.naver.maps.map.MapFragment"
             android:layout_width="match_parent"
             android:layout_height="200dp"></fragment>
+
         <LinearLayout
             android:id="@+id/map_division"
             android:layout_width="match_parent"
@@ -63,11 +78,10 @@
             android:orientation="horizontal" />
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/listView"
-            android:layout_margin="10dp"
-            />
+            android:layout_margin="10dp" />
     </LinearLayout>
 
     <com.github.clans.fab.FloatingActionMenu

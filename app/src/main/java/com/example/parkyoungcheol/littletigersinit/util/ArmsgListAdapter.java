@@ -68,7 +68,6 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
                 String longitude = Double.toString(data.getLongitude());
                 String latitude = Double.toString(data.getLongitude());
 
-
                 Intent intent = new Intent(v.getContext(), AR_navigationActivity.class);
                 intent.putExtra("dest_lon_X_from_armessage", String.valueOf(longitude));
                 intent.putExtra("dest_lat_Y_from_armessage", String.valueOf(latitude));
@@ -80,7 +79,6 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
             }
         });
     }
-
 
     @Override
     public int getItemCount() {
