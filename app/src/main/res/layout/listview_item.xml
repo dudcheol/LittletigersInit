@@ -50,16 +50,18 @@
 
                 <Button
                     android:id="@+id/btnSelector"
-                    android:layout_width="60dp"
+                    android:layout_width="65dp"
                     android:layout_height="60dp"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/button_bg"
                     android:drawableTop="@drawable/navigation"
                     android:padding="10dp"
-                    android:text="0M"
+                    android:text="0KM"
                     android:textColor="#FFF"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"
+                    android:singleLine="true"
+                    />
         </RelativeLayout>
 
 </LinearLayout>
