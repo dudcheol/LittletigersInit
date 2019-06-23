@@ -118,6 +118,7 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
 
         ar_message_btn = (com.github.clans.fab.FloatingActionButton)findViewById(R.id.ar_message_list_btn);
 
+
         ar_message_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

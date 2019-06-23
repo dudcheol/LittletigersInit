@@ -438,18 +438,18 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String msg;
-
                 oData.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Marker marker = new Marker();
                     ArmsgData abc = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
                     marker.setPosition(new LatLng(abc.getLatitude(), abc.getLongitude()));
-                    /*if(abc.getLabel().length()>=10){
+                    if(abc.getLabel().length()>=10){
                         msg = abc.getLabel().substring(0,10)+"...";
                     }else{
                         msg = abc.getLabel();
                     }
-                    marker.setCaptionText(msg);*/
+                    marker.setCaptionText(msg);
+                    marker.setCaptionText(msg);
                     marker.setWidth(80);
                     marker.setHeight(80);
                     marker.setIcon(OverlayImage.fromResource(R.drawable.ar_marker));

@@ -66,6 +66,7 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
 
         viewHolder.oTextTitle.setText(data.getLabel());
         viewHolder.oTextDate.setText(data.getAddress());
+        viewHolder.oBtn.setText("test");
         /*viewHolder.oBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
