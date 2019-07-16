@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -346,15 +347,68 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         }
         else {
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            String provider = location.getProvider();
-            Double lon_X = location.getLongitude();
-            Double lat_Y = location.getLatitude();
+            if(location == null){
 
-            myGeo = new GeoPoint(lon_X, lat_Y);
+                pDialog = new ProgressDialog(ar_mainActivity.this);
+                pDialog.setMessage("위치정보를 받아오고 있습니다...");
+                pDialog.show();
+                while (true){
+                    location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    if(location==null){
+                        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                                1000,
+                                1,
+                                gpsLocationListener);
+                        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                                1000,
+                                1,
+                                gpsLocationListener);
+                        continue;
+                    }else{
+                        break;
+                    }
+                }
+                //로딩메시지제거
+                if (pDialog != null) {
+                    pDialog.dismiss();
+                    pDialog = null;
+                }
+
+            } else {
+                String provider = location.getProvider();
+                Double lon_X = location.getLongitude();
+                Double lat_Y = location.getLatitude();
+
+                myGeo = new GeoPoint(lon_X, lat_Y);
+            }
         }
         return myGeo;
     }
 
+    // 현재위치가 바뀔때마다 좌표를 바꾸는 리스너
+    final LocationListener gpsLocationListener = new LocationListener() {
+        public void onLocationChanged(Location location) {
+            //String provider = location.getProvider();
+            double longitude = location.getLongitude();
+            double latitude = location.getLatitude();
+            //double altitude = location.getAltitude();
+
+            //Todo -- 영철 메모
+            // 1. 현재위치 바뀔때마다도 설정해주어야함
+            // 지금은 한번 받아온거 주구장창 쓰고있음,,
+            // 2. removeUpdates << 이거 로케이션 체인지 리스너 onpause에서 해줘야할듯?
+            // 자세한내용 구글링 ㄱㄱ
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+        public void onProviderEnabled(String provider) {
+        }
+
+        public void onProviderDisabled(String provider) {
+        }
+    };
 
 
     // 카메라 권한 받아오기
