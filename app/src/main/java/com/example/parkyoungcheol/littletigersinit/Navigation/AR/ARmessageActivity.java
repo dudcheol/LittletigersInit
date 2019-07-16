@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -94,8 +95,17 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
         txtView = (TextView) findViewById(R.id.result);
         current_mylocation_text = (TextView) findViewById(R.id.current_location_text);
 
+        // 위치권한 받아오기
+        int permissionLocation = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION);
+        if(permissionLocation == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(ARmessageActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        }else{
+
+        }
+
         change_list.setOnClickListener(new View.OnClickListener() {
             @Override
+
             public void onClick(View v) {
                 ShowDialog();
             }
@@ -108,14 +118,6 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
             msg = geoCodingCoordiToAddress(sLng,sLat);
         }
         current_mylocation_text.setText(msg);
-
-        // 위치권한 받아오기
-        int permissionLocation = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION);
-        if(permissionLocation == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(ARmessageActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-        }else{
-
-        }
 
         ar_message_btn = (com.github.clans.fab.FloatingActionButton)findViewById(R.id.ar_message_list_btn);
 
@@ -337,7 +339,7 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     // 현재 내 위치 반환
-    private GeoPoint findMyLocation() {
+    /*private GeoPoint findMyLocation() {
         GeoPoint myGeo = null;
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -358,7 +360,98 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
             myGeo = new GeoPoint(lon_X, lat_Y);
         }
         return myGeo;
+    }*/
+    private GeoPoint findMyLocation(){
+        final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        GeoPoint myGeo = null;
+        double longitude=0,latitude=0;
+        if ( Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission( getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions( ARmessageActivity.this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
+                    0 );
+        }
+        else{
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            if(location == null){
+
+                pDialog = new ProgressDialog(ARmessageActivity.this);
+                pDialog.setMessage("위치정보를 받아오고 있습니다...");
+                pDialog.show();
+                while (true){
+                    location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    if(location==null){
+                        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                                1000,
+                                1,
+                                gpsLocationListener);
+                        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                                1000,
+                                1,
+                                gpsLocationListener);
+                        continue;
+                    }else{
+                        break;
+                    }
+                }
+                //로딩메시지제거
+                if (pDialog != null) {
+                    pDialog.dismiss();
+                    pDialog = null;
+                }
+
+            } else {
+
+                //String provider = location.getProvider();
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
+                //double altitude = location.getAltitude();
+                sLat = latitude;
+                sLng = longitude;
+                myGeo = new GeoPoint(longitude, latitude);
+            }
+
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    3000,
+                    1,
+                    gpsLocationListener);
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                    3000,
+                    1,
+                    gpsLocationListener);
+        }
+
+        return myGeo;
     }
+
+    // 현재위치가 바뀔때마다 좌표를 바꾸는 리스너
+    final LocationListener gpsLocationListener = new LocationListener() {
+        public void onLocationChanged(Location location) {
+            //String provider = location.getProvider();
+            double longitude = location.getLongitude();
+            double latitude = location.getLatitude();
+            //double altitude = location.getAltitude();
+
+            sLat = latitude;
+            sLng = longitude;
+
+            if(geoCodingCoordiToAddress(sLng,sLat).length()>=15){
+                msg = geoCodingCoordiToAddress(sLng,sLat).substring(0,15)+"...";
+            }else{
+                msg = geoCodingCoordiToAddress(sLng,sLat);
+            }
+            current_mylocation_text.setText(msg);
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+        public void onProviderEnabled(String provider) {
+        }
+
+        public void onProviderDisabled(String provider) {
+        }
+    };
 
     // 권한설정
     @Override
