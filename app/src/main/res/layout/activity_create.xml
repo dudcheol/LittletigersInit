@@ -71,7 +71,7 @@
             android:id="@+id/password_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
+            android:hint="Password(6자 이상)"
             android:inputType="textPassword"
             android:textColor="#333"
             android:textCursorDrawable="@drawable/color_cursor"
