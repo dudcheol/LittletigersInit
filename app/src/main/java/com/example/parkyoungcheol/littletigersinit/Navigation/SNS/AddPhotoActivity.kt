@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.example.parkyoungcheol.littletigersinit.Model.ContentDTO
@@ -14,9 +15,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_add_photo.*
-import java.net.URI
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.log
 
 class AddPhotoActivity : AppCompatActivity() {
 
@@ -65,9 +66,9 @@ class AddPhotoActivity : AppCompatActivity() {
             //이미지 선택시
             if(resultCode == Activity.RESULT_OK){
                 //이미지뷰에 이미지 세팅
-                println(data?.data)
-                photoUri = data?.data
-                addphoto_image.setImageURI(data?.data)
+                println(data!!.data)
+                photoUri = data!!.data
+                addphoto_image.setImageURI(data!!.data)
             }
 
             else{
@@ -92,7 +93,7 @@ class AddPhotoActivity : AppCompatActivity() {
 
 
         val storageRef = storage?.reference?.child("images")?.child(imageFileName)
-        storageRef?.putFile(photoUri!!)?.addOnSuccessListener { taskSnapshot ->
+        storageRef?.putFile(photoUri!!)?.addOnSuccessListener{ taskSnapshot ->
             progress_bar.visibility = View.GONE
 
             Toast.makeText(this, getString(R.string.upload_success),
@@ -105,8 +106,10 @@ class AddPhotoActivity : AppCompatActivity() {
             uri.addOnSuccessListener { Uri ->
                 val contentDTO = ContentDTO()
 
+                Log.v("uri_test",uri.toString())
                 //이미지 주소
                 contentDTO.imageUrl = uri.result.toString()
+                Log.v("uri.result_test",contentDTO.imageUrl.toString())
                 //유저의 UID
                 contentDTO.uid = auth?.currentUser?.uid
                 //게시물의 설명

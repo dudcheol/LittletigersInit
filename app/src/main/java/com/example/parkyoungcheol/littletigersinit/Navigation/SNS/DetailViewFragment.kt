@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,22 +77,32 @@ class DetailViewFragment : Fragment() {
             firestore?.collection("users")?.document(uid!!)?.get()?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     var userDTO = task.result?.toObject(FollowDTO::class.java)
-                    if (userDTO?.followings != null) {
+                    if (!userDTO?.followings.toString().equals("{}")) {
                         getCotents(userDTO?.followings)
+                        sad.visibility = View.GONE
+                        no_alarm.visibility = View.GONE
+                        Log.v("팔로잉", userDTO?.followings.toString())
+                    }else{
+                        sad.visibility = View.VISIBLE
+                        no_alarm.visibility = View.VISIBLE
                     }
                 }
             }
         }
 
         fun getCotents(followers: MutableMap<String, Boolean>?) {
-            imagesSnapshot = firestore?.collection("images")?.orderBy("timestamp", Query.Direction.DESCENDING)?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            val uid = FirebaseAuth.getInstance().currentUser!!.uid
+            imagesSnapshot = firestore
+                    ?.collection("images")
+                    ?.orderBy("timestamp", Query.Direction.DESCENDING)
+                    ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 contentDTOs.clear()
                 contentUidList.clear()
                 if (querySnapshot == null) return@addSnapshotListener
                 for (snapshot in querySnapshot!!.documents) {
                     var item = snapshot.toObject(ContentDTO::class.java)!!
-                    println(item.uid)
-                    if (followers?.keys?.contains(item.uid)!!) {
+
+                    if (followers?.keys?.contains(item.uid)!! || item.uid==uid) {
                         contentDTOs.add(item)
                         contentUidList.add(snapshot.id)
                     }
@@ -170,6 +181,7 @@ class DetailViewFragment : Fragment() {
                 intent.putExtra("contentUid", contentUidList[position])
                 intent.putExtra("destinationUid", contentDTOs[position].uid)
                 startActivity(intent)
+                activity!!.overridePendingTransition(R.anim.slide_in_right,R.anim.non_anim)
             }
 
         }

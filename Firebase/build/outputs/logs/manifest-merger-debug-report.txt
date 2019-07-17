@@ -1,31 +1,31 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml:9:1-13:12
-INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml:9:1-13:12
-INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml:9:1-13:12
-INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml:9:1-13:12
-INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml:9:1-13:12
-INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml:9:1-13:12
-INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml:9:1-13:12
+ADDED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml:9:1-13:12
+INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml:9:1-13:12
+INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml:9:1-13:12
+INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml:9:1-13:12
+INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml:9:1-13:12
+INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml:9:1-13:12
+INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml:9:1-13:12
 	package
-		ADDED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml:10:11-46
-		INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml
-		INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml
+		ADDED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml:10:11-46
+		INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml
+		INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml
 	android:versionName
-		ADDED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml:12:11-36
-		INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml
-		INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml
+		ADDED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml:12:11-36
+		INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml
+		INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml
 	xmlns:android
-		ADDED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml:9:11-69
+		ADDED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml:9:11-69
 	android:versionCode
-		ADDED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml:11:11-34
-		INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml
-		INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml
+		ADDED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml:11:11-34
+		INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml
+		INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml
 uses-sdk
-INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml
-INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml
+INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml
+INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml
-		ADDED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml
-		INJECTED from C:\Users\kimkyoungsub\AndroidStudioProjects\LittletigersInit5\Firebase\AndroidManifest.xml
+		INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml
+		ADDED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml
+		INJECTED from D:\LittletigersInit\LittletigersInit-master\Firebase\AndroidManifest.xml

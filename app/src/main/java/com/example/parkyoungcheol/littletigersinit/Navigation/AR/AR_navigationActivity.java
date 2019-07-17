@@ -450,7 +450,7 @@ public class AR_navigationActivity extends AppCompatActivity {
     };
 
     //구글 지오코딩. 좌표 -> 주소
-    public String geoCodingCoordiToAddress(double lon, double lat){
+    private String geoCodingCoordiToAddress(double lon, double lat){
         final Geocoder geocoder = new Geocoder(this);
         List<Address> list = null;
         String result=null;
@@ -463,12 +463,12 @@ public class AR_navigationActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
             Log.e("test", "입출력 오류 - 서버에서 주소변환시 에러발생");
-            return "주소로 표시할 수 없음";
+            return "주소변환실패(위도:"+lat+"/경도:"+lon+")";
         }
 
         if (list != null) {
             if (list.size() == 0) {
-                return "주소로 표시할 수 없음";
+                return "주소변환실패(위도:"+lat+"/경도:"+lon+")";
             } else {
                 String address = list.get(0).getAddressLine(0);
                 result = address.substring(4);

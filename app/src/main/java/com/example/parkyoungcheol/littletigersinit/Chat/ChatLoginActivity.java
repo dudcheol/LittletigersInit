@@ -182,7 +182,7 @@ public class ChatLoginActivity extends AppCompatActivity implements GoogleApiCli
 
                         }
                         else {
-                            Snackbar.make(mProgressBar, "로그인에 실패sign.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(mProgressBar, "로그인 실패", Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 });

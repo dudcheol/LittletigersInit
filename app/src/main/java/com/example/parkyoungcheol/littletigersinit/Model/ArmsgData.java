@@ -14,6 +14,7 @@ public class ArmsgData
     public Double latitude;
     public Double longitude;
     public String address;
+    public Double distance;
 
     public void setAddress(String address) {
         this.address = address;
@@ -21,6 +22,14 @@ public class ArmsgData
 
     public String getAddress() {
         return address;
+    }
+
+    public Double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
     }
 
     public View.OnClickListener onClickListener;

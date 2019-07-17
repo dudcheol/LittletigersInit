@@ -5,11 +5,36 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/sad"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_photo2"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="50dp"/>
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/no_alarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/sad"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:text="를 터치해서 사람들이 공유한 사진을 보고\n팔로우해보세요! 놀라운 일이 벌어질걸요?"
+            android:layout_marginRight="50dp"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/detailviewfragment_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+        </RelativeLayout>
 
 
 </LinearLayout>
