@@ -117,6 +117,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 holder.sendTxt.setText(textMessage.getMessageText());
                 holder.sendTxt.setVisibility(View.VISIBLE);
                 holder.sendImage.setVisibility(View.GONE);
+                holder.sendLocation.setVisibility(View.GONE);
 
             } else if (item.getMessageType() == Message.MessageType.PHOTO) {
                 Glide.with(holder.sendArea)
@@ -125,6 +126,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
                 holder.sendTxt.setVisibility(View.GONE);
                 holder.sendImage.setVisibility(View.VISIBLE);
+                holder.sendLocation.setVisibility(View.GONE);
             } else if (item.getMessageType() == Message.MessageType.LOCATION) {
                 holder.sendTxt.setText(locationMessage.getLocationText());
                 holder.sendLocation.setVisibility(View.VISIBLE);
@@ -149,6 +151,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 holder.rcvTextView.setText(textMessage.getMessageText());
                 holder.rcvTextView.setVisibility(View.VISIBLE);
                 holder.rcvImage.setVisibility(View.GONE);
+                holder.rcvLocation.setVisibility(View.GONE);
 
             } else if (item.getMessageType() == Message.MessageType.PHOTO) {
                 Glide
@@ -158,6 +161,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
                 holder.rcvTextView.setVisibility(View.GONE);
                 holder.rcvImage.setVisibility(View.VISIBLE);
+                holder.rcvLocation.setVisibility(View.GONE);
             } else if (item.getMessageType() == Message.MessageType.LOCATION){
                 holder.rcvTextView.setText(locationMessage.getLocationText());
                 if(locationMessage.getLocationText().equals("위치 전송 실패")){

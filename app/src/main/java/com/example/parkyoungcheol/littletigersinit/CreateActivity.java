@@ -57,15 +57,15 @@ public class CreateActivity extends AppCompatActivity {
         mUserRef = mFirebaseDatabase.getReference("users");
 
         mCreatebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if ((mEmail_edittext.getText().toString().replace(" ", "").equals("")) ||
-                        (mPassword_edittext.getText().toString().replace(" ", "").equals(""))) {
-                    Toast.makeText(CreateActivity.this, "이메일과 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
-                } else {
-                    createEmail();
+                @Override
+                public void onClick(View view) {
+                    if ((mEmail_edittext.getText().toString().replace(" ", "").equals("")) ||
+                            (mPassword_edittext.getText().toString().replace(" ", "").equals(""))) {
+                        Toast.makeText(CreateActivity.this, "이메일과 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        createEmail();
+                    }
                 }
-            }
         });
         mCancelbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +130,14 @@ public class CreateActivity extends AppCompatActivity {
                                 });
 
                             } else {
-                                Toast.makeText(CreateActivity.this, "이미있는 아이디입니다.", Toast.LENGTH_SHORT).show();
+                                //여기에 추가해야함
+                                if(mPassword_edittext.getText().toString().length() < 6 )
+                                {
+                                    Toast.makeText(CreateActivity.this, "비밀번호는 6자리 이상이여야 합니다.", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(CreateActivity.this, "이미있는 아이디입니다.", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
                     });
