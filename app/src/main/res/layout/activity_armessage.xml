@@ -20,8 +20,10 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:paddingBottom="10dp">
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
 
             <TextView
                 android:id="@+id/AR_message_text"
@@ -44,19 +46,23 @@
                 android:textSize="20dp"
                 android:textStyle="bold" />
         </RelativeLayout>
-        <LinearLayout
+      <!--  <LinearLayout
             android:id="@+id/map_division"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/title"
             android:background="#000000"
-            android:orientation="horizontal" />
+            android:orientation="horizontal" />-->
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/map_division"
+            android:layout_height="35dp"
             android:orientation="vertical"
+            android:background="@drawable/startar_btn_bg"
+            android:backgroundTint="@color/colorLightGray"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
             >
             <Button
                 android:id="@+id/change_list"
@@ -64,6 +70,7 @@
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
                 android:background="#00ff0000"
+                android:layout_centerVertical="true"
                 />
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -71,26 +78,31 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp">
+                android:layout_marginRight="10dp"
+                android:layout_centerVertical="true">
                 <TextView
                     android:id="@+id/current_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="현재 위치:"
+                    android:text="내 위치:"
+                    android:textStyle="bold"
                     android:textColor="#000000"
-                    android:layout_alignParentLeft="true" />
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"/>
                 <TextView
                     android:id="@+id/current_location_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/current_location"
-                    android:text="asdf"/>
+                    android:text="asdf"
+                    android:layout_centerVertical="true"/>
                 <TextView
                     android:id="@+id/mylocationtext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="범위:"
-                    android:layout_toLeftOf="@+id/result"/>
+                    android:layout_toLeftOf="@+id/result"
+                    android:layout_centerVertical="true"/>
                 <TextView
                     android:id="@+id/result"
                     android:layout_width="wrap_content"
@@ -101,6 +113,7 @@
                     android:text="전체"
                     android:textStyle="bold"
                     android:textColor="#000000"
+                    android:layout_centerVertical="true"
                     />
 
                 <TextView
@@ -108,13 +121,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/arrow"
-                    android:text="(km)" />
+                    android:text="(km)"
+                    android:layout_centerVertical="true"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/map_marker2"
                     android:layout_toLeftOf="@+id/mylocationtext"
+                    android:layout_centerVertical="true"
+                    android:tint="#000000"
                     />
 
                 <ImageView
@@ -127,13 +143,13 @@
             </RelativeLayout>
         </RelativeLayout>
 
-        <LinearLayout
+        <!--<LinearLayout
             android:id="@+id/title_division"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_above="@id/map"
             android:background="#000000"
-            android:orientation="horizontal" />
+            android:orientation="horizontal" />-->
 
         <fragment
             android:id="@+id/map"
@@ -145,7 +161,8 @@
             android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp" />
+            android:overScrollMode="never"
+            />
     </LinearLayout>
 
     <com.github.clans.fab.FloatingActionMenu

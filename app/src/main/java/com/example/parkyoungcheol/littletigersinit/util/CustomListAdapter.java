@@ -45,7 +45,7 @@ public class CustomListAdapter extends BaseAdapter {
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            convertView = inflater.inflate(R.layout.list_row, null);
+            convertView = inflater.inflate(R.layout.arsearch_list_item, null);
 
         TextView title = (TextView) convertView.findViewById(R.id.title);
         //TextView link = (TextView) convertView.findViewById(R.id.link);

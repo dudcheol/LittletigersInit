@@ -1,33 +1,18 @@
 package com.example.parkyoungcheol.littletigersinit.util;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.parkyoungcheol.littletigersinit.Chat.LocationMessage;
-import com.example.parkyoungcheol.littletigersinit.Chat.Message;
-import com.example.parkyoungcheol.littletigersinit.Chat.PhotoMessage;
-import com.example.parkyoungcheol.littletigersinit.Chat.TextMessage;
 import com.example.parkyoungcheol.littletigersinit.Model.ArmsgData;
-import com.example.parkyoungcheol.littletigersinit.Navigation.AR.AR_navigationActivity;
-import com.example.parkyoungcheol.littletigersinit.Navigation.AR.ARmessageActivity;
 import com.example.parkyoungcheol.littletigersinit.R;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.ViewHolder>
@@ -55,7 +40,7 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.listview_item,viewGroup,false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.armsg_list_item,viewGroup,false);
         return new ViewHolder(v);
     }
 
