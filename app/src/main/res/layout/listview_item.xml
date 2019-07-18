@@ -51,7 +51,9 @@
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/ic_favorite"/>
+                            android:src="@drawable/ic_favorite_24dp"
+                            android:tint="@android:color/holo_red_light"
+                            />
                         <TextView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
