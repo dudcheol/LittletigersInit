@@ -40,6 +40,7 @@ class DetailViewFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         user = FirebaseAuth.getInstance().currentUser
+        Log.d("UID CHECK",user!!.uid+user!!.email)
         firestore = FirebaseFirestore.getInstance()
         okHttpClient = OkHttpClient()
         fcmPush = FcmPush()
@@ -77,7 +78,7 @@ class DetailViewFragment : Fragment() {
             firestore?.collection("users")?.document(uid!!)?.get()?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     var userDTO = task.result?.toObject(FollowDTO::class.java)
-                    if (!userDTO?.followings.toString().equals("{}")) {
+                    if (userDTO!=null) {
                         getCotents(userDTO?.followings)
                         sad.visibility = View.GONE
                         no_alarm.visibility = View.GONE
@@ -101,6 +102,8 @@ class DetailViewFragment : Fragment() {
                 if (querySnapshot == null) return@addSnapshotListener
                 for (snapshot in querySnapshot!!.documents) {
                     var item = snapshot.toObject(ContentDTO::class.java)!!
+
+                    Log.d("UID CHECK",item.uid)
 
                     if (followers?.keys?.contains(item.uid)!! || item.uid==uid) {
                         contentDTOs.add(item)
