@@ -97,6 +97,7 @@ public class UserDetailViewFragment extends Fragment {
         deleteBtn=view.findViewById(R.id.deleteBtn);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
+        Log.v("USER_CHECK",user.getUid()+user.getEmail()+user.getDisplayName()+user.getPhotoUrl());
         firestore = FirebaseFirestore.getInstance();
         fcmPush = new FcmPush();
 

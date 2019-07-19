@@ -76,10 +76,12 @@
     </LinearLayout>
 
     <ListView
+        android:listSelector="@android:color/transparent"
         android:id="@+id/list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:divider="@null"/>
+        android:divider="@null"
+        android:overScrollMode="never"/>
 
 </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

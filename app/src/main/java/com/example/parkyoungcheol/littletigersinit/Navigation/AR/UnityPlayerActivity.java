@@ -7,12 +7,15 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.widget.Toast;
 
 import com.example.parkyoungcheol.littletigersinit.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.unity3d.player.UnityPlayer;
 
 import static com.unity3d.player.UnityPlayer.UnitySendMessage;
@@ -21,12 +24,18 @@ public class UnityPlayerActivity extends Activity
 {
     protected UnityPlayer mUnityPlayer; // don't change the name of this variable; referenced from native code
     private ProgressDialog pDialog;
+    private FirebaseUser user;
+    private String currentUserID;
 
     // Setup activity layout
     @Override protected void onCreate(Bundle savedInstanceState)
     {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        Log.v("USER_CHECK",user.getUid()+user.getEmail());
+        currentUserID=user.getUid();
 
         mUnityPlayer = new UnityPlayer(this);
         setContentView(mUnityPlayer);
@@ -70,8 +79,8 @@ public class UnityPlayerActivity extends Activity
                         // ARnavigation을 받으면 AR 네비게이션 신이 실행됨
                         //UnitySendMessage("SceneType", "divScene", "ARnavigation");
                         // 길안내 경로 경위도 유니티로 전송
+                        UnitySendMessage("reciveDataFromAndroid", "UID", currentUserID);
                         UnitySendMessage("reciveDataFromAndroid", "selectScene", "NAV");
-
                         UnitySendMessage("reciveDataFromAndroid", "RecvLocation", TmapJSON);
 
                         //로딩메시지제거
@@ -97,6 +106,7 @@ public class UnityPlayerActivity extends Activity
                 final Handler handler2 = new Handler(){
                     @Override
                     public void handleMessage(Message msg) {
+                        UnitySendMessage("reciveDataFromAndroid", "UID", currentUserID);
                         UnitySendMessage("reciveDataFromAndroid", "selectScene", "POI");
 
                         UnitySendMessage("reciveDataFromAndroid", "CAFE", CAFE);
@@ -120,7 +130,7 @@ public class UnityPlayerActivity extends Activity
                 final Handler handler3 = new Handler(){
                     @Override
                     public void handleMessage(Message msg) {
-
+                        UnitySendMessage("reciveDataFromAndroid", "UID", currentUserID);
                         UnitySendMessage("reciveDataFromAndroid", "selectScene", "MSG");
 
                         //로딩메시지제거
