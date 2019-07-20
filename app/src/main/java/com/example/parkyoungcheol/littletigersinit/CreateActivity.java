@@ -131,7 +131,10 @@ public class CreateActivity extends AppCompatActivity {
 
                             } else {
                                 //여기에 추가해야함
-                                if(mPassword_edittext.getText().toString().length() < 6 )
+                                if (!mEmail_edittext.getText().toString().contains("@")){
+                                    Toast.makeText(CreateActivity.this, "아이디는 이메일 형식이여야 합니다.", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(mPassword_edittext.getText().toString().length() < 6 )
                                 {
                                     Toast.makeText(CreateActivity.this, "비밀번호는 6자리 이상이여야 합니다.", Toast.LENGTH_SHORT).show();
                                 }
