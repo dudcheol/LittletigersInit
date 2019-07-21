@@ -1,6 +1,7 @@
 package com.example.parkyoungcheol.littletigersinit;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -29,6 +30,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -72,6 +74,7 @@ import com.naver.maps.map.overlay.Overlay;
 import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
 import com.naver.maps.map.util.MarkerIcons;
+import com.xw.repo.BubbleSeekBar;
 
 
 import org.json.JSONArray;
@@ -99,6 +102,8 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     private FirebaseDatabase mFirebaseDb;
     private DatabaseReference mARMessageRef;
     private AlertDialog.Builder alertDialogBuilder;
+    private BubbleSeekBar bubbleSeekBar;
+    private int progressStatus;
 
     //private Button menu,ar_nav,info,poi;
     @BindView(R.id.fab_menu_btn)
@@ -172,52 +177,96 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                 /*myCurrentLocation = findMyLocation();
                 allPOIreciever(myCurrentLocation.getX(),myCurrentLocation.getY());*/
 
-                pDialog = new ProgressDialog(ar_mainActivity.this);
-                // Showing progress dialog before making http request
-                pDialog.setMessage("AR Loading...");
-                pDialog.show();
+                final AlertDialog.Builder popDialog = new AlertDialog.Builder(v.getContext());
+                View innerView =  getLayoutInflater().inflate(R.layout.custom_seekbar,null);
 
-                Intent intent = new Intent(ar_mainActivity.this,UnityPlayerActivity.class);
-                intent.putExtra("SELECT", 2);
+                popDialog.setView(innerView);
+                popDialog.setTitle("어디까지 보고싶으세요?\n");
+                bubbleSeekBar=(BubbleSeekBar)innerView.findViewById(R.id.bubble_seekbar);
+                TextView count = innerView.findViewById(R.id.count);
+                TextView tip = innerView.findViewById(R.id.tip);
+                tip.setVisibility(View.GONE);
+                count.setText(progressStatus+"km");
+                bubbleSeekBar.getConfigBuilder()
+                        .min(0)
+                        .max(10)
+                        .progress(progressStatus)
+                        .sectionCount(5)
+                        .trackColor(ContextCompat.getColor(v.getContext(), R.color.colorLightGray))
+                        .secondTrackColor(ContextCompat.getColor(v.getContext(), R.color.main_mint))
+                        .thumbColor(ContextCompat.getColor(v.getContext(), R.color.mainColor))
+                        .showSectionText()
+                        .sectionTextColor(ContextCompat.getColor(v.getContext(), R.color.tw__composer_deep_gray))
+                        .sectionTextSize(12)
+                        .showThumbText()
+                        .touchToSeek()
+                        .thumbTextColor(ContextCompat.getColor(v.getContext(), R.color.main_red))
+                        .thumbTextSize(15)
+                        .hideBubble()
+                        .showSectionMark()
+                        .seekBySection()
+                        .sectionTextPosition(BubbleSeekBar.TextPosition.BELOW_SECTION_MARK)
+                        .build();
 
-                int delayTime=0;
-                loopShareInt=0;
-                for (int i = 0; i < categoryAry.length; i++) {
-                    final Handler handler = new Handler() {
-                        @Override
-                        public void handleMessage(Message msg) {
-                            pDialog.setMessage(categoryAry[loopShareInt]+" Loading..");
-                            POIreceiver(categoryAry[loopShareInt]);
-                            loopShareInt++;
-                        }
-                    };
-                    delayTime+=300;
-                    handler.sendEmptyMessageDelayed(0, delayTime);
-                }
 
-                final Handler handler = new Handler() {
+                popDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
-                    public void handleMessage(Message msg) {
-                        if(errorState){
-                            Toast.makeText(ar_mainActivity.this, "주변 정보를 받아오지 못했습니다. 잠시 후 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
-                            hidePDialog();
-                        }else {
-                            intent.putExtra(categoryAry[0], resultMSG.getCAFE());
-                            intent.putExtra(categoryAry[1], resultMSG_for_BUSSTOP.getBUSSTOP());
-                            intent.putExtra(categoryAry[2], resultMSG.getCONVENIENCE());
-                            intent.putExtra(categoryAry[3], resultMSG.getRESTAURANT());
-                            intent.putExtra(categoryAry[4], resultMSG.getBANK());
-                            intent.putExtra(categoryAry[5], resultMSG.getACCOMMODATION());
-                            intent.putExtra(categoryAry[6], resultMSG.getHOSPITAL());
-                            hidePDialog();
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
+                    public void onClick(DialogInterface dialogInterface, int k) {
+                        pDialog = new ProgressDialog(ar_mainActivity.this);
+                        // Showing progress dialog before making http request
+                        pDialog.setMessage("AR Loading...");
+                        pDialog.show();
+
+                        Intent intent = new Intent(ar_mainActivity.this,UnityPlayerActivity.class);
+                        intent.putExtra("SELECT", 2);
+
+                        int delayTime=0;
+                        loopShareInt=0;
+                        for (int i = 0; i < categoryAry.length; i++) {
+                            final Handler handler = new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    pDialog.setMessage(categoryAry[loopShareInt]+" Loading..");
+                                    POIreceiver(categoryAry[loopShareInt]);
+                                    loopShareInt++;
+                                }
+                            };
+                            delayTime+=300;
+                            handler.sendEmptyMessageDelayed(0, delayTime);
                         }
+
+                        final Handler handler = new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                if(errorState){
+                                    Toast.makeText(ar_mainActivity.this, "주변 정보를 받아오지 못했습니다. 잠시 후 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                                    hidePDialog();
+                                }else {
+                                    intent.putExtra(categoryAry[0], resultMSG.getCAFE());
+                                    intent.putExtra(categoryAry[1], resultMSG_for_BUSSTOP.getBUSSTOP());
+                                    intent.putExtra(categoryAry[2], resultMSG.getCONVENIENCE());
+                                    intent.putExtra(categoryAry[3], resultMSG.getRESTAURANT());
+                                    intent.putExtra(categoryAry[4], resultMSG.getBANK());
+                                    intent.putExtra(categoryAry[5], resultMSG.getACCOMMODATION());
+                                    intent.putExtra(categoryAry[6], resultMSG.getHOSPITAL());
+                                    hidePDialog();
+                                    startActivity(intent);
+                                    overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
+                                }
+                            }
+                        };
+                        handler.sendEmptyMessageDelayed(0, 2500);
+
                     }
-                };
-                handler.sendEmptyMessageDelayed(0, 2500);
-
-
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                popDialog.create();
+                popDialog.show();
             }
         });
     }
@@ -394,7 +443,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
             //double altitude = location.getAltitude();
 
             //Todo -- 영철 메모
-            // 1. 현재위치 바뀔때마다도 설정해주어야함
+            // 1. 현재위치 바뀔때마다도 설정해주어야함 << 이거 안해주면 여기서 poi넘어갔을때 좀 이상해질수있음
             // 지금은 한번 받아온거 주구장창 쓰고있음,,
             // 2. removeUpdates << 이거 로케이션 체인지 리스너 onpause에서 해줘야할듯?
             // 자세한내용 구글링 ㄱㄱ
