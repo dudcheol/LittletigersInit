@@ -171,5 +171,8 @@ dependencies {
     //implementation(name: 'com.google.firebase.firebase-measurement-connector-17.0.1', ext: 'aar')
     implementation project(':Firebase')
     implementation 'com.google.firebase:firebase-core:16.0.9'
+
+    // seekbar ui
+    implementation 'com.xw.repo:bubbleseekbar:3.20'
 }
 apply plugin: 'com.google.gms.google-services'

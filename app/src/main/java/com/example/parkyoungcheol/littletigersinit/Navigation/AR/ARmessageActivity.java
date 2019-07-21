@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -19,7 +20,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,10 +34,7 @@ import com.example.parkyoungcheol.littletigersinit.Chat.RecyclerViewItemClickLis
 import com.example.parkyoungcheol.littletigersinit.Model.ArmsgData;
 import com.example.parkyoungcheol.littletigersinit.Model.GeoPoint;
 import com.example.parkyoungcheol.littletigersinit.R;
-import com.example.parkyoungcheol.littletigersinit.ar_mainActivity;
 import com.example.parkyoungcheol.littletigersinit.util.ArmsgListAdapter;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -56,6 +53,8 @@ import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
+import com.twitter.sdk.android.tweetcomposer.internal.util.ObservableScrollView;
+import com.xw.repo.BubbleSeekBar;
 
 import org.w3c.dom.Text;
 
@@ -80,8 +79,9 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
     private com.github.clans.fab.FloatingActionButton ar_message_btn;
 
     private ProgressDialog pDialog;
-
     private AlertDialog.Builder alertDialogBuilder;
+    private BubbleSeekBar bubbleSeekBar;
+    private int progressStatus=0;
 
     Double sLat, sLng;
     public TextView txtView, current_mylocation_text;
@@ -93,10 +93,15 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_armessage);
 
+        SharedPreferences pref = getSharedPreferences("Distance", 0);
+        progressStatus = pref.getInt("count", 0);
+
         change_list = (Button) findViewById(R.id.change_list);
         txtView = (TextView) findViewById(R.id.result);
         current_mylocation_text = (TextView) findViewById(R.id.current_location_text);
         ar_message_btn = (com.github.clans.fab.FloatingActionButton)findViewById(R.id.ar_message_list_btn);
+
+        txtView.setText(""+progressStatus);
 
         // 위치권한 받아오기
         checkLocationPermission();
@@ -162,10 +167,12 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                     int i = 0;
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         ArmsgData bbs = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
-                        mBoardList.add(bbs);
-                        mBoardList.get(i).setAddress(geoCodingCoordiToAddress(mBoardList.get(i).getLongitude(), mBoardList.get(i).getLatitude()));
-                        mBoardList.get(i).setDistance(calcDistance2(sLat, sLng, bbs.getLatitude(), bbs.getLongitude()) / 1000);
-                        i++;
+                        if(calcDistance(sLat, sLng, bbs.getLatitude(), bbs.getLongitude()) <= progressStatus) {
+                            mBoardList.add(bbs);
+                            mBoardList.get(i).setAddress(geoCodingCoordiToAddress(mBoardList.get(i).getLongitude(), mBoardList.get(i).getLatitude()));
+                            mBoardList.get(i).setDistance(calcDistance2(sLat, sLng, bbs.getLatitude(), bbs.getLongitude())/1000);
+                            i++;
+                        }
                     }
 
                     //Collections.reverse(mBoardList);
@@ -534,11 +541,71 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
 
         return rslt;
     }
+
     public void ShowDialog()
     {
 
         final AlertDialog.Builder popDialog = new AlertDialog.Builder(this);
-        final SeekBar seek = new SeekBar(this);
+        View innerView =  getLayoutInflater().inflate(R.layout.custom_seekbar,null);
+
+        popDialog.setView(innerView);
+        popDialog.setTitle("AR 메시지 검색 범위 설정(km)\n");
+        bubbleSeekBar=(BubbleSeekBar)innerView.findViewById(R.id.bubble_seekbar);
+        TextView count = innerView.findViewById(R.id.count);
+        /*ObservableScrollView observableScrollView = innerView.findViewById(R.id.observableScroll);
+
+        observableScrollView.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
+            @Override
+            public void onScrollChanged(int scrollY) {
+                bubbleSeekBar.correctOffsetWhenContainerOnScrolling();
+            }
+        });*/
+
+        bubbleSeekBar.getConfigBuilder()
+            .min(0)
+            .max(200)
+            .progress(progressStatus)
+            .sectionCount(5)
+            .trackColor(ContextCompat.getColor(this, R.color.colorLightGray))
+            .secondTrackColor(ContextCompat.getColor(this, R.color.main_mint))
+            .thumbColor(ContextCompat.getColor(this, R.color.mainColor))
+            .showSectionText()
+            .sectionTextColor(ContextCompat.getColor(this, R.color.tw__composer_deep_gray))
+            .sectionTextSize(12)
+            .showThumbText()
+            .touchToSeek()
+            .thumbTextColor(ContextCompat.getColor(this, R.color.main_red))
+            .thumbTextSize(15)
+            .hideBubble()
+            .showSectionMark()
+            //.seekBySection() 따라다니는거
+            //.sectionTextPosition(BubbleSeekBar.TextPosition.BELOW_SECTION_MARK)
+            .build();
+        bubbleSeekBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
+            @Override
+            public void onProgressChanged(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat, boolean fromUser) {
+                txtView.setText(String.valueOf(progress));
+                progressStatus=progress;
+                count.setText(progress+"km까지 검색합니다.");
+                if(txtView.getText().equals("200"))
+                {
+                    txtView.setText("전체");
+                    count.setText("모든 메시지를 검색합니다.");
+                }
+            }
+
+            @Override
+            public void getProgressOnActionUp(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat) {
+
+            }
+
+            @Override
+            public void getProgressOnFinally(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat, boolean fromUser) {
+
+            }
+        });
+
+        /*final SeekBar seek = new SeekBar(this);
         seek.setMax(200);
         //popDialog.setIcon(android.R.drawable.btn_star_big_on);
         popDialog.setTitle("AR 메시지 검색 범위 설정(km)\n");
@@ -556,12 +623,12 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
 
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
-        });
+        });*/
 
         popDialog.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if (txtView.getText().equals("전체"))
+                        if (progressStatus==200)
                         {
                             mARMessageRef.addValueEventListener(new ValueEventListener() {
                                 @Override
@@ -615,7 +682,7 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                                     int i=0;
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                         ArmsgData bbs = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
-                                        if(calcDistance(sLat, sLng, bbs.getLatitude(), bbs.getLongitude()) <= Integer.parseInt(txtView.getText().toString())) {
+                                        if(calcDistance(sLat, sLng, bbs.getLatitude(), bbs.getLongitude()) <= progressStatus) {
                                             mBoardList.add(bbs);
                                             mBoardList.get(i).setAddress(geoCodingCoordiToAddress(mBoardList.get(i).getLongitude(), mBoardList.get(i).getLatitude()));
                                             mBoardList.get(i).setDistance(calcDistance2(sLat, sLng, bbs.getLatitude(), bbs.getLongitude())/1000);
@@ -652,5 +719,14 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                 });
         popDialog.create();
         popDialog.show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences pref = getSharedPreferences("Distance", 0);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt("count",progressStatus);
+        editor.commit();
     }
 }

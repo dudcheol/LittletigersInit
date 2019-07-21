@@ -394,7 +394,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
             //double altitude = location.getAltitude();
 
             //Todo -- 영철 메모
-            // 1. 현재위치 바뀔때마다도 설정해주어야함
+            // 1. 현재위치 바뀔때마다도 설정해주어야함 << 이거 안해주면 여기서 poi넘어갔을때 좀 이상해질수있음
             // 지금은 한번 받아온거 주구장창 쓰고있음,,
             // 2. removeUpdates << 이거 로케이션 체인지 리스너 onpause에서 해줘야할듯?
             // 자세한내용 구글링 ㄱㄱ

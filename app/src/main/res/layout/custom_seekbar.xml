@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="30dp">
+
+
+    <!--<com.example.parkyoungcheol.littletigersinit.util.ObservableScrollView
+        android:id="@+id/observableScroll"
+        android:layout_width="match_parent"
+        android:layout_height="120dp">-->
+        <TextView
+            android:id="@+id/count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0~200km까지 검색이 가능합니다."/>
+        <com.xw.repo.BubbleSeekBar
+            android:id="@+id/bubble_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="8dp"
+            app:bsb_max="200"
+            app:bsb_min="0"
+            app:bsb_second_track_color="@color/main_mint"
+            app:bsb_track_size="4dp"/>
+    <!--</com.example.parkyoungcheol.littletigersinit.util.ObservableScrollView>-->
+
+
+    <!--<com.xw.repo.BubbleSeekBar
+        android:id="@+id/bubble_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_marginTop="8dp"
+        app:bsb_always_show_bubble="true"
+        app:bsb_auto_adjust_section_mark="true"
+        app:bsb_second_track_color="@color/mainColor"
+        app:bsb_section_count="5"
+        app:bsb_section_text_position="below_section_mark"
+        app:bsb_show_section_mark="true"
+        app:bsb_show_section_text="true"
+        app:bsb_show_thumb_text="true"
+        app:bsb_touch_to_seek="true"
+        app:bsb_track_color="@color/main_mint"/>
+-->
+</LinearLayout>
