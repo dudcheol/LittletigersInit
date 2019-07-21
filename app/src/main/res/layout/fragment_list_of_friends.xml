@@ -31,7 +31,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="찾기" />
+                android:text="추가" />
 
 
     </LinearLayout>

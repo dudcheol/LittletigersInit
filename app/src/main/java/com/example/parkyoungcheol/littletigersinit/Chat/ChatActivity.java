@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.parkyoungcheol.littletigersinit.R;
 import com.example.parkyoungcheol.littletigersinit.ar_mainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,6 +39,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -64,6 +68,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private String mChatId;
 
+
     @BindView(R.id.senderBtn)
     ImageView mSenderButton;
 
@@ -76,6 +81,7 @@ public class ChatActivity extends AppCompatActivity {
 
     @BindView(R.id.chat_rec_view)
     RecyclerView mChatRecyclerView;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private MessageListAdapter messageListAdapter;
     private FirebaseDatabase mFirebaseDb;
     private DatabaseReference mChatRef;
@@ -91,6 +97,7 @@ public class ChatActivity extends AppCompatActivity {
     public String locationText = "위치 전송 실패";
     public String longitude2= "";
     public String latitude2= "";
+    public String PhotoUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +124,23 @@ public class ChatActivity extends AppCompatActivity {
         mChatRecyclerView.setAdapter(messageListAdapter);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
+        db.collection("profileImages").whereGreaterThanOrEqualTo("image", "a").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (document.getData().get("image").toString().contains(mFirebaseUser.getUid())) {
+                                    PhotoUrl = document.getData().get("image").toString();
+                                    break;
+                                }
+                                else {
+                                    PhotoUrl = "https://i.imgur.com/jCxAEpA.jpg";
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
     @Override
@@ -450,30 +474,12 @@ public class ChatActivity extends AppCompatActivity {
 
     private Message message = new Message();
 
-    /*public void onMapReady(@NonNull final NaverMap naverMap) {
-
-        naverMap.addOnLocationChangeListener(new NaverMap.OnLocationChangeListener() {
-            @Override
-            public void onLocationChange(@NonNull Location location) {
-                location_Latitude = location_Latitude;
-                location_Longitude= location_Longitude;
-            }
-        });
-    }*/
     private void sendMessage(){
         // 메세지 키 생성
         mChatMessageRef = mFirebaseDb.getReference("chat_messages").child(mChatId);
         // chat_message>{chat_id}>{message_id} > messageInfo
         String messageId = mChatMessageRef.push().getKey();
         String messageText = mMessageText.getText().toString();
-        String PhotoUrl;
-
-        if(mFirebaseUser.getPhotoUrl() != null){
-            PhotoUrl = mFirebaseUser.getPhotoUrl().toString();
-        }
-        else {
-            PhotoUrl = "https://i.imgur.com/jCxAEpA.jpg";
-        }
 
         final Bundle bundle = new Bundle();
         bundle.putString("me", mFirebaseUser.getEmail());

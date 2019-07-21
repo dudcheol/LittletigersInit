@@ -4,6 +4,7 @@ package com.example.parkyoungcheol.littletigersinit.Chat;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
@@ -17,9 +18,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.parkyoungcheol.littletigersinit.Navigation.AR.AR_navigationActivity;
 import com.example.parkyoungcheol.littletigersinit.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,6 +40,8 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     // VIew 가 사용 될 때
 
     private ArrayList<Message> mMessageList;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private SimpleDateFormat messageDateFormat = new SimpleDateFormat("MM/dd a\n hh:mm");
 
@@ -227,6 +236,31 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                         .load(item.getMessageUser().getProfileUrl())
                         .into(holder.rcvProfileView);
             }
+            db.collection("profileImages").whereGreaterThanOrEqualTo("image", "a").get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if (document.getData().get("image").toString().contains(item.getMessageUser().getUid())) {
+                                        Glide
+                                                .with(holder.yourArea)
+                                                .load(document.getData().get("image").toString())
+                                                .apply(RequestOptions.circleCropTransform())
+                                                .into(holder.rcvProfileView);
+                                        break;
+                                    }
+                                    else {
+                                        Glide.with(holder.yourArea)
+                                                .load("https://i.imgur.com/jCxAEpA.jpg")
+                                                .apply(RequestOptions.circleCropTransform())
+                                                .into(holder.rcvProfileView);
+                                    }
+                                }
+                            }
+                        }
+                    });
+
 
             if (item.getMessageType() == Message.MessageType.EXIT) {
                 holder.yourArea.setVisibility(View.GONE);

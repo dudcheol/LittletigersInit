@@ -1,6 +1,7 @@
 package com.example.parkyoungcheol.littletigersinit.Chat;
 
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.parkyoungcheol.littletigersinit.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,6 +33,11 @@ import butterknife.ButterKnife;
 
 public class ListOfChatAdapter extends RecyclerView.Adapter<ListOfChatAdapter.ChatHolder> {
     private ArrayList<Chat> mChatList;
+    private String mChatId;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseDatabase mFirebaseDb;
+    private DatabaseReference mChatMemeberRef;
+    private FirebaseUser mFirebaseUser;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd\naa hh:mm");
     private ChatFragment mChatFragment;
@@ -80,8 +99,63 @@ public class ListOfChatAdapter extends RecyclerView.Adapter<ListOfChatAdapter.Ch
     @Override
     public void onBindViewHolder(ChatHolder holder, int position) {
         final Chat item = getItem(position);
+        mFirebaseDb = FirebaseDatabase.getInstance();
+        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        mChatId = item.getChatId();
+        mChatMemeberRef = mFirebaseDb.getReference("chat_members").child(mChatId);
 
-        // chatThumbnailView
+        mChatMemeberRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int cnt = 0;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.getKey().contains(mFirebaseUser.getUid())) {
+
+                    }
+                    else {
+                        cnt++;
+                        db.collection("profileImages").whereGreaterThanOrEqualTo("image", "a").get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                //int cnt = 0;
+                                                if (document.getData().get("image").toString().contains(snapshot.getKey())) {
+                                                    Glide.with(holder.itemView)
+                                                            .load(document.getData().get("image").toString())
+                                                            .apply(RequestOptions.circleCropTransform())
+                                                            .into(holder.chatThumbnailView);
+                                                    break;
+                                                }
+                                                else {
+                                                    Glide.with(holder.itemView)
+                                                            .load("https://i.imgur.com/jCxAEpA.jpg")
+                                                            .apply(RequestOptions.circleCropTransform())
+                                                            .into(holder.chatThumbnailView);
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                });
+                    }
+                    if(cnt>1){
+                        Glide.with(holder.itemView)
+                                .load("https://i.imgur.com/jCxAEpA.jpg")
+                                .apply(RequestOptions.circleCropTransform())
+                                .into(holder.chatThumbnailView);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         if (item.getLastMessage() != null) {
 
             if (item.getLastMessage().getMessageType() == Message.MessageType.TEXT) {
