@@ -101,7 +101,7 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
         current_mylocation_text = (TextView) findViewById(R.id.current_location_text);
         ar_message_btn = (com.github.clans.fab.FloatingActionButton)findViewById(R.id.ar_message_list_btn);
 
-        txtView.setText(""+progressStatus);
+        txtView.setText(progressStatus+"km");
 
         // 위치권한 받아오기
         checkLocationPermission();
@@ -549,17 +549,10 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
         View innerView =  getLayoutInflater().inflate(R.layout.custom_seekbar,null);
 
         popDialog.setView(innerView);
-        popDialog.setTitle("AR 메시지 검색 범위 설정(km)\n");
+        popDialog.setTitle("어디까지 보고싶으세요?\n");
         bubbleSeekBar=(BubbleSeekBar)innerView.findViewById(R.id.bubble_seekbar);
         TextView count = innerView.findViewById(R.id.count);
-        /*ObservableScrollView observableScrollView = innerView.findViewById(R.id.observableScroll);
-
-        observableScrollView.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
-            @Override
-            public void onScrollChanged(int scrollY) {
-                bubbleSeekBar.correctOffsetWhenContainerOnScrolling();
-            }
-        });*/
+        count.setText(progressStatus+"km");
 
         bubbleSeekBar.getConfigBuilder()
             .min(0)
@@ -586,11 +579,11 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
             public void onProgressChanged(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat, boolean fromUser) {
                 txtView.setText(String.valueOf(progress));
                 progressStatus=progress;
-                count.setText(progress+"km까지 검색합니다.");
+                count.setText(progress+"km");
                 if(txtView.getText().equals("200"))
                 {
                     txtView.setText("전체");
-                    count.setText("모든 메시지를 검색합니다.");
+                    count.setText("모든 ");
                 }
             }
 
