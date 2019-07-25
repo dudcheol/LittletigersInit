@@ -122,6 +122,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     public boolean loopStopper=true; // JSON 객체 받아왔을때 에러 발생시 반복문 종료 위한 변수
     private String[] categoryAry={"CAFE","BUSSTOP","CONVENIENCE","RESTAURANT","BANK","ACCOMMODATION","HOSPITAL"};
     public int loopShareInt=0; // for루프와 핸들러 사이의 공유변수
+    private double current_longitude=0,current_latitude=0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -275,9 +276,14 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     // NaverHttpHandler에 Naver에서 요구하는 API URL형식을 맞춰 보내고 전달받은 JSON 값을 파싱한다
     // 파싱해서 저장하는 형태 : 위치이름,경도,위도|
     public void POIreceiver(String category){
-
+        String createdURL;
         GeoPoint myGeo = findMyLocation();
-        String createdURL = DataSource.createRequestCategoryURL(category,myGeo.getX(),myGeo.getY());
+
+        if(current_latitude!=0 && current_longitude!=0){
+            createdURL = DataSource.createRequestCategoryURL(category,current_longitude,current_latitude);
+        }else{
+            createdURL = DataSource.createRequestCategoryURL(category,myGeo.getX(),myGeo.getY());
+        }
         Log.i("만들어진 주소",createdURL);
 
         JsonObjectRequest localRequest = new JsonObjectRequest(Request.Method.GET, createdURL, null,
@@ -427,6 +433,8 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                 String provider = location.getProvider();
                 Double lon_X = location.getLongitude();
                 Double lat_Y = location.getLatitude();
+                current_longitude = lon_X;
+                current_latitude = lat_Y;
 
                 myGeo = new GeoPoint(lon_X, lat_Y);
             }
@@ -438,8 +446,8 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     final LocationListener gpsLocationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
             //String provider = location.getProvider();
-            double longitude = location.getLongitude();
-            double latitude = location.getLatitude();
+            current_longitude = location.getLongitude();
+            current_latitude = location.getLatitude();
             //double altitude = location.getAltitude();
 
             //Todo -- 영철 메모

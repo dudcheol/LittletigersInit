@@ -376,7 +376,6 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
     }*/
 
     private GeoPoint findMyLocation(){
-        // Todo -- 잘되는지 찬진이폰으로 확인해볼것
         final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         GeoPoint myGeo = null;
         double longitude=0,latitude=0;
