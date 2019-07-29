@@ -351,30 +351,6 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
         }
     }
 
-    // 현재 내 위치 반환
-    /*private GeoPoint findMyLocation() {
-        GeoPoint myGeo = null;
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        // 밑줄 권한때문에 그런거임
-        if ( Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission( getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions( ARmessageActivity.this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
-                    0 );
-        }
-        else {
-            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            String provider = location.getProvider();
-            Double lon_X = location.getLongitude();
-            Double lat_Y = location.getLatitude();
-
-            sLat = lat_Y;
-            sLng = lon_X;
-            myGeo = new GeoPoint(lon_X, lat_Y);
-        }
-        return myGeo;
-    }*/
-
     private GeoPoint findMyLocation(){
         final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         GeoPoint myGeo = null;
@@ -596,26 +572,6 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
 
             }
         });
-
-        /*final SeekBar seek = new SeekBar(this);
-        seek.setMax(200);
-        //popDialog.setIcon(android.R.drawable.btn_star_big_on);
-        popDialog.setTitle("AR 메시지 검색 범위 설정(km)\n");
-        popDialog.setView(seek);
-        seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
-                txtView.setText(String.valueOf(progress));
-                if(txtView.getText().equals("200"))
-                {
-                    txtView.setText("전체");
-                }
-            }
-            public void onStartTrackingTouch(SeekBar arg0) {
-            }
-
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });*/
 
         popDialog.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {

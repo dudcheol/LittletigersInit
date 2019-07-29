@@ -80,6 +80,7 @@ import com.xw.repo.BubbleSeekBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -103,7 +104,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     private DatabaseReference mARMessageRef;
     private AlertDialog.Builder alertDialogBuilder;
     private BubbleSeekBar bubbleSeekBar;
-    private int progressStatus;
+    private int progressStatus=500;
 
     //private Button menu,ar_nav,info,poi;
     @BindView(R.id.fab_menu_btn)
@@ -123,6 +124,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     private String[] categoryAry={"CAFE","BUSSTOP","CONVENIENCE","RESTAURANT","BANK","ACCOMMODATION","HOSPITAL"};
     public int loopShareInt=0; // for루프와 핸들러 사이의 공유변수
     private double current_longitude=0,current_latitude=0;
+    double subDistance;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -180,19 +182,19 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
 
                 final AlertDialog.Builder popDialog = new AlertDialog.Builder(v.getContext());
                 View innerView =  getLayoutInflater().inflate(R.layout.custom_seekbar,null);
+                TextView count = innerView.findViewById(R.id.count);
 
                 popDialog.setView(innerView);
                 popDialog.setTitle("어디까지 보고싶으세요?\n");
                 bubbleSeekBar=(BubbleSeekBar)innerView.findViewById(R.id.bubble_seekbar);
-                TextView count = innerView.findViewById(R.id.count);
                 TextView tip = innerView.findViewById(R.id.tip);
                 tip.setVisibility(View.GONE);
-                count.setText(progressStatus+"km");
+                count.setText(progressStatus+"m");
                 bubbleSeekBar.getConfigBuilder()
-                        .min(0)
-                        .max(10)
+                        .min(500)
+                        .max(2500)
                         .progress(progressStatus)
-                        .sectionCount(5)
+                        .sectionCount(4)
                         .trackColor(ContextCompat.getColor(v.getContext(), R.color.colorLightGray))
                         .secondTrackColor(ContextCompat.getColor(v.getContext(), R.color.main_mint))
                         .thumbColor(ContextCompat.getColor(v.getContext(), R.color.mainColor))
@@ -208,6 +210,23 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                         .seekBySection()
                         .sectionTextPosition(BubbleSeekBar.TextPosition.BELOW_SECTION_MARK)
                         .build();
+                bubbleSeekBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
+                    @Override
+                    public void onProgressChanged(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat, boolean fromUser) {
+                        progressStatus=progress;
+                        count.setText(progress+"m");
+                    }
+
+                    @Override
+                    public void getProgressOnActionUp(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat) {
+
+                    }
+
+                    @Override
+                    public void getProgressOnFinally(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat, boolean fromUser) {
+
+                    }
+                });
 
 
                 popDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -217,6 +236,12 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                         // Showing progress dialog before making http request
                         pDialog.setMessage("AR Loading...");
                         pDialog.show();
+
+                        // 반경을 설정할 수 있도록 해주는 변수 (현재위치 좌표에 subDistance를 빼면됨)
+                        subDistance = LatitudeInDifference(progressStatus-100);
+                        //double diffLongitude = LongitudeInDifference(current_longitude,400);
+                        Log.v("LatLon","currentLat="+current_latitude+"currentLon="+current_longitude+"//"+(current_latitude-subDistance)+", "+(current_longitude-subDistance));
+
 
                         Intent intent = new Intent(ar_mainActivity.this,UnityPlayerActivity.class);
                         intent.putExtra("SELECT", 2);
@@ -280,9 +305,9 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         GeoPoint myGeo = findMyLocation();
 
         if(current_latitude!=0 && current_longitude!=0){
-            createdURL = DataSource.createRequestCategoryURL(category,current_longitude,current_latitude);
+            createdURL = DataSource.createRequestCategoryURL(category,current_longitude,current_latitude,subDistance);
         }else{
-            createdURL = DataSource.createRequestCategoryURL(category,myGeo.getX(),myGeo.getY());
+            createdURL = DataSource.createRequestCategoryURL(category,myGeo.getX(),myGeo.getY(),subDistance);
         }
         Log.i("만들어진 주소",createdURL);
 
@@ -387,6 +412,8 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         localRequest.setShouldCache(false);
         AppHelper.requestQueue.add(localRequest);
     }
+
+
 
 
     // 현재 내 위치 반환
@@ -663,5 +690,24 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
             pDialog.dismiss();
             pDialog = null;
         }
+    }
+
+    // WGS좌표계 반경구하기 ( 몇 m거리의 위도,경도 구하기 )
+    //반경 m이내의 위도차(degree)
+    public double LatitudeInDifference(int diff){
+        //지구반지름
+        final int earth = 6371000;    //단위m
+
+        return (diff*360.0) / (2*Math.PI*earth);
+    }
+    //반경 m이내의 경도차(degree)
+    public double LongitudeInDifference(double _latitude, int diff){
+        //지구반지름
+        final int earth = 6371000;    //단위m
+
+        double ddd = Math.cos(0);
+        double ddf = Math.cos(Math.toRadians(_latitude));
+
+        return (diff*360.0) / (2*Math.PI*earth*Math.cos(Math.toRadians(_latitude)));
     }
 }
