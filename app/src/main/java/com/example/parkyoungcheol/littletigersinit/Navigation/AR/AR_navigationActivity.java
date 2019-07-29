@@ -217,24 +217,6 @@ public class AR_navigationActivity extends AppCompatActivity {
         dest_lat_Y = sf.getString("destLatY", null);
         coordiStyle = sf.getString("coordiStyle",null);
 
-        /*final Handler handler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                // 전에 설정해두었던 시작지,도착지 기억
-                SharedPreferences sf = getSharedPreferences("sFile", MODE_PRIVATE);
-                String sourceResult = sf.getString("sourceResult", null);
-                startTitle = sourceResult;
-                String destResult = sf.getString("destResult", null);
-                destTitle = destResult;
-                start_lon_X = sf.getString("startLonX", null);
-                start_lat_Y = sf.getString("startLatY", null);
-                dest_lon_X = sf.getString("destLonX", null);
-                dest_lat_Y = sf.getString("destLatY", null);
-                coordiStyle = sf.getString("coordiStyle",null);
-            }
-        };
-        handler.sendEmptyMessageDelayed(0,500);*/
-
         // 출발지 선택 버튼
         // requestCode 1001이면 출발지, 2002이면 도착지
         sourcePickBtn.setOnClickListener(new View.OnClickListener() {
@@ -524,7 +506,7 @@ public class AR_navigationActivity extends AppCompatActivity {
     // Tmap에 출발지, 도착지 보내서 길안내 경로마다의 경위도를 받아서 파싱함
     // 파싱하여 유니티로 넘겨줌
     // 형태 : 경도,위도|경도,위도| ...
-    private String TmapNaviJsonReceiver(String startLonX, String startLatY, String destLonX, String destLatY){
+    private String TmapNaviJsonReceiver(String startLonX, String startLatY, String destLonX, String destLatY) {
         StringBuffer sb=new StringBuffer();
         try {
             start_lon=Double.parseDouble(startLonX);
