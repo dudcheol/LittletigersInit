@@ -172,12 +172,23 @@
         android:layout_gravity="bottom|end"
         android:paddingEnd="8dp"
         android:paddingBottom="8dp"
-        app:menu_colorNormal="#FF2899FE"
-        app:menu_colorPressed="#71BFFF"
+        app:menu_colorNormal="#71BFFF"
+        app:menu_colorPressed="#FF2899FE"
         app:menu_colorRipple="#71BCFF"
         app:menu_icon="@drawable/menu"
         app:menu_openDirection="up"
         app:menu_showShadow="true">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/ar_my_message_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:fab_colorNormal="#969696"
+            app:fab_colorPressed="#FF2899FE"
+            app:fab_colorRipple="#71BCFF"
+            app:fab_label="내 글 보기"
+            app:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/ar_message_list_btn"

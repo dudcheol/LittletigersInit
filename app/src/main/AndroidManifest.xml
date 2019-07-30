@@ -44,7 +44,8 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustResize|stateHidden"
         tools:replace="android:icon, android:label, android:theme, android:name,android:allowBackup">
-        <activity android:name=".Navigation.AR.ARmessageActivity"></activity>
+        <activity android:name=".Navigation.AR.AR_MyMessageActivity"></activity>
+        <activity android:name=".Navigation.AR.ARmessageActivity" />
         <activity android:name=".Chat.ChatActivity" />
         <activity android:name=".Chat.ChatMainActivity" />
         <activity android:name=".CreateActivity" />

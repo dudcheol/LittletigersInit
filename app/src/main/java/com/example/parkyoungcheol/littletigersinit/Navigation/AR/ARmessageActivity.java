@@ -76,7 +76,7 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
     private RecyclerView m_oListView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private com.github.clans.fab.FloatingActionButton ar_message_btn;
+    private com.github.clans.fab.FloatingActionButton ar_message_btn,ar_my_message_btn;
 
     private ProgressDialog pDialog;
     private AlertDialog.Builder alertDialogBuilder;
@@ -100,6 +100,7 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
         txtView = (TextView) findViewById(R.id.result);
         current_mylocation_text = (TextView) findViewById(R.id.current_location_text);
         ar_message_btn = (com.github.clans.fab.FloatingActionButton)findViewById(R.id.ar_message_list_btn);
+        ar_my_message_btn = findViewById(R.id.ar_my_message_btn);
 
         txtView.setText(progressStatus+"km");
 
@@ -135,6 +136,12 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                 startActivity(intent);
                 overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
             }
+        });
+
+        ar_my_message_btn.setOnClickListener(view -> {
+            Intent intent = new Intent(ARmessageActivity.this, AR_MyMessageActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
         });
 
 
@@ -527,7 +534,16 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
         popDialog.setTitle("어디까지 보고싶으세요?\n");
         bubbleSeekBar=(BubbleSeekBar)innerView.findViewById(R.id.bubble_seekbar);
         TextView count = innerView.findViewById(R.id.count);
-        count.setText(progressStatus+"km");
+        if(progressStatus==200)
+        {
+            txtView.setText("전체");
+            count.setText("모든 ");
+        }else if(progressStatus==0){
+            txtView.setText("내 주변");
+            count.setText("주변 100m 이내");
+        }else{
+            count.setText(progressStatus+"km");
+        }
 
         bubbleSeekBar.getConfigBuilder()
             .min(0)
@@ -555,10 +571,14 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                 txtView.setText(String.valueOf(progress));
                 progressStatus=progress;
                 count.setText(progress+"km");
-                if(txtView.getText().equals("200"))
+                if(progressStatus==200)
                 {
                     txtView.setText("전체");
                     count.setText("모든 ");
+                }
+                if(progressStatus==0){
+                    txtView.setText("내 주변");
+                    count.setText("주변 100m 이내");
                 }
             }
 
