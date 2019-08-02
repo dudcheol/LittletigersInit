@@ -102,7 +102,14 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
         ar_message_btn = (com.github.clans.fab.FloatingActionButton)findViewById(R.id.ar_message_list_btn);
         ar_my_message_btn = findViewById(R.id.ar_my_message_btn);
 
-        txtView.setText(progressStatus+"km");
+        if(progressStatus==200)
+        {
+            txtView.setText("전체");
+        }else if(progressStatus==0){
+            txtView.setText("내 주변");
+        }else{
+            txtView.setText(progressStatus+"");
+        }
 
         // 위치권한 받아오기
         checkLocationPermission();

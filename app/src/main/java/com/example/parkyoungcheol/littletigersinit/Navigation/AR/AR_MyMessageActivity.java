@@ -144,7 +144,7 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
                         //TODO 여기다가 uid 비교 후 같은 접속한 uid와 같은거만 리스트에 넣어주며 끝
                         String special = bbs.getUID();
                         String special2 = mFirebaseUser.getUid();
-                        if(special != null && special.contains("0aqhKGhuyxeSVRomlALyxVnyYRx2")) {
+                        if(special != null && special.contains("JeS9CecpMRe7SxNksrT8z3aLv9u2")) {
                             mBoardList.add(bbs);
                             mBoardList.get(i).setAddress(geoCodingCoordiToAddress(mBoardList.get(i).getLongitude(), mBoardList.get(i).getLatitude()));
                             mBoardList.get(i).setDistance(calcDistance2(sLat, sLng, bbs.getLatitude(), bbs.getLongitude()) / 1000);
