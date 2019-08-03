@@ -167,7 +167,13 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
         mFirebaseDb = FirebaseDatabase.getInstance();
         mARMessageRef = mFirebaseDb.getReference("ARMessages");
 
+        // 리사이클러뷰 생성
         mBoardList = new ArrayList<>();
+        m_oListView = (RecyclerView) findViewById(R.id.listView);
+        mAdapter = new ArmsgListAdapter(ARmessageActivity.this, mBoardList);
+        mLayoutManager = new LinearLayoutManager(ARmessageActivity.this);
+        m_oListView.setLayoutManager(mLayoutManager);
+        m_oListView.setAdapter(mAdapter);
 
         // 권한체크
         if(permissionLocation == PackageManager.PERMISSION_DENIED){
@@ -196,12 +202,10 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                             return o1.getDistance().compareTo(o2.getDistance());
                         }
                     });
-                    m_oListView = (RecyclerView) findViewById(R.id.listView);
-                    mAdapter = new ArmsgListAdapter(ARmessageActivity.this, mBoardList);
+
+                    // 리사이클러뷰에게 데이터 바뀜을 알림
                     mAdapter.notifyDataSetChanged();
-                    mLayoutManager = new LinearLayoutManager(ARmessageActivity.this);
-                    m_oListView.setLayoutManager(mLayoutManager);
-                    m_oListView.setAdapter(mAdapter);
+
                     m_oListView.addOnItemTouchListener(new RecyclerViewItemClickListener(ARmessageActivity.this, new RecyclerViewItemClickListener.OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
@@ -226,7 +230,6 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     String longitude = Double.toString(armsgData.getLongitude());
                                                     String latitude = Double.toString(armsgData.getLatitude());
-
 
                                                     Intent intent = new Intent(ARmessageActivity.this, AR_navigationActivity.class);
                                                     intent.putExtra("dest_lon_X_from_armessage", String.valueOf(longitude));

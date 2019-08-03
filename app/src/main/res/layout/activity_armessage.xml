@@ -151,11 +151,21 @@
             android:background="#000000"
             android:orientation="horizontal" />-->
 
-        <fragment
-            android:id="@+id/map"
-            android:name="com.naver.maps.map.MapFragment"
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="200dp"></fragment>
+            android:layout_height="200dp"
+            android:elevation="50dp"
+            android:padding="10dp"
+            app:cardCornerRadius="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp">
+            <fragment
+                android:id="@+id/map"
+                android:name="com.naver.maps.map.MapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"></fragment>
+        </android.support.v7.widget.CardView>
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/listView"
