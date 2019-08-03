@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.google.firebase.database.Exclude;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,18 @@ public class ArmsgData
     public Double longitude;
     public String address;
     public Double distance;
+    public int likecnt;
+    public ArrayList likeuserlist;
+
+    public ArmsgData(){
+
+    }
+    public ArmsgData(String label, Double latitude, Double longitude){
+        this.label = label;
+        this.latitude = latitude;
+        this.longitude = longitude;
+
+    }
 
     public void setAddress(String address) {
         this.address = address;
@@ -67,15 +80,19 @@ public class ArmsgData
         this.onClickListener = onClickListener;
     }
 
-    public ArmsgData(){
-
-    }
-    public ArmsgData(String label, Double latitude, Double longitude){
-        this.label = label;
-        this.latitude = latitude;
-        this.longitude = longitude;
-
+    public int getLikecnt() {
+        return likecnt;
     }
 
+    public ArrayList getLikeuserlist() {
+        return likeuserlist;
+    }
 
+    public void setLikecnt(int likecnt) {
+        this.likecnt = likecnt;
+    }
+
+    public void setLikeuserlist(ArrayList likeuserlist) {
+        this.likeuserlist = likeuserlist;
+    }
 }

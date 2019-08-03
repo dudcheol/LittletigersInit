@@ -5,6 +5,11 @@ import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -17,26 +22,35 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.parkyoungcheol.littletigersinit.Chat.Chat
 import com.example.parkyoungcheol.littletigersinit.Chat.ChatLoginActivity
 import com.example.parkyoungcheol.littletigersinit.Chat.ChatMainActivity
 import com.example.parkyoungcheol.littletigersinit.Navigation.AR.ARmessageActivity
 import com.example.parkyoungcheol.littletigersinit.Navigation.SNS.*
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.item_comment.*
+import kotlinx.android.synthetic.main.item_comment.view.*
 import java.lang.ref.Reference
 import java.sql.PreparedStatement
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     val PICK_PROFILE_FROM_ALBUM = 10
     var backKeyPressedTime = 0L
+    var user : FirebaseUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +61,41 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         // Bottom Navigation View
         bottom_navigation.setOnNavigationItemSelectedListener(this)
         bottom_navigation.selectedItemId = R.id.action_home
+
+
+        // Bottom navi 사용자 프로필 이미지 가져옴
+        user=FirebaseAuth.getInstance().currentUser
+        FirebaseFirestore.getInstance()
+                .collection("profileImages")
+                .document(user!!.uid)
+                .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                    if(documentSnapshot?.data == null){
+                        profileImg?.visibility = View.GONE
+                        bottom_navigation.menu.getItem(4).setIcon(R.drawable.ic_account)
+                    }
+                    else {
+                        /*val target = object : SimpleTarget<Bitmap>() {
+                            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                var drawable = BitmapDrawable(resource)
+                                bottom_navigation.menu.getItem(4).setIcon(drawable)
+                            }
+                        }
+
+                        val url = documentSnapshot?.data!!["image"]
+                        Glide.with(this).asBitmap().load(url)
+                                .apply(RequestOptions().circleCrop())
+                                .into(target)*/
+
+                        profileImg?.visibility = View.VISIBLE
+                        bottom_navigation.menu.getItem(4).setIcon(null)
+                        val url = documentSnapshot?.data!!["image"]
+
+                        Glide.with(this)
+                                .load(url)
+                                .apply(RequestOptions().circleCrop())
+                                .into(profileImg)
+                    }
+                }
 
         // 앨범 접근 권한 요청
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
@@ -122,6 +171,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.main_content, detailViewFragment)
                         .commit()
+
+                val colorMatrix = ColorMatrix()
+                colorMatrix.setSaturation(0.0f)
+                val filter = ColorMatrixColorFilter(colorMatrix)
+                profileImg.colorFilter = filter
                 return true
             }
             R.id.action_search -> {
@@ -130,6 +184,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                         .beginTransaction()
                         .replace(R.id.main_content, gridFragment)
                         .commit()
+
+                val colorMatrix = ColorMatrix()
+                colorMatrix.setSaturation(0.0f)
+                val filter = ColorMatrixColorFilter(colorMatrix)
+                profileImg.colorFilter = filter
                 return true
             }
             R.id.action_add_photo -> {
@@ -140,6 +199,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 } else {
                     Toast.makeText(this, "스토리지 읽기 권한이 없습니다.", Toast.LENGTH_LONG).show()
                 }
+                val colorMatrix = ColorMatrix()
+                colorMatrix.setSaturation(0.0f)
+                val filter = ColorMatrixColorFilter(colorMatrix)
+                profileImg.colorFilter = filter
                 return true
             }
             R.id.action_favorite_alarm -> {
@@ -148,6 +211,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                         .beginTransaction()
                         .replace(R.id.main_content, alarmFragment)
                         .commit()
+
+                val colorMatrix = ColorMatrix()
+                colorMatrix.setSaturation(0.0f)
+                val filter = ColorMatrixColorFilter(colorMatrix)
+                profileImg.colorFilter = filter
                 return true
             }
             R.id.action_account -> {
@@ -159,6 +227,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.main_content, userFragment)
                         .commit()
+
+                profileImg.clearColorFilter()
+
                 return true
             }
         }

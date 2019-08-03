@@ -3,12 +3,15 @@ package com.example.parkyoungcheol.littletigersinit.Navigation.SNS
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutCompat
+import android.support.v7.widget.LinearLayoutCompat.*
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.parkyoungcheol.littletigersinit.MainActivity
@@ -25,7 +28,9 @@ import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
+import kotlinx.android.synthetic.main.item_detail.*
 import kotlinx.android.synthetic.main.item_detail.view.*
+import kotlinx.android.synthetic.main.item_detail.view.detailviewitem_imageview_content
 import okhttp3.OkHttpClient
 import java.util.*
 
@@ -80,12 +85,12 @@ class DetailViewFragment : Fragment() {
                     var userDTO = task.result?.toObject(FollowDTO::class.java)
                     if (userDTO!=null) {
                         getCotents(userDTO?.followings)
-                        sad.visibility = View.GONE
-                        no_alarm.visibility = View.GONE
+                        sad?.visibility = View.GONE
+                        no_alarm?.visibility = View.GONE
                         Log.v("팔로잉", userDTO?.followings.toString())
                     }else{
-                        sad.visibility = View.VISIBLE
-                        no_alarm.visibility = View.VISIBLE
+                        sad?.visibility = View.VISIBLE
+                        no_alarm?.visibility = View.VISIBLE
                     }
                 }
             }
@@ -118,8 +123,8 @@ class DetailViewFragment : Fragment() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
             val view = LayoutInflater.from(parent.context).inflate(R.layout.item_detail, parent, false)
-            return CustomViewHolder(view)
 
+            return CustomViewHolder(view)
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -132,12 +137,23 @@ class DetailViewFragment : Fragment() {
                         if (task.isSuccessful) {
 
                             val url = task.result?.get("image")
-                            Glide.with(holder.itemView.context)
-                                    .load(url)
-                                    .apply(RequestOptions().circleCrop()).into(viewHolder.detailviewitem_profile_image)
-
+                            //Log.d("profile_url",url.toString())
+                            if(url==null){
+                                Glide.with(holder.itemView.context)
+                                        .load(R.drawable.ic_account)
+                                        .into(viewHolder.detailviewitem_profile_image)
+                            }else {
+                                Glide.with(holder.itemView.context)
+                                        .load(url)
+                                        .apply(RequestOptions().circleCrop()).into(viewHolder.detailviewitem_profile_image)
+                            }
                         }
                     }
+
+            /*//현재 사이즈 뷰 화면 크기의 가로 크기의 값을 가지고 오기
+            val width = resources.displayMetrics.widthPixels
+            val imageView = holder.itemView.detailviewitem_imageview_content
+            imageView.layoutParams = LayoutParams(width, width)*/
 
             //UserFragment로 이동
             viewHolder.detailviewitem_profile_image.setOnClickListener {

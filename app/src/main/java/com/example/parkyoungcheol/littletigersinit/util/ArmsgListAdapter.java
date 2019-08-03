@@ -29,12 +29,14 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
         TextView oTextTitle;
         TextView oTextDate;
         Button oBtn;
+        TextView likeCnt;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             oTextTitle = (TextView) itemView.findViewById(R.id.textTitle);
             oTextDate = (TextView) itemView.findViewById(R.id.textDate);
             oBtn = (Button) itemView.findViewById(R.id.btnSelector);
+            likeCnt = (TextView) itemView.findViewById(R.id.favorite_count);
         }
     }
     @NonNull
@@ -52,22 +54,7 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
         viewHolder.oTextTitle.setText(data.getLabel());
         viewHolder.oTextDate.setText(data.getAddress());
         viewHolder.oBtn.setText(data.getDistance().toString()+"km");
-        /*viewHolder.oBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String longitude = Double.toString(data.getLongitude());
-                String latitude = Double.toString(data.getLongitude());
-
-
-                Intent intent = new Intent(v.getContext(), AR_navigationActivity.class);
-                intent.putExtra("dest_lon_X_from_armessage", String.valueOf(longitude));
-                intent.putExtra("dest_lat_Y_from_armessage", String.valueOf(latitude));
-                intent.putExtra("dest_label_from_armessage", String.valueOf(data.getAddress()));
-
-                mContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                mActivity.overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
-            }
-        });*/
+        viewHolder.likeCnt.setText(data.getLikecnt()+"");
     }
 
 

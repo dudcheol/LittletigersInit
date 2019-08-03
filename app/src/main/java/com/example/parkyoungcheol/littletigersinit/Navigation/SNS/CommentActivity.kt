@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,9 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.android.synthetic.main.activity_comment.*
+import kotlinx.android.synthetic.main.item_comment.*
 import kotlinx.android.synthetic.main.item_comment.view.*
+import kotlinx.android.synthetic.main.item_comment.view.commentviewitem_imageview_profile
 import java.util.*
 
 class CommentActivity : AppCompatActivity() {
@@ -124,9 +127,12 @@ class CommentActivity : AppCompatActivity() {
                     .collection("profileImages")
                     .document(comments[position].uid!!)
                     .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                        if (documentSnapshot?.data != null) {
-
+                        if(documentSnapshot?.data == null){
+                            commentviewitem_imageview_profile.setImageResource(R.drawable.ic_account)
+                        }
+                        else {
                             val url = documentSnapshot?.data!!["image"]
+
                             Glide.with(holder.itemView.context)
                                     .load(url)
                                     .apply(RequestOptions().circleCrop()).into(view.commentviewitem_imageview_profile)
