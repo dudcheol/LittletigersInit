@@ -16,6 +16,15 @@ public class MyArmsgData
     private String address;
     private Double distance;
     private String UID;
+    private String key;
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public String getUID() {
         return UID;

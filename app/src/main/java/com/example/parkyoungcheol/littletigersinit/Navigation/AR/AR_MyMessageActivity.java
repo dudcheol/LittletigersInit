@@ -36,6 +36,8 @@ import com.example.parkyoungcheol.littletigersinit.Model.MyArmsgData;
 import com.example.parkyoungcheol.littletigersinit.R;
 import com.example.parkyoungcheol.littletigersinit.util.ArmsgListAdapter;
 import com.example.parkyoungcheol.littletigersinit.util.MyArmsgListAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -144,7 +146,7 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
                         //TODO 여기다가 uid 비교 후 같은 접속한 uid와 같은거만 리스트에 넣어주며 끝
                         String special = bbs.getUID();
                         String special2 = mFirebaseUser.getUid();
-                        if(special != null && special.contains("JeS9CecpMRe7SxNksrT8z3aLv9u2")) {
+                        if(special != null && special.contains("0aqhKGhuyxeSVRomlALyxVnyYRx2")) {
                             mBoardList.add(bbs);
                             mBoardList.get(i).setAddress(geoCodingCoordiToAddress(mBoardList.get(i).getLongitude(), mBoardList.get(i).getLatitude()));
                             mBoardList.get(i).setDistance(calcDistance2(sLat, sLng, bbs.getLatitude(), bbs.getLongitude()) / 1000);
@@ -192,6 +194,19 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     //TODO 이부분을 DB삭제 기능을 추가한다.
+                                                    mFirebaseDb.getReference().child("ARMessages").child(armsgData.getKey()).removeValue()
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Toast.makeText(AR_MyMessageActivity.this, "삭제 성공", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Toast.makeText(AR_MyMessageActivity.this, "삭제 실패", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+
                                                 }
                                             });
 
@@ -270,20 +285,22 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Marker marker = new Marker();
                     MyArmsgData abc = snapshot.getValue(MyArmsgData.class); // 컨버팅되서 Bbs로........
-                    marker.setPosition(new LatLng(abc.getLatitude(), abc.getLongitude()));
-                    if(abc.getLabel().length()>=10){
-                        msg = abc.getLabel().substring(0,10)+"...";
-                    }else{
-                        msg = abc.getLabel();
+                    if(abc.getUID() != null && abc.getUID().contains("0aqhKGhuyxeSVRomlALyxVnyYRx2")) { //contains 안에 user.getuid로 바꾸기
+                        marker.setPosition(new LatLng(abc.getLatitude(), abc.getLongitude()));
+                        if (abc.getLabel().length() >= 10) {
+                            msg = abc.getLabel().substring(0, 10) + "...";
+                        } else {
+                            msg = abc.getLabel();
+                        }
+                        marker.setCaptionText(msg);
+                        marker.setWidth(80);
+                        marker.setHeight(80);
+                        marker.setIcon(OverlayImage.fromResource(R.drawable.ar_marker));
+                        marker.setCaptionColor(Color.WHITE);
+                        marker.setCaptionHaloColor(Color.BLACK);
+                        marker.setCaptionTextSize(12);
+                        marker.setMap(naverMap);
                     }
-                    marker.setCaptionText(msg);
-                    marker.setWidth(80);
-                    marker.setHeight(80);
-                    marker.setIcon(OverlayImage.fromResource(R.drawable.ar_marker));
-                    marker.setCaptionColor(Color.WHITE);
-                    marker.setCaptionHaloColor(Color.BLACK);
-                    marker.setCaptionTextSize(12);
-                    marker.setMap(naverMap);
                 }
             }
 
