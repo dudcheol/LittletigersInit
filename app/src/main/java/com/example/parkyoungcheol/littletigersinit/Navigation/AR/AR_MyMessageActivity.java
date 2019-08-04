@@ -162,6 +162,11 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
 
                     }
 
+                    if(mBoardList != null)
+                    {
+                        sad.setVisibility(View.GONE);
+                        no_alarm.setVisibility(View.GONE);
+                    }
 
                     //Collections.reverse(mBoardList);
                     Collections.sort(mBoardList, new Comparator<MyArmsgData>() {

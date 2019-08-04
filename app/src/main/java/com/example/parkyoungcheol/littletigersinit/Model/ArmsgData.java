@@ -17,7 +17,25 @@ public class ArmsgData
     public String address;
     public Double distance;
     public int likecnt;
-    public ArrayList likeuserlist;
+    //public ArrayList likelist;
+    public String key;
+    public String uid;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public ArmsgData(){
 
@@ -84,15 +102,15 @@ public class ArmsgData
         return likecnt;
     }
 
-    public ArrayList getLikeuserlist() {
-        return likeuserlist;
-    }
-
     public void setLikecnt(int likecnt) {
         this.likecnt = likecnt;
     }
 
-    public void setLikeuserlist(ArrayList likeuserlist) {
-        this.likeuserlist = likeuserlist;
+/*    public ArrayList getLikelist() {
+        return likelist;
     }
+
+    public void setLikelist(ArrayList likelist) {
+        this.likelist = likelist;
+    }*/
 }

@@ -8,10 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.parkyoungcheol.littletigersinit.Model.ArmsgData;
 import com.example.parkyoungcheol.littletigersinit.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -19,6 +24,9 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
 {
     private List<ArmsgData> mDataset;
     private Context mContext;
+    private FirebaseUser mFirebaseUser;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseDatabase mFirebaseDb;
 
     public ArmsgListAdapter(Context mContext, List<ArmsgData> mBoardList) {
         this.mContext = mContext;
@@ -30,6 +38,7 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
         TextView oTextDate;
         Button oBtn;
         TextView likeCnt;
+        ImageView likeBtn;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -37,6 +46,7 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
             oTextDate = (TextView) itemView.findViewById(R.id.textDate);
             oBtn = (Button) itemView.findViewById(R.id.btnSelector);
             likeCnt = (TextView) itemView.findViewById(R.id.favorite_count);
+            likeBtn = itemView.findViewById(R.id.favorite_btn);
         }
     }
     @NonNull
@@ -48,6 +58,11 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        mFirebaseDb = FirebaseDatabase.getInstance();
+
         ArmsgData data  = mDataset.get(i);
         Activity mActivity = (Activity)viewHolder.itemView.getContext();
 
@@ -55,6 +70,16 @@ public class ArmsgListAdapter extends RecyclerView.Adapter<ArmsgListAdapter.View
         viewHolder.oTextDate.setText(data.getAddress());
         viewHolder.oBtn.setText(data.getDistance().toString()+"km");
         viewHolder.likeCnt.setText(data.getLikecnt()+"");
+        viewHolder.likeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mActivity, "좋아요누름", Toast.LENGTH_SHORT).show();
+
+                mFirebaseDb.getReference().child("ARMessages").child(data.getKey()).child("likelist").push().setValue(data.getUid());
+
+
+            }
+        });
     }
 
 
