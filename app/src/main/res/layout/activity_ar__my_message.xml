@@ -53,11 +53,38 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"></fragment>
 
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        <ImageView
+            android:visibility="visible"
+            android:id="@+id/sad"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:src="@drawable/sad"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="70dp"/>
+        <TextView
+            android:visibility="visible"
+            android:id="@+id/no_alarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/sad"
+            android:gravity="center"
+            android:text="이런! 나의 AR 메시지가 없어요. \n AR 메시지를 게시하고 다른 사람과 \n소통해보세요."
+            android:layout_marginRight="0dp"/>
+
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never"
             />
+        </RelativeLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

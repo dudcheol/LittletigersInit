@@ -26,6 +26,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,6 +96,9 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ar__my_message);
 
+        ImageView sad = findViewById(R.id.sad);
+        TextView no_alarm = findViewById(R.id.no_alarm);
+
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
@@ -158,6 +162,7 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
 
                     }
 
+
                     //Collections.reverse(mBoardList);
                     Collections.sort(mBoardList, new Comparator<MyArmsgData>() {
                         @Override
@@ -193,7 +198,6 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
                                             new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    //TODO 이부분을 DB삭제 기능을 추가한다.
                                                     mFirebaseDb.getReference().child("ARMessages").child(armsgData.getKey()).removeValue()
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override

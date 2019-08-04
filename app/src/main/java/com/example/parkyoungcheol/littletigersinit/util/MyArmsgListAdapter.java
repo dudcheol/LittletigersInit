@@ -53,7 +53,6 @@ public class MyArmsgListAdapter extends RecyclerView.Adapter<MyArmsgListAdapter.
         viewHolder.oTextTitle.setText(data.getLabel());
         viewHolder.oTextDate.setText(data.getAddress());
         viewHolder.oBtn.setText(data.getDistance().toString()+"km");
-        //TODO 여기 oBtn 부분 어떻게 거리랑 삭제를 나타낼건지 생각해보기
         /*viewHolder.oBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

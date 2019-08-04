@@ -193,7 +193,7 @@
             android:id="@+id/ar_my_message_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:src="@drawable/my_icon"
             app:fab_colorNormal="#969696"
             app:fab_colorPressed="#FF2899FE"
             app:fab_colorRipple="#71BCFF"
