@@ -103,6 +103,13 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
         txtView = (TextView) findViewById(R.id.result);
         go_armsg_btn = (Button) findViewById(R.id.go_armsg_btn);
 
+        go_armsg_btn.setOnClickListener(v -> {
+            Intent intent = new Intent(AR_MyMessageActivity.this, UnityPlayerActivity.class);
+            intent.putExtra("SELECT", 3);
+            startActivity(intent);
+            overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
+        });
+
         // 위치권한 받아오기
         checkLocationPermission();
 
@@ -167,12 +174,6 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
                         no_alarm.setVisibility(View.GONE);
                         go_armsg_btn.setVisibility(View.GONE);
                     }
-                    go_armsg_btn.setOnClickListener(v -> {
-                        Intent intent = new Intent(AR_MyMessageActivity.this, UnityPlayerActivity.class);
-                        intent.putExtra("SELECT", 3);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
-                    });
 
                     //Collections.reverse(mBoardList);
                     Collections.sort(mBoardList, new Comparator<ArmsgData>() {
@@ -257,8 +258,8 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
                 oData.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Marker marker = new Marker();
-                    MyArmsgData abc = snapshot.getValue(MyArmsgData.class); // 컨버팅되서 Bbs로........
-                    if(abc.getUID() != null && abc.getUID().contains("0aqhKGhuyxeSVRomlALyxVnyYRx2")) { //contains 안에 user.getuid로 바꾸기
+                    ArmsgData abc = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
+                    if(abc.getUid() != null && abc.getUid().contains(currentUid)) { //contains 안에 user.getuid로 바꾸기
                         marker.setPosition(new LatLng(abc.getLatitude(), abc.getLongitude()));
                         if (abc.getLabel().length() >= 10) {
                             msg = abc.getLabel().substring(0, 10) + "...";

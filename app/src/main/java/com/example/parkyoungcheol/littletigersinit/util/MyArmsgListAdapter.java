@@ -13,11 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.parkyoungcheol.littletigersinit.Model.ArmsgData;
 import com.example.parkyoungcheol.littletigersinit.Model.MyArmsgData;
 import com.example.parkyoungcheol.littletigersinit.Navigation.AR.AR_navigationActivity;
 import com.example.parkyoungcheol.littletigersinit.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -35,11 +38,6 @@ public class MyArmsgListAdapter extends RecyclerView.Adapter<MyArmsgListAdapter.
     private FirebaseDatabase mFirebaseDb;
     private AlertDialog.Builder alertDialogBuilder;
     private Activity mActivity;
-    private TextView oTextTitle;
-    private TextView oTextDate;
-    private Button oBtn;
-    private TextView likeCnt;
-    private ShineButton likeBtn;
     private String currentUid;
 
     public MyArmsgListAdapter(Context mContext, List<ArmsgData> mBoardList) {
@@ -51,6 +49,8 @@ public class MyArmsgListAdapter extends RecyclerView.Adapter<MyArmsgListAdapter.
         TextView oTextTitle;
         TextView oTextDate;
         Button oBtn;
+        TextView likeCnt;
+        ShineButton likeBtn;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -74,55 +74,62 @@ public class MyArmsgListAdapter extends RecyclerView.Adapter<MyArmsgListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        oTextTitle.setText(mDataset.get(i).getLabel());
-        oTextDate.setText(mDataset.get(i).getAddress());
-        oBtn.setText(mDataset.get(i).getDistance().toString() + "km");
-        likeCnt.setText(mDataset.get(i).getLikecnt()+"");
+        viewHolder.oTextTitle.setText(mDataset.get(i).getLabel());
+        viewHolder.oTextDate.setText(mDataset.get(i).getAddress());
+        viewHolder.oBtn.setText(mDataset.get(i).getDistance().toString() + "km");
+        viewHolder.likeCnt.setText(mDataset.get(i).getLikecnt()+"");
+        viewHolder.oTextTitle.setSelected(true);
 
         // 좋아요 버튼 초기 설정 (하트 채워져있는거 여부 결정)
-        if(mDataset.get(i).getLikelist().contains(currentUid)){
-            likeBtn.setChecked(true);
+        if(mDataset.get(i).getLikelist()!=null) {
+            if (mDataset.get(i).getLikelist().contains(currentUid)) {
+                viewHolder.likeBtn.setChecked(true);
+            } else {
+                viewHolder.likeBtn.setChecked(false);
+            }
         }else{
-            likeBtn.setChecked(false);
+            viewHolder.likeBtn.setChecked(false);
         }
 
         // 좋아요 버튼 클릭 시
-        likeBtn.setOnClickListener(v -> {
+        viewHolder.likeBtn.setOnClickListener(v -> {
             favoriteEvent(i);
             //notifyItemChanged(i);
         });
 
         // 삭제 버튼 눌렀을 시시
-        oBtn.setOnClickListener(v -> {
+        viewHolder.oBtn.setOnClickListener(v -> {
             ArmsgData armsgData = mDataset.get(i);
 
-            alertDialogBuilder = new AlertDialog.Builder(v.getContext());
+            alertDialogBuilder = new AlertDialog.Builder(mActivity);
 
-            alertDialogBuilder.setTitle("AR 메시지");
+            alertDialogBuilder.setTitle("정말 삭제하시겠습니까?");
             alertDialogBuilder
                     .setMessage(armsgData.getLabel())
                     .setCancelable(true)
-                    .setPositiveButton("닫기",
+                    .setPositiveButton("취소",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
                                 }
                             })
-                    .setNegativeButton("여기로 길안내",
+                    .setNegativeButton("삭제하기",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    String longitude = Double.toString(armsgData.getLongitude());
-                                    String latitude = Double.toString(armsgData.getLatitude());
-
-                                    Intent intent = new Intent(mActivity, AR_navigationActivity.class);
-                                    intent.putExtra("dest_lon_X_from_armessage", String.valueOf(longitude));
-                                    intent.putExtra("dest_lat_Y_from_armessage", String.valueOf(latitude));
-                                    intent.putExtra("dest_label_from_armessage", String.valueOf(armsgData.getAddress()));
-
-                                    mActivity.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                                    mActivity.overridePendingTransition(R.anim.push_up_in, R.anim.non_anim);
+                                    mFirebaseDb.getReference().child("ARMessages").child(armsgData.getKey()).removeValue()
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(mActivity, "삭제 성공", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(mActivity, "삭제 실패", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
 
                                 }
                             });
@@ -142,22 +149,33 @@ public class MyArmsgListAdapter extends RecyclerView.Adapter<MyArmsgListAdapter.
     private void favoriteEvent(int i){
         DatabaseReference tsDoc = mFirebaseDb.getReference("ARMessages");
 
-        if (mDataset.get(i).getLikelist().contains(currentUid)) {
-            Log.v("어댑터 좋아요 테스트","좋아요 취소");
-            mDataset.get(i).setLikecnt(mDataset.get(i).getLikecnt()-1);
-            ArrayList<String> changeData = mDataset.get(i).getLikelist();
-            changeData.remove(currentUid);
-            mDataset.get(i).setLikelist(changeData);
-        } else {
-            Log.v("어댑터 좋아요 테스트","좋아요 등록");
-            mDataset.get(i).setLikecnt(mDataset.get(i).getLikecnt()+1);
-            ArrayList<String> changeData = mDataset.get(i).getLikelist();
+        ArmsgData data = mDataset.get(i);
+
+        if(data.getLikelist()!=null) {
+            if (data.getLikelist().contains(currentUid)) {
+                Log.v("어댑터 좋아요 테스트", "좋아요 취소");
+                data.setLikecnt(data.getLikecnt() - 1);
+                ArrayList<String> changeData = data.getLikelist();
+                changeData.remove(currentUid);
+                data.setLikelist(changeData);
+            } else {
+                Log.v("어댑터 좋아요 테스트", "좋아요 등록");
+                data.setLikecnt(data.getLikecnt() + 1);
+                ArrayList<String> changeData = data.getLikelist();
+                changeData.add(currentUid);
+                data.setLikelist(changeData);
+            }
+        } else{
+            // likelist가 null 일 경우이므로 새롭게 넣어주어야함
+            Log.v("어댑터 좋아요 테스트", "좋아요 등록");
+            data.setLikecnt(data.getLikecnt() + 1);
+            ArrayList<String> changeData = new ArrayList<>();
             changeData.add(currentUid);
-            mDataset.get(i).setLikelist(changeData);
+            data.setLikelist(changeData);
         }
 
         Map<String,Object> updates = new HashMap<>();
-        updates.put(mDataset.get(i).getKey(),mDataset.get(i));
+        updates.put(data.getKey(),data);
         tsDoc.updateChildren(updates);
     }
 

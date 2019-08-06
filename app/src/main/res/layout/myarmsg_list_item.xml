@@ -20,7 +20,7 @@
         <TextView
             android:id="@+id/textTitle"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:text="제목"
             android:textSize="23dp"
             android:layout_weight="60"
@@ -29,10 +29,11 @@
             android:textStyle="bold"
             android:textColor="#000000"
             android:layout_marginTop="10dp"
-            android:maxLines="1"
-            android:maxLength="50"
             android:singleLine="true"
-            android:ellipsize="end"
+            android:ellipsize="marquee"
+            android:focusable="false"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
             />
 
         <LinearLayout

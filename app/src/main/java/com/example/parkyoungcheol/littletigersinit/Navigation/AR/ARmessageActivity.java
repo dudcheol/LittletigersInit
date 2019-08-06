@@ -205,7 +205,6 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
 
                     // 리사이클러뷰에게 데이터 바뀜을 알림
                     mAdapter.notifyDataSetChanged();
-
                 }
 
                 @Override
@@ -274,7 +273,6 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
         naverMap.setIndoorEnabled(false);
 
         ArrayList<ArmsgData> oData = new ArrayList<ArmsgData>();
-        ArmsgData oItem = new ArmsgData();
         mARMessageRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -579,7 +577,6 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                                         mBoardList.get(i).setAddress(geoCodingCoordiToAddress(mBoardList.get(i).getLongitude(), mBoardList.get(i).getLatitude()));
                                         mBoardList.get(i).setDistance(calcDistance2(sLat, sLng, bbs.getLatitude(), bbs.getLongitude())/1000);
                                         i++;
-
                                     }
 
                                     Collections.sort(mBoardList, new Comparator<ArmsgData>() {
@@ -588,13 +585,7 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                                             return o1.getDistance().compareTo(o2.getDistance());
                                         }
                                     });
-                                    m_oListView = (RecyclerView)findViewById(R.id.listView);
-                                    mAdapter = new ArmsgListAdapter(ARmessageActivity.this, mBoardList);
                                     mAdapter.notifyDataSetChanged();
-                                    mLayoutManager = new LinearLayoutManager(ARmessageActivity.this);
-                                    m_oListView.setLayoutManager(mLayoutManager);
-                                    m_oListView.setAdapter(mAdapter);
-
                                 }
 
                                 @Override
@@ -636,13 +627,7 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                                             return o1.getDistance().compareTo(o2.getDistance());
                                         }
                                     });
-                                    m_oListView = (RecyclerView)findViewById(R.id.listView);
-                                    mAdapter = new ArmsgListAdapter(ARmessageActivity.this, mBoardList);
                                     mAdapter.notifyDataSetChanged();
-                                    mLayoutManager = new LinearLayoutManager(ARmessageActivity.this);
-                                    m_oListView.setLayoutManager(mLayoutManager);
-                                    m_oListView.setAdapter(mAdapter);
-
                                 }
 
                                 @Override
