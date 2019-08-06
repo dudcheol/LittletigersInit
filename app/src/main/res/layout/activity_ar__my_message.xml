@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Navigation.AR.ARmessageActivity"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    tools:context=".Navigation.AR.ARmessageActivity">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -21,8 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
             android:layout_marginBottom="5dp">
 
             <TextView
@@ -47,44 +46,73 @@
                 android:textStyle="bold" />
         </RelativeLayout>
 
-        <fragment
-            android:id="@+id/map"
-            android:name="com.naver.maps.map.MapFragment"
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="200dp"></fragment>
+            android:layout_height="200dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:elevation="50dp"
+            android:padding="10dp"
+            app:cardCornerRadius="10dp">
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <fragment
+                android:id="@+id/map"
+                android:name="com.naver.maps.map.MapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"></fragment>
+        </android.support.v7.widget.CardView>
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-        <ImageView
-            android:visibility="visible"
-            android:id="@+id/sad"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:src="@drawable/sad"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="70dp"/>
-        <TextView
-            android:visibility="visible"
-            android:id="@+id/no_alarm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/sad"
-            android:gravity="center"
-            android:text="이런! 나의 AR 메시지가 없어요. \n AR 메시지를 게시하고 다른 사람과 \n소통해보세요."
-            android:layout_marginRight="0dp"/>
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true">
+            <ImageView
+                android:id="@+id/sad"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_gravity="center"
+                android:src="@drawable/sad"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/no_alarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="0dp"
+                android:layout_toRightOf="@+id/sad"
+                android:layout_alignBottom="@+id/sad"
+                android:gravity="center"
+                android:text="이런! 나의 AR 메시지가 없어요. \n원하는 장소에서 메시지를 남겨보세요."
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/go_armsg_btn"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@drawable/rectangle_btn_default"
+                android:layout_below="@+id/sad"
+                android:layout_centerHorizontal="true"
+                android:text="해볼게요!"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                style="?android:attr/borderlessButtonStyle"
+                >
+            </Button>
+
+            </RelativeLayout>
 
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="never"
-            />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never" />
         </RelativeLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

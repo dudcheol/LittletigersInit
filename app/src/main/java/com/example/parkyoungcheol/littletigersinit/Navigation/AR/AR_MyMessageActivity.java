@@ -75,10 +75,9 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
     private FirebaseDatabase mFirebaseDb;
     private DatabaseReference mARMessageRef;
 
-    private FirebaseUser mFirebaseUser;
-    private FirebaseAuth mFirebaseAuth;
+    private String currentUid;
 
-    private static List<MyArmsgData> mBoardList;
+    private static List<ArmsgData> mBoardList;
     private RecyclerView m_oListView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -88,6 +87,7 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
 
     Double sLat, sLng;
     public TextView txtView;
+    private Button go_armsg_btn;
     String msg;//현재위치 지오코딩결과
 
 
@@ -99,10 +99,9 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
         ImageView sad = findViewById(R.id.sad);
         TextView no_alarm = findViewById(R.id.no_alarm);
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
-
+        currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         txtView = (TextView) findViewById(R.id.result);
+        go_armsg_btn = (Button) findViewById(R.id.go_armsg_btn);
 
         // 위치권한 받아오기
         checkLocationPermission();
@@ -146,11 +145,8 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
                     findMyLocation();
                     int i = 0;
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        MyArmsgData bbs = snapshot.getValue(MyArmsgData.class); // 컨버팅되서 Bbs로........
-                        //TODO 여기다가 uid 비교 후 같은 접속한 uid와 같은거만 리스트에 넣어주며 끝
-                        String special = bbs.getUID();
-                        String special2 = mFirebaseUser.getUid();
-                        if(special != null && special.contains("0aqhKGhuyxeSVRomlALyxVnyYRx2")) {
+                        ArmsgData bbs = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
+                        if(bbs.getUid() != null && bbs.getUid().contains(currentUid)) {
                             mBoardList.add(bbs);
                             mBoardList.get(i).setAddress(geoCodingCoordiToAddress(mBoardList.get(i).getLongitude(), mBoardList.get(i).getLatitude()));
                             mBoardList.get(i).setDistance(calcDistance2(sLat, sLng, bbs.getLatitude(), bbs.getLongitude()) / 1000);
@@ -159,71 +155,39 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
                         else{
 
                         }
-
                     }
 
-                    if(mBoardList != null)
+                    if(mBoardList.isEmpty())
                     {
+                        sad.setVisibility(View.VISIBLE);
+                        no_alarm.setVisibility(View.VISIBLE);
+                        go_armsg_btn.setVisibility(View.VISIBLE);
+                    }else{
                         sad.setVisibility(View.GONE);
                         no_alarm.setVisibility(View.GONE);
+                        go_armsg_btn.setVisibility(View.GONE);
                     }
+                    go_armsg_btn.setOnClickListener(v -> {
+                        Intent intent = new Intent(AR_MyMessageActivity.this, UnityPlayerActivity.class);
+                        intent.putExtra("SELECT", 3);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
+                    });
 
                     //Collections.reverse(mBoardList);
-                    Collections.sort(mBoardList, new Comparator<MyArmsgData>() {
+                    Collections.sort(mBoardList, new Comparator<ArmsgData>() {
                         @Override
-                        public int compare(MyArmsgData o1, MyArmsgData o2) {
+                        public int compare(ArmsgData o1, ArmsgData o2) {
                             return o1.getDistance().compareTo(o2.getDistance());
                         }
                     });
+
                     m_oListView = (RecyclerView) findViewById(R.id.listView);
                     mAdapter = new MyArmsgListAdapter(AR_MyMessageActivity.this, mBoardList);
                     mAdapter.notifyDataSetChanged();
                     mLayoutManager = new LinearLayoutManager(AR_MyMessageActivity.this);
                     m_oListView.setLayoutManager(mLayoutManager);
                     m_oListView.setAdapter(mAdapter);
-                    m_oListView.addOnItemTouchListener(new RecyclerViewItemClickListener(AR_MyMessageActivity.this, new RecyclerViewItemClickListener.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-                            MyArmsgData armsgData = mBoardList.get(position);
-
-                            alertDialogBuilder = new AlertDialog.Builder(AR_MyMessageActivity.this);
-
-                            alertDialogBuilder.setTitle("AR 메시지 내용");
-                            alertDialogBuilder
-                                    .setMessage(armsgData.getLabel())
-                                    .setCancelable(true)
-                                    .setPositiveButton("취소",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.cancel();
-                                                }
-                                            })
-                                    .setNegativeButton("삭제하기",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    mFirebaseDb.getReference().child("ARMessages").child(armsgData.getKey()).removeValue()
-                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                @Override
-                                                                public void onSuccess(Void aVoid) {
-                                                                    Toast.makeText(AR_MyMessageActivity.this, "삭제 성공", Toast.LENGTH_SHORT).show();
-                                                                }
-                                                            }).addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            Toast.makeText(AR_MyMessageActivity.this, "삭제 실패", Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
-
-                                                }
-                                            });
-
-                            AlertDialog alertDialog = alertDialogBuilder.create();
-                            alertDialog.show();
-                        }
-                    }));
-
                 }
 
                 @Override
