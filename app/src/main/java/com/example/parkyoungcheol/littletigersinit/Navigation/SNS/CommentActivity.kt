@@ -1,5 +1,6 @@
 package com.example.parkyoungcheol.littletigersinit.Navigation.SNS
 
+import android.app.Activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.parkyoungcheol.littletigersinit.MainActivity
 import com.example.parkyoungcheol.littletigersinit.Model.AlarmDTO
 import com.example.parkyoungcheol.littletigersinit.Model.ContentDTO
 import com.example.parkyoungcheol.littletigersinit.R
@@ -109,7 +111,6 @@ class CommentActivity : AppCompatActivity() {
                         notifyDataSetChanged()
 
                     }
-
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -141,6 +142,14 @@ class CommentActivity : AppCompatActivity() {
 
             view.commentviewitem_textview_profile.text = comments[position].userId
             view.commentviewitem_textview_comment.text = comments[position].comment
+
+            if(comments.isEmpty()){
+                no_alarm?.visibility = View.VISIBLE
+                sad?.visibility = View.VISIBLE
+            }else{
+                no_alarm?.visibility = View.GONE
+                sad?.visibility = View.GONE
+            }
         }
 
         override fun getItemCount(): Int {

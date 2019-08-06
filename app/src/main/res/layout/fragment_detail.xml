@@ -27,7 +27,7 @@
             android:layout_toRightOf="@+id/sad"
             android:gravity="center"
             android:layout_marginLeft="10dp"
-            android:text="를 터치해서 사람들이 공유한 사진을 보고\n팔로우해보세요! 놀라운 일이 벌어질걸요?"
+            android:text="앨범에서 사람들이 공유한 사진을 보고\n팔로우해보세요! 놀라운 일이 벌어질걸요?"
             android:layout_marginRight="50dp"/>
 
         <android.support.v7.widget.RecyclerView
