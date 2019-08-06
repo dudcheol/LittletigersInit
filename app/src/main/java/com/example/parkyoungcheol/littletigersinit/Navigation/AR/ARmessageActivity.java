@@ -205,47 +205,6 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
 
                     // 리사이클러뷰에게 데이터 바뀜을 알림
                     mAdapter.notifyDataSetChanged();
-
-                    m_oListView.addOnItemTouchListener(new RecyclerViewItemClickListener(ARmessageActivity.this, new RecyclerViewItemClickListener.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-                            ArmsgData armsgData = mBoardList.get(position);
-
-                            alertDialogBuilder = new AlertDialog.Builder(ARmessageActivity.this);
-
-                            alertDialogBuilder.setTitle("AR 메시지 내용");
-                            alertDialogBuilder
-                                    .setMessage(armsgData.getLabel())
-                                    .setCancelable(true)
-                                    .setPositiveButton("확인",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.cancel();
-                                                }
-                                            })
-                                    .setNegativeButton("여기로 길안내 받기",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    String longitude = Double.toString(armsgData.getLongitude());
-                                                    String latitude = Double.toString(armsgData.getLatitude());
-
-                                                    Intent intent = new Intent(ARmessageActivity.this, AR_navigationActivity.class);
-                                                    intent.putExtra("dest_lon_X_from_armessage", String.valueOf(longitude));
-                                                    intent.putExtra("dest_lat_Y_from_armessage", String.valueOf(latitude));
-                                                    intent.putExtra("dest_label_from_armessage", String.valueOf(armsgData.getAddress()));
-
-                                                    startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                                                    overridePendingTransition(R.anim.push_up_in, R.anim.non_anim);
-                                                }
-                                            });
-
-                            AlertDialog alertDialog = alertDialogBuilder.create();
-                            alertDialog.show();
-                        }
-                    }));
-
                 }
 
                 @Override
@@ -314,7 +273,6 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
         naverMap.setIndoorEnabled(false);
 
         ArrayList<ArmsgData> oData = new ArrayList<ArmsgData>();
-        ArmsgData oItem = new ArmsgData();
         mARMessageRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -536,7 +494,6 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
 
     public void ShowDialog()
     {
-
         final AlertDialog.Builder popDialog = new AlertDialog.Builder(this);
         View innerView =  getLayoutInflater().inflate(R.layout.custom_seekbar,null);
 
@@ -603,6 +560,7 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
 
+        // 범위설정
         popDialog.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -619,7 +577,6 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                                         mBoardList.get(i).setAddress(geoCodingCoordiToAddress(mBoardList.get(i).getLongitude(), mBoardList.get(i).getLatitude()));
                                         mBoardList.get(i).setDistance(calcDistance2(sLat, sLng, bbs.getLatitude(), bbs.getLongitude())/1000);
                                         i++;
-
                                     }
 
                                     Collections.sort(mBoardList, new Comparator<ArmsgData>() {
@@ -628,13 +585,7 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                                             return o1.getDistance().compareTo(o2.getDistance());
                                         }
                                     });
-                                    m_oListView = (RecyclerView)findViewById(R.id.listView);
-                                    mAdapter = new ArmsgListAdapter(ARmessageActivity.this, mBoardList);
                                     mAdapter.notifyDataSetChanged();
-                                    mLayoutManager = new LinearLayoutManager(ARmessageActivity.this);
-                                    m_oListView.setLayoutManager(mLayoutManager);
-                                    m_oListView.setAdapter(mAdapter);
-
                                 }
 
                                 @Override
@@ -676,13 +627,7 @@ public class ARmessageActivity extends FragmentActivity implements OnMapReadyCal
                                             return o1.getDistance().compareTo(o2.getDistance());
                                         }
                                     });
-                                    m_oListView = (RecyclerView)findViewById(R.id.listView);
-                                    mAdapter = new ArmsgListAdapter(ARmessageActivity.this, mBoardList);
                                     mAdapter.notifyDataSetChanged();
-                                    mLayoutManager = new LinearLayoutManager(ARmessageActivity.this);
-                                    m_oListView.setLayoutManager(mLayoutManager);
-                                    m_oListView.setAdapter(mAdapter);
-
                                 }
 
                                 @Override

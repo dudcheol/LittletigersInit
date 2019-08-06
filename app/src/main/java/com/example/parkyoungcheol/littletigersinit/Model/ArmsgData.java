@@ -7,6 +7,7 @@ import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ArmsgData
@@ -17,7 +18,7 @@ public class ArmsgData
     public String address;
     public Double distance;
     public int likecnt;
-    //public ArrayList likelist;
+    public ArrayList<String> likelist;
     public String key;
     public String uid;
 
@@ -106,11 +107,19 @@ public class ArmsgData
         this.likecnt = likecnt;
     }
 
-/*    public ArrayList getLikelist() {
+    public ArrayList<String> getLikelist() {
         return likelist;
     }
 
-    public void setLikelist(ArrayList likelist) {
+    public void setLikelist(ArrayList<String> likelist) {
+        this.likelist = likelist;
+    }
+
+    /*public List<String> getLikelist() {
+        return likelist;
+    }
+
+    public void setLikelist(List<String> likelist) {
         this.likelist = likelist;
     }*/
 }

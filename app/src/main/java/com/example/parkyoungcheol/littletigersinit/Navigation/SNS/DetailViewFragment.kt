@@ -172,6 +172,20 @@ class DetailViewFragment : Fragment() {
 
             // 유저 아이디
             viewHolder.detailviewitem_profile_textview.text = contentDTOs[position].userId
+            viewHolder.detailviewitem_profile_textview.setOnClickListener{
+
+                val fragment = UserFragment()
+                val bundle = Bundle()
+
+                bundle.putString("destinationUid", contentDTOs[position].uid)
+                bundle.putString("userId", contentDTOs[position].userId)
+
+                fragment.arguments = bundle
+                activity!!.supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_content, fragment)
+                        .commit()
+
+            }
 
             // 가운데 이미지
             Glide.with(holder.itemView.context)
