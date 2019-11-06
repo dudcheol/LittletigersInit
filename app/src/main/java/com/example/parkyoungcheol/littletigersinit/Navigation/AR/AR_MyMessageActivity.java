@@ -107,20 +107,20 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
             Intent intent = new Intent(AR_MyMessageActivity.this, UnityPlayerActivity.class);
             intent.putExtra("SELECT", 3);
             startActivity(intent);
-            overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
+            overridePendingTransition(R.anim.push_up_in, R.anim.non_anim);
         });
 
         // 위치권한 받아오기
         checkLocationPermission();
 
         // 위치권한이 안받아져있을 경우
-        if(permissionLocation == PackageManager.PERMISSION_DENIED){
-        }else{
+        if (permissionLocation == PackageManager.PERMISSION_DENIED) {
+        } else {
             findMyLocation();
-            if(geoCodingCoordiToAddress(sLng,sLat).length()>=15){
-                msg = geoCodingCoordiToAddress(sLng,sLat).substring(0,15)+"...";
-            }else{
-                msg = geoCodingCoordiToAddress(sLng,sLat);
+            if (geoCodingCoordiToAddress(sLng, sLat).length() >= 15) {
+                msg = geoCodingCoordiToAddress(sLng, sLat).substring(0, 15) + "...";
+            } else {
+                msg = geoCodingCoordiToAddress(sLng, sLat);
             }
         }
 
@@ -128,7 +128,7 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
         NaverMapSdk.getInstance(this).setClient(
                 new NaverMapSdk.NaverCloudPlatformClient("0yfv84wqze"));
 
-        MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
+        MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment == null) {
             mapFragment = MapFragment.newInstance();
             getSupportFragmentManager().beginTransaction().add(R.id.map, mapFragment).commit();
@@ -142,9 +142,9 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
         mBoardList = new ArrayList<>();
 
         // 권한체크
-        if(permissionLocation == PackageManager.PERMISSION_DENIED){
+        if (permissionLocation == PackageManager.PERMISSION_DENIED) {
 
-        }else {
+        } else {
             mARMessageRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -153,29 +153,26 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
                     int i = 0;
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         ArmsgData bbs = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
-                        if(bbs.getUid() != null && bbs.getUid().contains(currentUid)) {
+                        if (bbs.getUid() != null && bbs.getUid().contains(currentUid)) {
                             mBoardList.add(bbs);
                             mBoardList.get(i).setAddress(geoCodingCoordiToAddress(mBoardList.get(i).getLongitude(), mBoardList.get(i).getLatitude()));
                             mBoardList.get(i).setDistance(calcDistance2(sLat, sLng, bbs.getLatitude(), bbs.getLongitude()) / 1000);
                             i++;
-                        }
-                        else{
+                        } else {
 
                         }
                     }
 
-                    if(mBoardList.isEmpty())
-                    {
+                    if (mBoardList.isEmpty()) {
                         sad.setVisibility(View.VISIBLE);
                         no_alarm.setVisibility(View.VISIBLE);
                         go_armsg_btn.setVisibility(View.VISIBLE);
-                    }else{
+                    } else {
                         sad.setVisibility(View.GONE);
                         no_alarm.setVisibility(View.GONE);
                         go_armsg_btn.setVisibility(View.GONE);
                     }
 
-                    //Collections.reverse(mBoardList);
                     Collections.sort(mBoardList, new Comparator<ArmsgData>() {
                         @Override
                         public int compare(ArmsgData o1, ArmsgData o2) {
@@ -199,10 +196,10 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
         }
     }
 
-    private String geoCodingCoordiToAddress(double lon, double lat){
+    private String geoCodingCoordiToAddress(double lon, double lat) {
         final Geocoder geocoder = new Geocoder(this);
         List<Address> list = null;
-        String result=null;
+        String result = null;
 
         try {
             list = geocoder.getFromLocation(
@@ -212,12 +209,12 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
         } catch (IOException e) {
             e.printStackTrace();
             Log.e("test", "입출력 오류 - 서버에서 주소변환시 에러발생");
-            return "주소변환실패(위도:"+lat+"/경도:"+lon+")";
+            return "주소변환실패(위도:" + lat + "/경도:" + lon + ")";
         }
 
         if (list != null) {
             if (list.size() == 0) {
-                return "주소변환실패(위도:"+lat+"/경도:"+lon+")";
+                return "주소변환실패(위도:" + lat + "/경도:" + lon + ")";
             } else {
                 String address = list.get(0).getAddressLine(0);
                 result = address.substring(4);
@@ -259,7 +256,7 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Marker marker = new Marker();
                     ArmsgData abc = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
-                    if(abc.getUid() != null && abc.getUid().contains(currentUid)) { //contains 안에 user.getuid로 바꾸기
+                    if (abc.getUid() != null && abc.getUid().contains(currentUid)) { //contains 안에 user.getuid로 바꾸기
                         marker.setPosition(new LatLng(abc.getLatitude(), abc.getLongitude()));
                         if (abc.getLabel().length() >= 10) {
                             msg = abc.getLabel().substring(0, 10) + "...";
@@ -298,33 +295,32 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
         naverMap.setLocationTrackingMode(LocationTrackingMode.Face);
 
         // 카메라 이동 .. 단, 위치 퍼미션이 허가되어있을 때만
-        if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             GeoPoint mGeo = findMyLocation();
             CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(mGeo.getY(), mGeo.getX()));
             naverMap.moveCamera(cameraUpdate);
         }
     }
 
-    private GeoPoint findMyLocation(){
+    private GeoPoint findMyLocation() {
         final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         GeoPoint myGeo = null;
-        double longitude=0,latitude=0;
-        if ( Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission( getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions( AR_MyMessageActivity.this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
-                    0 );
-        }
-        else{
+        double longitude = 0, latitude = 0;
+        if (Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(AR_MyMessageActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    0);
+        } else {
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-            if(location == null){
+            if (location == null) {
 
                 pDialog = new ProgressDialog(AR_MyMessageActivity.this);
                 pDialog.setMessage("위치정보를 받아오고 있습니다...");
                 pDialog.show();
-                while (true){
+                while (true) {
                     location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    if(location==null){
+                    if (location == null) {
                         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                                 1000,
                                 1,
@@ -334,7 +330,7 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
                                 1,
                                 gpsLocationListener);
                         continue;
-                    }else{
+                    } else {
                         break;
                     }
                 }
@@ -371,18 +367,16 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
     // 현재위치가 바뀔때마다 좌표를 바꾸는 리스너
     final LocationListener gpsLocationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
-            //String provider = location.getProvider();
             double longitude = location.getLongitude();
             double latitude = location.getLatitude();
-            //double altitude = location.getAltitude();
 
             sLat = latitude;
             sLng = longitude;
 
-            if(geoCodingCoordiToAddress(sLng,sLat).length()>=15){
-                msg = geoCodingCoordiToAddress(sLng,sLat).substring(0,15)+"...";
-            }else{
-                msg = geoCodingCoordiToAddress(sLng,sLat);
+            if (geoCodingCoordiToAddress(sLng, sLat).length() >= 15) {
+                msg = geoCodingCoordiToAddress(sLng, sLat).substring(0, 15) + "...";
+            } else {
+                msg = geoCodingCoordiToAddress(sLng, sLat);
             }
         }
 
@@ -396,12 +390,12 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
         }
     };
 
-    public void checkLocationPermission(){
+    public void checkLocationPermission() {
         permissionLocation = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION);
 
-        if(permissionLocation == PackageManager.PERMISSION_DENIED) {
+        if (permissionLocation == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(AR_MyMessageActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-        }else{
+        } else {
 
         }
     }
@@ -411,30 +405,30 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         // 위치 추적 권한
-        if(requestCode==LOCATION_PERMISSION_REQUEST_CODE){
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             for (int i = 0; i < permissions.length; i++) {
                 String permission = permissions[i];
                 int grantResult = grantResults[i];
                 if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    if(grantResult == PackageManager.PERMISSION_GRANTED) {
+                    if (grantResult == PackageManager.PERMISSION_GRANTED) {
                         checkLocationPermission();
                         recreate();
                     } else {
                         Toast.makeText(this, "ar기능을 이용하려면 위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show();
                         finish();
-                        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }
                 }
             }
         }
     }
 
-    public static double calcDistance(double lat1, double lon1, double lat2, double lon2){
+    public static double calcDistance(double lat1, double lon1, double lat2, double lon2) {
         double EARTH_R, Rad, radLat1, radLat2, radDist;
         double distance, ret;
 
         EARTH_R = 6371000.0;
-        Rad = Math.PI/180;
+        Rad = Math.PI / 180;
         radLat1 = Rad * lat1;
         radLat2 = Rad * lat2;
         radDist = Rad * (lon1 - lon2);
@@ -444,17 +438,16 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
         ret = EARTH_R * Math.acos(distance);
 
         double rslt = Math.round(Math.round(ret) / 1000);
-        //String result = rslt + " km";
-        //if(rslt == 0) result = Math.round(ret) +" m";
 
         return rslt;
     }
-    public static double calcDistance2(double lat1, double lon1, double lat2, double lon2){
+
+    public static double calcDistance2(double lat1, double lon1, double lat2, double lon2) {
         double EARTH_R, Rad, radLat1, radLat2, radDist;
         double distance, ret;
 
         EARTH_R = 6371000.0;
-        Rad = Math.PI/180;
+        Rad = Math.PI / 180;
         radLat1 = Rad * lat1;
         radLat2 = Rad * lat2;
         radDist = Rad * (lon1 - lon2);
@@ -464,8 +457,6 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
         ret = EARTH_R * Math.acos(distance);
 
         double rslt = Math.round(Math.round(ret) / 1);
-        //String result = rslt + " km";
-        //if(rslt == 0) result = Math.round(ret) +" m";
 
         return rslt;
     }
@@ -484,6 +475,6 @@ public class AR_MyMessageActivity extends FragmentActivity implements OnMapReady
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        overridePendingTransition(R.anim.non_anim,R.anim.push_down_out);
+        overridePendingTransition(R.anim.non_anim, R.anim.push_down_out);
     }
 }

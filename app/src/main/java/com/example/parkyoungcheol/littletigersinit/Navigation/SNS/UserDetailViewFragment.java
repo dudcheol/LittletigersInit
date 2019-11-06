@@ -56,7 +56,7 @@ public class UserDetailViewFragment extends Fragment {
     // 현재 로그인되어 있는 유저 정보
     FirebaseUser user;
     FirebaseFirestore firestore;
-    String currentUid=null;
+    String currentUid = null;
 
     // 지금 보고있는 게시글을 게시한 유저의 uid
     String destinationUid = null;
@@ -71,8 +71,8 @@ public class UserDetailViewFragment extends Fragment {
     private ImageView userProfileImage, detailImage;
     private ShineButton likeBtn;
     Button deleteBtn;
-    int likeCount=0;
-    int cnt=0;
+    int likeCount = 0;
+    int cnt = 0;
 
     private ContentDTO contentDTO;
     FcmPush fcmPush;
@@ -94,24 +94,24 @@ public class UserDetailViewFragment extends Fragment {
         userProfileImage = view.findViewById(R.id.detailviewitem_profile_image);
         detailImage = view.findViewById(R.id.detailviewitem_imageview_content);
         likeBtn = view.findViewById(R.id.detailviewitem_favorite_imageview);
-        deleteBtn=view.findViewById(R.id.deleteBtn);
+        deleteBtn = view.findViewById(R.id.deleteBtn);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-        Log.v("USER_CHECK",user.getUid()+user.getEmail()+user.getDisplayName()+user.getPhotoUrl());
+        Log.v("USER_CHECK", user.getUid() + user.getEmail() + user.getDisplayName() + user.getPhotoUrl());
         firestore = FirebaseFirestore.getInstance();
         fcmPush = new FcmPush();
 
-        if(getArguments()!=null) {
+        if (getArguments() != null) {
             imageUrl = getArguments().getString("imageUrl");
             destinationUid = getArguments().getString("uid");
             contentUid = getArguments().getString("contentUid");
         }
-        currentUid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+        currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
         // 메인액티비티 이미지 변경
-        MainActivity mainActivity = (MainActivity)getActivity();
-        ImageView mainImage =  mainActivity.findViewById(R.id.toolbar_title_image);
+        MainActivity mainActivity = (MainActivity) getActivity();
+        ImageView mainImage = mainActivity.findViewById(R.id.toolbar_title_image);
         ImageView ARbutton = mainActivity.findViewById(R.id.ARmessageBtn);
         ImageView ARbutton2 = mainActivity.findViewById(R.id.ARbtn);
         ImageView chatbtn = mainActivity.findViewById(R.id.ChatBtn);
@@ -126,31 +126,31 @@ public class UserDetailViewFragment extends Fragment {
         backBtn.setVisibility(View.VISIBLE);
         mainText.setVisibility(View.VISIBLE);
 
-        backBtn.setOnClickListener(v->{
+        backBtn.setOnClickListener(v -> {
             navigationView.setSelectedItemId(R.id.action_home);
         });
 
         ImageView commentBtn = view.findViewById(R.id.detailviewitem_comment_imageview);
-        commentBtn.setOnClickListener(v->{
+        commentBtn.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), CommentActivity.class);
             intent.putExtra("contentUid", contentUid);
             intent.putExtra("destinationUid", destinationUid);
             startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.slide_in_right,R.anim.non_anim);
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.non_anim);
         });
 
         deleteBtn.setVisibility(View.VISIBLE);
 
         // 내 게시글일 경우 삭제버튼이 보이게 하고
-        if(currentUid!=null && currentUid.equals(destinationUid)){
+        if (currentUid != null && currentUid.equals(destinationUid)) {
             deleteBtn.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             // 내 게시글이 아닐 경우 삭제버튼 안보이게함
             deleteBtn.setVisibility(View.GONE);
         }
 
         // 게시글 삭제
-        deleteBtn.setOnClickListener(v->{
+        deleteBtn.setOnClickListener(v -> {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
             alertDialogBuilder.setTitle("<!>");
@@ -229,32 +229,32 @@ public class UserDetailViewFragment extends Fragment {
         // 디테일한 정보 가져오기
         firestore
                 .collection("images")
-                .whereEqualTo("imageUrl",imageUrl)
+                .whereEqualTo("imageUrl", imageUrl)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         // 데이터 가져오는 작업이 잘 동작했을 때
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot documentSnapshot:task.getResult()){
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 contentDTO = documentSnapshot.toObject(ContentDTO.class);
                                 userId.setText(contentDTO.getUserId());
-                                like.setText(contentDTO.getFavoriteCount()+"명");
-                                likeCount=contentDTO.getFavoriteCount();
+                                like.setText(contentDTO.getFavoriteCount() + "명");
+                                likeCount = contentDTO.getFavoriteCount();
                                 explain.setText(contentDTO.getExplain());
                                 Glide.with(view)
                                         .load(contentDTO.getImageUrl())
                                         .into(detailImage);
-                                mainText.setText(contentDTO.getUserId()+"님의 게시글");
+                                mainText.setText(contentDTO.getUserId() + "님의 게시글");
                             }
 
                             // 좋아요 버튼 설정
                             if (contentDTO.getFavorites().containsKey(currentUid)) {
                                 likeBtn.setChecked(true);
-                                cnt=0;
-                            }else{
+                                cnt = 0;
+                            } else {
                                 likeBtn.setChecked(false);
-                                cnt=1;
+                                cnt = 1;
                             }
                         }
                         // 가져오는거 에러났을 때
@@ -280,9 +280,9 @@ public class UserDetailViewFragment extends Fragment {
                     }
 
                     if (snapshot != null && snapshot.exists()) {
-                        Log.v("좋아요 수 테스트",snapshot.getData().toString());
+                        Log.v("좋아요 수 테스트", snapshot.getData().toString());
                         ContentDTO contentDTO = snapshot.toObject(ContentDTO.class);
-                        like.setText(contentDTO.getFavoriteCount()+"명");
+                        like.setText(contentDTO.getFavoriteCount() + "명");
                     } else {
 
                     }
@@ -292,7 +292,7 @@ public class UserDetailViewFragment extends Fragment {
     }
 
     // 좋아요 알림
-    void favoriteAlarm(String destinationUid){
+    void favoriteAlarm(String destinationUid) {
         AlarmDTO alarmDTO = new AlarmDTO();
         alarmDTO.setDestinationUid(destinationUid);
         alarmDTO.setUserId(user.getEmail());
@@ -302,26 +302,26 @@ public class UserDetailViewFragment extends Fragment {
 
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO);
         String message = user.getEmail() + "님이 좋아요를 눌렀습니다.";
-        fcmPush.sendMessage(destinationUid, "알림 메시지 입니다.",message);
+        fcmPush.sendMessage(destinationUid, "알림 메시지 입니다.", message);
     }
 
     // 좋아요 이벤트 기능
-    private void favoriteEvent(){
-        Log.v("좋아요 테스트","contentUid: "+contentUid);
+    private void favoriteEvent() {
+        Log.v("좋아요 테스트", "contentUid: " + contentUid);
         DocumentReference tsDoc = firestore.collection("images").document(contentUid);
         firestore.runTransaction(transaction -> {
             String uid = currentUid;
             ContentDTO contentDTO = transaction.get(tsDoc).toObject(ContentDTO.class);
 
             if (contentDTO.getFavorites().containsKey(uid)) {
-                Log.v("좋아요 테스트1","좋아요 취소");
+                Log.v("좋아요 테스트1", "좋아요 취소");
                 contentDTO.setFavoriteCount(contentDTO.getFavoriteCount() - 1);
                 contentDTO.getFavorites().remove(uid);
             } else {
-                Log.v("좋아요 테스트2","좋아요 등록");
+                Log.v("좋아요 테스트2", "좋아요 등록");
                 contentDTO.setFavoriteCount(contentDTO.getFavoriteCount() + 1);
-                HashMap<String,Boolean> hashMap = new HashMap<String,Boolean>();
-                hashMap.put(uid,true);
+                HashMap<String, Boolean> hashMap = new HashMap<String, Boolean>();
+                hashMap.put(uid, true);
                 contentDTO.setFavorites(hashMap);
                 favoriteAlarm(destinationUid);
             }

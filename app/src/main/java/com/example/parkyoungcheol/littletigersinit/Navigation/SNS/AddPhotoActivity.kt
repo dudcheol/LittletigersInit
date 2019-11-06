@@ -48,7 +48,7 @@ class AddPhotoActivity : AppCompatActivity() {
             val photoPickerIntent = Intent(Intent.ACTION_PICK)
             photoPickerIntent.type = "image/*"
             startActivityForResult(photoPickerIntent, PICK_IMAGE_FROM_ALBUM)
-            overridePendingTransition(R.anim.push_up_in,R.anim.non_anim)
+            overridePendingTransition(R.anim.push_up_in, R.anim.non_anim)
         }
 
         addphoto_btn_upload.setOnClickListener {
@@ -64,14 +64,12 @@ class AddPhotoActivity : AppCompatActivity() {
 
         if (requestCode == PICK_IMAGE_FROM_ALBUM) {
             //이미지 선택시
-            if(resultCode == Activity.RESULT_OK){
+            if (resultCode == Activity.RESULT_OK) {
                 //이미지뷰에 이미지 세팅
                 println(data!!.data)
                 photoUri = data!!.data
                 addphoto_image.setImageURI(data!!.data)
-            }
-
-            else{
+            } else {
                 finish()
             }
 
@@ -82,10 +80,10 @@ class AddPhotoActivity : AppCompatActivity() {
         super.onBackPressed()
 
         finish()
-        overridePendingTransition(R.anim.non_anim,R.anim.push_down_out)
+        overridePendingTransition(R.anim.non_anim, R.anim.push_down_out)
     }
 
-    fun contentUpload(){
+    fun contentUpload() {
         progress_bar.visibility = View.VISIBLE
 
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
@@ -93,7 +91,7 @@ class AddPhotoActivity : AppCompatActivity() {
 
 
         val storageRef = storage?.reference?.child("images")?.child(imageFileName)
-        storageRef?.putFile(photoUri!!)?.addOnSuccessListener{ taskSnapshot ->
+        storageRef?.putFile(photoUri!!)?.addOnSuccessListener { taskSnapshot ->
             progress_bar.visibility = View.GONE
 
             Toast.makeText(this, getString(R.string.upload_success),
@@ -106,10 +104,10 @@ class AddPhotoActivity : AppCompatActivity() {
             uri.addOnSuccessListener { Uri ->
                 val contentDTO = ContentDTO()
 
-                Log.v("uri_test",uri.toString())
+                Log.v("uri_test", uri.toString())
                 //이미지 주소
                 contentDTO.imageUrl = uri.result.toString()
-                Log.v("uri.result_test",contentDTO.imageUrl.toString())
+                Log.v("uri.result_test", contentDTO.imageUrl.toString())
                 //유저의 UID
                 contentDTO.uid = auth?.currentUser?.uid
                 //게시물의 설명

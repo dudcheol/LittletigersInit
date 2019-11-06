@@ -5,33 +5,20 @@ import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
-import com.example.parkyoungcheol.littletigersinit.Chat.Chat
-import com.example.parkyoungcheol.littletigersinit.Chat.ChatLoginActivity
 import com.example.parkyoungcheol.littletigersinit.Chat.ChatMainActivity
 import com.example.parkyoungcheol.littletigersinit.Navigation.AR.ARmessageActivity
 import com.example.parkyoungcheol.littletigersinit.Navigation.SNS.*
@@ -40,17 +27,12 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.item_comment.*
-import kotlinx.android.synthetic.main.item_comment.view.*
-import java.lang.ref.Reference
-import java.sql.PreparedStatement
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     val PICK_PROFILE_FROM_ALBUM = 10
     var backKeyPressedTime = 0L
-    var user : FirebaseUser? = null
+    var user: FirebaseUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,28 +46,15 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
 
         // Bottom navi 사용자 프로필 이미지 가져옴
-        user=FirebaseAuth.getInstance().currentUser
+        user = FirebaseAuth.getInstance().currentUser
         FirebaseFirestore.getInstance()
                 .collection("profileImages")
                 .document(user!!.uid)
                 .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                    if(documentSnapshot?.data == null){
+                    if (documentSnapshot?.data == null) {
                         profileImg?.visibility = View.GONE
                         bottom_navigation.menu.getItem(4).setIcon(R.drawable.ic_account)
-                    }
-                    else {
-                        /*val target = object : SimpleTarget<Bitmap>() {
-                            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                                var drawable = BitmapDrawable(resource)
-                                bottom_navigation.menu.getItem(4).setIcon(drawable)
-                            }
-                        }
-
-                        val url = documentSnapshot?.data!!["image"]
-                        Glide.with(this).asBitmap().load(url)
-                                .apply(RequestOptions().circleCrop())
-                                .into(target)*/
-
+                    } else {
                         profileImg?.visibility = View.VISIBLE
                         bottom_navigation.menu.getItem(4).setIcon(null)
                         val url = documentSnapshot?.data!!["image"]
