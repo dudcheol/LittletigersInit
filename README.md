@@ -15,3 +15,6 @@ This app combines AR and SNS.
 - 사용자가 자신만의 장소 등록 가능
 - 자신이 지정한 장소에 AR메시지 남기기 가능
 - 식상한 SNS가 아닌, AR을 접목시켜 차별화된 기능을 제공하여 사용자들이 큰 흥미를 느낄 수 있음
+
+YOUTUBE 영상 주소
+- https://youtu.be/E1drjy37nwc
