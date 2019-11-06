@@ -91,7 +91,7 @@ public class Nav_searchActivity extends AppCompatActivity {
             resultIntent.putExtra("getX", String.valueOf(myLocation.getX()));
             resultIntent.putExtra("getY", String.valueOf(myLocation.getY()));
             resultIntent.putExtra("getTitle", "현재위치");
-            resultIntent.putExtra("coordiStyle","WGS");
+            resultIntent.putExtra("coordiStyle", "WGS");
             setResult(RESULT_OK, resultIntent);
             finish();
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -105,7 +105,6 @@ public class Nav_searchActivity extends AppCompatActivity {
                 //키보드 내려가게 하기
                 imm.hideSoftInputFromWindow(searchEdit.getWindowToken(), 0);
                 pDialog = new ProgressDialog(Nav_searchActivity.this);
-                // Showing progress dialog before making http request
                 pDialog.setMessage("Loading...");
                 pDialog.show();
                 requestWithSomeHttpHeaders();
@@ -122,7 +121,6 @@ public class Nav_searchActivity extends AppCompatActivity {
                     //키보드 내려가게 하기
                     imm.hideSoftInputFromWindow(searchEdit.getWindowToken(), 0);
                     pDialog = new ProgressDialog(Nav_searchActivity.this);
-                    // Showing progress dialog before making http request
                     pDialog.setMessage("Loading...");
                     pDialog.show();
                     requestWithSomeHttpHeaders();
@@ -176,15 +174,11 @@ public class Nav_searchActivity extends AppCompatActivity {
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                //GeoPoint getGeoPoint = convertKATECtoWGS(list.get(position).getMapx(),list.get(position).getMapy());
-
-                                //Toast.makeText(Nav_searchActivity.this, String.valueOf(getGeoPoint.getX())+", "+String.valueOf(getGeoPoint.getY()), Toast.LENGTH_SHORT).show();
-                                //Toast.makeText(Nav_searchActivity.this, list.get(position).getMapx() + "," + list.get(position).getMapy(), Toast.LENGTH_SHORT).show();
                                 Intent resultIntent = new Intent();
                                 resultIntent.putExtra("getX", String.valueOf(list.get(position).getMapx()));
                                 resultIntent.putExtra("getY", String.valueOf(list.get(position).getMapy()));
                                 resultIntent.putExtra("getTitle", list.get(position).getTitle());
-                                resultIntent.putExtra("coordiStyle","KATECH");
+                                resultIntent.putExtra("coordiStyle", "KATECH");
                                 setResult(RESULT_OK, resultIntent);
                                 finish();
                                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -223,12 +217,11 @@ public class Nav_searchActivity extends AppCompatActivity {
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         // 밑줄 권한때문에 그런거임
-        if ( Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission( getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions( Nav_searchActivity.this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
-                    0 );
-        }
-        else {
+        if (Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(Nav_searchActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    0);
+        } else {
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             String provider = location.getProvider();
             double lon_X = location.getLongitude();
@@ -249,7 +242,7 @@ public class Nav_searchActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     private void hidePDialog() {

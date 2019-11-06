@@ -31,24 +31,24 @@ import okhttp3.OkHttpClient;
 
 public class TmapHttpHandler extends AsyncTask<String, Void, String> {
     private static final String TAG = "TmapHttpHandler";
-    private String str=null, receiveMsg=null;
-    //private String urlStr="https://api2.sktelecom.com/tmap/routes/pedestrian?version=1&format=json";
-    //private String startX="126.733638", startY="37.340267", endX="126.742849", endY="37.351813";
+    private String str = null, receiveMsg = null;
     private static final String T_MAP_APP_KEY = "6afd2dfb-333b-4618-bc36-f894407adc82";
 
-    private String startName=null;
+    private String startName = null;
+
     {
         try {
-            startName = URLEncoder.encode("출발지","UTF-8");
+            startName = URLEncoder.encode("출발지", "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
 
-    private String endName=null;
+    private String endName = null;
+
     {
         try {
-            endName = URLEncoder.encode("목적지","UTF-8");
+            endName = URLEncoder.encode("목적지", "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -58,23 +58,16 @@ public class TmapHttpHandler extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
         URL url = null;
         try {
-            /*urlStr += "&startX="+startX;
-            urlStr += "&startY="+startY;
-            urlStr += "&endX="+endX;
-            urlStr += "&endY="+endY;
-            urlStr += "&startName="+startName;
-            urlStr += "&endName="+endName;
-            urlStr += "&appKey=6afd2dfb-333b-4618-bc36-f894407adc82";*/
             String urlStr = params[0];
-            Log.i("패럼 url",urlStr);
+            Log.i("패럼 url", urlStr);
 
-            urlStr += "&startName="+ startName + "&endName="+ endName + "&appKey=" + T_MAP_APP_KEY;
+            urlStr += "&startName=" + startName + "&endName=" + endName + "&appKey=" + T_MAP_APP_KEY;
 
-            url=new URL(urlStr);
+            url = new URL(urlStr);
 
-            Log.i("패럼url에 파라미터 추가",urlStr);
+            Log.i("패럼url에 파라미터 추가", urlStr);
 
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 
             if (conn.getResponseCode() == conn.HTTP_OK) {
@@ -90,7 +83,7 @@ public class TmapHttpHandler extends AsyncTask<String, Void, String> {
                 reader.close();
             } else {
                 Log.i("통신 결과", conn.getResponseCode() + "에러");
-                receiveMsg="Error";
+                receiveMsg = "Error";
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();

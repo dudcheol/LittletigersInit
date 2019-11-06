@@ -99,7 +99,6 @@ class UserFragment : Fragment() {
                 showHide(fragmentView!!.add_photo)
                 fragmentView!!.account_btn_follow_signout.setBackgroundResource(R.drawable.rectangle_btn)
                 fragmentView!!.account_btn_follow_signout.text = getString(R.string.follow)
-                //view.account_btn_follow_signout.setOnClickListener{ requestFollow() }
                 var mainActivity = (activity as MainActivity)
                 mainActivity.toolbar_title_image.visibility = View.GONE
                 mainActivity.ARmessageBtn.visibility = View.GONE
@@ -133,10 +132,10 @@ class UserFragment : Fragment() {
         getProfileImage()
     }
 
-    fun showHide(view:View) {
-        view.visibility = if (view.visibility == View.VISIBLE){
+    fun showHide(view: View) {
+        view.visibility = if (view.visibility == View.VISIBLE) {
             View.INVISIBLE
-        } else{
+        } else {
             View.VISIBLE
         }
     }
@@ -152,7 +151,7 @@ class UserFragment : Fragment() {
                                     .load(url)
                                     .apply(RequestOptions().circleCrop()).into(fragmentView!!.account_iv_profile)
                         }
-                    }else{
+                    } else {
                         cover_account_iv_profile.setImageResource(R.drawable.ic_account)
                     }
                 }
@@ -294,14 +293,14 @@ class UserFragment : Fragment() {
                     ?.orderBy("timestamp", Query.Direction.DESCENDING)
                     ?.whereEqualTo("uid", uid)
                     ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                if (querySnapshot == null) return@addSnapshotListener
-                for (snapshot in querySnapshot!!.documents) {
-                    contentDTOs.add(snapshot.toObject(ContentDTO::class.java)!!)
-                    contentUidList.add(snapshot.id)
-                }
-                account_tv_post_count.text = contentDTOs.size.toString()
-                notifyDataSetChanged()
-            }
+                        if (querySnapshot == null) return@addSnapshotListener
+                        for (snapshot in querySnapshot!!.documents) {
+                            contentDTOs.add(snapshot.toObject(ContentDTO::class.java)!!)
+                            contentUidList.add(snapshot.id)
+                        }
+                        account_tv_post_count.text = contentDTOs.size.toString()
+                        notifyDataSetChanged()
+                    }
 
         }
 

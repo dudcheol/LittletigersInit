@@ -68,7 +68,6 @@ class CommentActivity : AppCompatActivity() {
     }
 
 
-
     override fun onStop() {
         super.onStop()
         commentSnapshot?.remove()
@@ -128,10 +127,9 @@ class CommentActivity : AppCompatActivity() {
                     .collection("profileImages")
                     .document(comments[position].uid!!)
                     .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                        if(documentSnapshot?.data == null){
+                        if (documentSnapshot?.data == null) {
                             commentviewitem_imageview_profile.setImageResource(R.drawable.ic_account)
-                        }
-                        else {
+                        } else {
                             val url = documentSnapshot?.data!!["image"]
 
                             Glide.with(holder.itemView.context)
@@ -143,10 +141,10 @@ class CommentActivity : AppCompatActivity() {
             view.commentviewitem_textview_profile.text = comments[position].userId
             view.commentviewitem_textview_comment.text = comments[position].comment
 
-            if(comments.isEmpty()){
+            if (comments.isEmpty()) {
                 no_alarm?.visibility = View.VISIBLE
                 sad?.visibility = View.VISIBLE
-            }else{
+            } else {
                 no_alarm?.visibility = View.GONE
                 sad?.visibility = View.GONE
             }
@@ -163,6 +161,6 @@ class CommentActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
-        overridePendingTransition(R.anim.non_anim,R.anim.slide_out_right)
+        overridePendingTransition(R.anim.non_anim, R.anim.slide_out_right)
     }
 }

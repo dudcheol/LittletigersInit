@@ -22,7 +22,7 @@ import java.util.ArrayList
 class GridFragment : Fragment() {
 
     var mainView: View? = null
-    var imagesSnapshot  : ListenerRegistration? = null
+    var imagesSnapshot: ListenerRegistration? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mainView = inflater.inflate(R.layout.fragment_grid, container, false)
 

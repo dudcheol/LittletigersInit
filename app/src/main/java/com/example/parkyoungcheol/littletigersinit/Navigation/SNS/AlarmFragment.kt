@@ -43,7 +43,7 @@ class AlarmFragment : Fragment() {
                     .whereEqualTo("destinationUid", uid)
                     .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                         alarmDTOList.clear()
-                        if(querySnapshot == null)return@addSnapshotListener
+                        if (querySnapshot == null) return@addSnapshotListener
                         for (snapshot in querySnapshot?.documents!!) {
                             alarmDTOList.add(snapshot.toObject(AlarmDTO::class.java)!!)
                         }
@@ -56,7 +56,7 @@ class AlarmFragment : Fragment() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false)
 
-            if(alarmDTOList!=null){
+            if (alarmDTOList != null) {
                 showHide(sad)
                 showHide(no_alarm)
             }
@@ -64,10 +64,10 @@ class AlarmFragment : Fragment() {
             return CustomViewHolder(view)
         }
 
-        fun showHide(view:View) {
-            view.visibility = if (view.visibility == View.VISIBLE){
+        fun showHide(view: View) {
+            view.visibility = if (view.visibility == View.VISIBLE) {
                 View.GONE
-            } else{
+            } else {
                 View.GONE
             }
         }
@@ -78,9 +78,8 @@ class AlarmFragment : Fragment() {
             val commentTextView = holder.itemView.commentviewitem_textview_profile
 
             FirebaseFirestore.getInstance().collection("profileImages")
-                    .document(alarmDTOList[position].uid!!).get().addOnCompleteListener {
-                        task ->
-                        if(task.isSuccessful){
+                    .document(alarmDTOList[position].uid!!).get().addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
                             val url = task.result?.get("image")
                             activity?.let {
                                 Glide.with(it)
@@ -113,6 +112,7 @@ class AlarmFragment : Fragment() {
 
             return alarmDTOList.size
         }
+
         inner class CustomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     }

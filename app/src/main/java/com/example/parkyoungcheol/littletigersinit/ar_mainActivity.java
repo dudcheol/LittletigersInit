@@ -104,7 +104,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     private DatabaseReference mARMessageRef;
     private AlertDialog.Builder alertDialogBuilder;
     private BubbleSeekBar bubbleSeekBar;
-    private int progressStatus=500;
+    private int progressStatus = 500;
 
     //private Button menu,ar_nav,info,poi;
     @BindView(R.id.fab_menu_btn)
@@ -119,11 +119,11 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     public ResultMSG resultMSG = new ResultMSG();
     public ResultMSG resultMSG_for_BUSSTOP = new ResultMSG();
     private ProgressDialog pDialog;
-    public boolean errorState=false; // JSON 객체 받아왔을때 에러 발생시 상태표시
-    public boolean loopStopper=true; // JSON 객체 받아왔을때 에러 발생시 반복문 종료 위한 변수
-    private String[] categoryAry={"CAFE","BUSSTOP","CONVENIENCE","RESTAURANT","BANK","ACCOMMODATION","HOSPITAL"};
-    public int loopShareInt=0; // for루프와 핸들러 사이의 공유변수
-    private double current_longitude=0,current_latitude=0;
+    public boolean errorState = false; // JSON 객체 받아왔을때 에러 발생시 상태표시
+    public boolean loopStopper = true; // JSON 객체 받아왔을때 에러 발생시 반복문 종료 위한 변수
+    private String[] categoryAry = {"CAFE", "BUSSTOP", "CONVENIENCE", "RESTAURANT", "BANK", "ACCOMMODATION", "HOSPITAL"};
+    public int loopShareInt = 0; // for루프와 핸들러 사이의 공유변수
+    private double current_longitude = 0, current_latitude = 0;
     double subDistance;
 
     @Override
@@ -139,7 +139,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         NaverMapSdk.getInstance(this).setClient(
                 new NaverMapSdk.NaverCloudPlatformClient("0yfv84wqze"));
 
-        MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
+        MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment == null) {
             mapFragment = MapFragment.newInstance();
             getSupportFragmentManager().beginTransaction().add(R.id.map, mapFragment).commit();
@@ -154,7 +154,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                 Intent intent = new Intent(ar_mainActivity.this, UnityPlayerActivity.class);
                 intent.putExtra("SELECT", 3);
                 startActivity(intent);
-                overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
+                overridePendingTransition(R.anim.push_up_in, R.anim.non_anim);
             }
         });
 
@@ -164,12 +164,12 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
             public void onClick(View v) {
                 Intent intent = new Intent(ar_mainActivity.this, AR_navigationActivity.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
+                overridePendingTransition(R.anim.push_up_in, R.anim.non_anim);
             }
         });
 
 
-        if(AppHelper.requestQueue == null){
+        if (AppHelper.requestQueue == null) {
             //리퀘스트큐 생성 (MainActivit가 메모리에서 만들어질 때 같이 생성이 될것이다.
             AppHelper.requestQueue = Volley.newRequestQueue(getApplicationContext());
         }
@@ -177,19 +177,16 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         poi_browser_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*myCurrentLocation = findMyLocation();
-                allPOIreciever(myCurrentLocation.getX(),myCurrentLocation.getY());*/
-
                 final AlertDialog.Builder popDialog = new AlertDialog.Builder(v.getContext());
-                View innerView =  getLayoutInflater().inflate(R.layout.custom_seekbar,null);
+                View innerView = getLayoutInflater().inflate(R.layout.custom_seekbar, null);
                 TextView count = innerView.findViewById(R.id.count);
 
                 popDialog.setView(innerView);
                 popDialog.setTitle("어디까지 보고싶으세요?\n");
-                bubbleSeekBar=(BubbleSeekBar)innerView.findViewById(R.id.bubble_seekbar);
+                bubbleSeekBar = (BubbleSeekBar) innerView.findViewById(R.id.bubble_seekbar);
                 TextView tip = innerView.findViewById(R.id.tip);
                 tip.setVisibility(View.GONE);
-                count.setText(progressStatus+"m");
+                count.setText(progressStatus + "m");
                 bubbleSeekBar.getConfigBuilder()
                         .min(500)
                         .max(2500)
@@ -213,8 +210,8 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                 bubbleSeekBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
                     @Override
                     public void onProgressChanged(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat, boolean fromUser) {
-                        progressStatus=progress;
-                        count.setText(progress+"m");
+                        progressStatus = progress;
+                        count.setText(progress + "m");
                     }
 
                     @Override
@@ -238,36 +235,35 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                         pDialog.show();
 
                         // 반경을 설정할 수 있도록 해주는 변수 (현재위치 좌표에 subDistance를 빼면됨)
-                        subDistance = LatitudeInDifference(progressStatus-100);
-                        //double diffLongitude = LongitudeInDifference(current_longitude,400);
-                        Log.v("LatLon","currentLat="+current_latitude+"currentLon="+current_longitude+"//"+(current_latitude-subDistance)+", "+(current_longitude-subDistance));
+                        subDistance = LatitudeInDifference(progressStatus - 100);
+                        Log.v("LatLon", "currentLat=" + current_latitude + "currentLon=" + current_longitude + "//" + (current_latitude - subDistance) + ", " + (current_longitude - subDistance));
 
 
-                        Intent intent = new Intent(ar_mainActivity.this,UnityPlayerActivity.class);
+                        Intent intent = new Intent(ar_mainActivity.this, UnityPlayerActivity.class);
                         intent.putExtra("SELECT", 2);
 
-                        int delayTime=0;
-                        loopShareInt=0;
+                        int delayTime = 0;
+                        loopShareInt = 0;
                         for (int i = 0; i < categoryAry.length; i++) {
                             final Handler handler = new Handler() {
                                 @Override
                                 public void handleMessage(Message msg) {
-                                    pDialog.setMessage(categoryAry[loopShareInt]+" Loading..");
+                                    pDialog.setMessage(categoryAry[loopShareInt] + " Loading..");
                                     POIreceiver(categoryAry[loopShareInt]);
                                     loopShareInt++;
                                 }
                             };
-                            delayTime+=300;
+                            delayTime += 300;
                             handler.sendEmptyMessageDelayed(0, delayTime);
                         }
 
                         final Handler handler = new Handler() {
                             @Override
                             public void handleMessage(Message msg) {
-                                if(errorState){
+                                if (errorState) {
                                     Toast.makeText(ar_mainActivity.this, "주변 정보를 받아오지 못했습니다. 잠시 후 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
                                     hidePDialog();
-                                }else {
+                                } else {
                                     intent.putExtra(categoryAry[0], resultMSG.getCAFE());
                                     intent.putExtra(categoryAry[1], resultMSG_for_BUSSTOP.getBUSSTOP());
                                     intent.putExtra(categoryAry[2], resultMSG.getCONVENIENCE());
@@ -277,7 +273,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                                     intent.putExtra(categoryAry[6], resultMSG.getHOSPITAL());
                                     hidePDialog();
                                     startActivity(intent);
-                                    overridePendingTransition(R.anim.push_up_in,R.anim.non_anim);
+                                    overridePendingTransition(R.anim.push_up_in, R.anim.non_anim);
                                 }
                             }
                         };
@@ -285,12 +281,12 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
 
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        });
                 popDialog.create();
                 popDialog.show();
             }
@@ -300,16 +296,16 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     // 주변검색 API 결과값 파싱
     // NaverHttpHandler에 Naver에서 요구하는 API URL형식을 맞춰 보내고 전달받은 JSON 값을 파싱한다
     // 파싱해서 저장하는 형태 : 위치이름,경도,위도|
-    public void POIreceiver(String category){
+    public void POIreceiver(String category) {
         String createdURL;
         GeoPoint myGeo = findMyLocation();
 
-        if(current_latitude!=0 && current_longitude!=0){
-            createdURL = DataSource.createRequestCategoryURL(category,current_longitude,current_latitude,subDistance);
-        }else{
-            createdURL = DataSource.createRequestCategoryURL(category,myGeo.getX(),myGeo.getY(),subDistance);
+        if (current_latitude != 0 && current_longitude != 0) {
+            createdURL = DataSource.createRequestCategoryURL(category, current_longitude, current_latitude, subDistance);
+        } else {
+            createdURL = DataSource.createRequestCategoryURL(category, myGeo.getX(), myGeo.getY(), subDistance);
         }
-        Log.i("만들어진 주소",createdURL);
+        Log.i("만들어진 주소", createdURL);
 
         JsonObjectRequest localRequest = new JsonObjectRequest(Request.Method.GET, createdURL, null,
                 new Response.Listener<JSONObject>() {
@@ -326,12 +322,11 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                         JSONArray station = null;
 
                         boolean errorFinder = response.toString().contains("error");
-                        Log.i("확인",String.valueOf(errorFinder));
+                        Log.i("확인", String.valueOf(errorFinder));
                         try {
-                            if(errorFinder){
-                                //Toast.makeText(context, response.getJSONObject("error").getString("msg"), Toast.LENGTH_SHORT).show();
-                                errorState=true;
-                            }else {
+                            if (errorFinder) {
+                                errorState = true;
+                            } else {
                                 result = response.getJSONObject("result");
 
                                 if (category.equals("BUSSTOP")) {
@@ -367,7 +362,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                                     }
                                 }
 
-                                Log.i("파싱결과",sb.toString());
+                                Log.i("파싱결과", sb.toString());
 
                                 switch (category) {
                                     case "CAFE":
@@ -394,7 +389,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                                 }
                             }
                         } catch (JSONException e) {
-                            errorState=true;
+                            errorState = true;
                             e.printStackTrace();
                         }
 
@@ -404,7 +399,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("ERROR_RESPONSE =>", error.toString());
-                        errorState=true;
+                        errorState = true;
                         Toast.makeText(ar_mainActivity.this, "통신에러", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -414,29 +409,26 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
 
-
-
     // 현재 내 위치 반환
     private GeoPoint findMyLocation() {
         GeoPoint myGeo = null;
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         // 밑줄 권한때문에 그런거임
-        if ( Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission( getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions( ar_mainActivity.this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
-                    0 );
-        }
-        else {
+        if (Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(ar_mainActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    0);
+        } else {
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if(location == null){
+            if (location == null) {
 
                 pDialog = new ProgressDialog(ar_mainActivity.this);
                 pDialog.setMessage("위치정보를 받아오고 있습니다...");
                 pDialog.show();
-                while (true){
+                while (true) {
                     location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    if(location==null){
+                    if (location == null) {
                         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                                 1000,
                                 1,
@@ -446,7 +438,7 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                                 1,
                                 gpsLocationListener);
                         continue;
-                    }else{
+                    } else {
                         break;
                     }
                 }
@@ -472,16 +464,8 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     // 현재위치가 바뀔때마다 좌표를 바꾸는 리스너
     final LocationListener gpsLocationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
-            //String provider = location.getProvider();
             current_longitude = location.getLongitude();
             current_latitude = location.getLatitude();
-            //double altitude = location.getAltitude();
-
-            //Todo -- 영철 메모
-            // 1. 현재위치 바뀔때마다도 설정해주어야함 << 이거 안해주면 여기서 poi넘어갔을때 좀 이상해질수있음
-            // 지금은 한번 받아온거 주구장창 쓰고있음,,
-            // 2. removeUpdates << 이거 로케이션 체인지 리스너 onpause에서 해줘야할듯?
-            // 자세한내용 구글링 ㄱㄱ
         }
 
         public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -496,15 +480,15 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
 
 
     // 카메라 권한 받아오기
-    public void checkCameraAndLocationPermission(){
+    public void checkCameraAndLocationPermission() {
         int permissionCamera = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
         int permissionLocation = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION);
 
-        if(permissionLocation == PackageManager.PERMISSION_DENIED) {
+        if (permissionLocation == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(ar_mainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-        }else if(permissionCamera == PackageManager.PERMISSION_DENIED) {
+        } else if (permissionCamera == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(ar_mainActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA);
-        }else{
+        } else {
 
         }
     }
@@ -514,34 +498,34 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         // 위치 추적 권한
-        if(requestCode==LOCATION_PERMISSION_REQUEST_CODE){
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             for (int i = 0; i < permissions.length; i++) {
                 String permission = permissions[i];
                 int grantResult = grantResults[i];
                 if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    if(grantResult == PackageManager.PERMISSION_GRANTED) {
+                    if (grantResult == PackageManager.PERMISSION_GRANTED) {
                         checkCameraAndLocationPermission();
                     } else {
                         Toast.makeText(this, "ar기능을 이용하려면 위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show();
                         finish();
-                        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     }
                 }
             }
         }
 
         // 카메라 권한
-        if(requestCode==REQUEST_CAMERA){
+        if (requestCode == REQUEST_CAMERA) {
             for (int i = 0; i < permissions.length; i++) {
                 String permission = permissions[i];
                 int grantResult = grantResults[i];
                 if (permission.equals(Manifest.permission.CAMERA)) {
-                    if(grantResult == PackageManager.PERMISSION_GRANTED) {
+                    if (grantResult == PackageManager.PERMISSION_GRANTED) {
                         checkCameraAndLocationPermission();
                     } else {
                         Toast.makeText(this, "ar기능을 이용하려면 카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show();
                         finish();
-                        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     }
                 }
             }
@@ -581,9 +565,9 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
                     Marker marker = new Marker();
                     ArmsgData abc = snapshot.getValue(ArmsgData.class); // 컨버팅되서 Bbs로........
                     marker.setPosition(new LatLng(abc.getLatitude(), abc.getLongitude()));
-                    if(abc.getLabel().length()>=10){
-                        msg = abc.getLabel().substring(0,10)+"...";
-                    }else{
+                    if (abc.getLabel().length() >= 10) {
+                        msg = abc.getLabel().substring(0, 10) + "...";
+                    } else {
                         msg = abc.getLabel();
                     }
                     marker.setCaptionText(msg);
@@ -640,49 +624,29 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
         naverMap.setLocationTrackingMode(LocationTrackingMode.Face);
 
         // 카메라 이동 .. 단, 위치 퍼미션이 허가되어있을 때만
-        if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             GeoPoint mGeo = findMyLocation();
             CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(mGeo.getY(), mGeo.getX()));
             naverMap.moveCamera(cameraUpdate);
         }
-
-        /*
-        Projection projection = naverMap.getProjection();
-        // 화면의 100,100 지점을 지도 좌표로 변환
-        LatLng coord = projection.fromScreenLocation(new PointF(100, 100));
-        // 지도의 x,y 지점을 화면 좌표로 변환
-        PointF point = projection.toScreenLocation(new LatLng(37.5666102, 126.9783881));
-        */
-
-
-        /*naverMap.addOnLocationChangeListener(new NaverMap.OnLocationChangeListener() {
-            @Override
-            public void onLocationChange(@NonNull Location location) {
-                // 카메라 이동
-                CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(location.getLatitude(), location.getLongitude()));
-                naverMap.moveCamera(cameraUpdate);
-            }
-        });*/
-
-
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        SharedPreferences prefs = getSharedPreferences("sFile",0);
+        SharedPreferences prefs = getSharedPreferences("sFile", 0);
         SharedPreferences.Editor editor = prefs.edit();
         editor.clear();
         editor.commit();
-        Log.i("destroy","SharedPreferences 데이터 삭제");
+        Log.i("destroy", "SharedPreferences 데이터 삭제");
     }
 
     private void hidePDialog() {
@@ -694,20 +658,21 @@ public class ar_mainActivity extends FragmentActivity implements OnMapReadyCallb
 
     // WGS좌표계 반경구하기 ( 몇 m거리의 위도,경도 구하기 )
     //반경 m이내의 위도차(degree)
-    public double LatitudeInDifference(int diff){
+    public double LatitudeInDifference(int diff) {
         //지구반지름
         final int earth = 6371000;    //단위m
 
-        return (diff*360.0) / (2*Math.PI*earth);
+        return (diff * 360.0) / (2 * Math.PI * earth);
     }
+
     //반경 m이내의 경도차(degree)
-    public double LongitudeInDifference(double _latitude, int diff){
+    public double LongitudeInDifference(double _latitude, int diff) {
         //지구반지름
         final int earth = 6371000;    //단위m
 
         double ddd = Math.cos(0);
         double ddf = Math.cos(Math.toRadians(_latitude));
 
-        return (diff*360.0) / (2*Math.PI*earth*Math.cos(Math.toRadians(_latitude)));
+        return (diff * 360.0) / (2 * Math.PI * earth * Math.cos(Math.toRadians(_latitude)));
     }
 }

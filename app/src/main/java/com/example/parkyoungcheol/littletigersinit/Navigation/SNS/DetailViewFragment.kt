@@ -45,7 +45,7 @@ class DetailViewFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         user = FirebaseAuth.getInstance().currentUser
-        Log.d("UID CHECK",user!!.uid+user!!.email)
+        Log.d("UID CHECK", user!!.uid + user!!.email)
         firestore = FirebaseFirestore.getInstance()
         okHttpClient = OkHttpClient()
         fcmPush = FcmPush()
@@ -83,12 +83,12 @@ class DetailViewFragment : Fragment() {
             firestore?.collection("users")?.document(uid!!)?.get()?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     var userDTO = task.result?.toObject(FollowDTO::class.java)
-                    if (userDTO!=null) {
+                    if (userDTO != null) {
                         getCotents(userDTO?.followings)
                         sad?.visibility = View.GONE
                         no_alarm?.visibility = View.GONE
                         Log.v("팔로잉", userDTO?.followings.toString())
-                    }else{
+                    } else {
                         sad?.visibility = View.VISIBLE
                         no_alarm?.visibility = View.VISIBLE
                     }
@@ -102,21 +102,21 @@ class DetailViewFragment : Fragment() {
                     ?.collection("images")
                     ?.orderBy("timestamp", Query.Direction.DESCENDING)
                     ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                contentDTOs.clear()
-                contentUidList.clear()
-                if (querySnapshot == null) return@addSnapshotListener
-                for (snapshot in querySnapshot!!.documents) {
-                    var item = snapshot.toObject(ContentDTO::class.java)!!
+                        contentDTOs.clear()
+                        contentUidList.clear()
+                        if (querySnapshot == null) return@addSnapshotListener
+                        for (snapshot in querySnapshot!!.documents) {
+                            var item = snapshot.toObject(ContentDTO::class.java)!!
 
-                    Log.d("UID CHECK",item.uid)
+                            Log.d("UID CHECK", item.uid)
 
-                    if (followers?.keys?.contains(item.uid)!! || item.uid==uid) {
-                        contentDTOs.add(item)
-                        contentUidList.add(snapshot.id)
+                            if (followers?.keys?.contains(item.uid)!! || item.uid == uid) {
+                                contentDTOs.add(item)
+                                contentUidList.add(snapshot.id)
+                            }
+                        }
+                        notifyDataSetChanged()
                     }
-                }
-                notifyDataSetChanged()
-            }
 
         }
 
@@ -138,22 +138,17 @@ class DetailViewFragment : Fragment() {
 
                             val url = task.result?.get("image")
                             //Log.d("profile_url",url.toString())
-                            if(url==null){
+                            if (url == null) {
                                 Glide.with(holder.itemView.context)
                                         .load(R.drawable.ic_account)
                                         .into(viewHolder.detailviewitem_profile_image)
-                            }else {
+                            } else {
                                 Glide.with(holder.itemView.context)
                                         .load(url)
                                         .apply(RequestOptions().circleCrop()).into(viewHolder.detailviewitem_profile_image)
                             }
                         }
                     }
-
-            /*//현재 사이즈 뷰 화면 크기의 가로 크기의 값을 가지고 오기
-            val width = resources.displayMetrics.widthPixels
-            val imageView = holder.itemView.detailviewitem_imageview_content
-            imageView.layoutParams = LayoutParams(width, width)*/
 
             //UserFragment로 이동
             viewHolder.detailviewitem_profile_image.setOnClickListener {
@@ -172,7 +167,7 @@ class DetailViewFragment : Fragment() {
 
             // 유저 아이디
             viewHolder.detailviewitem_profile_textview.text = contentDTOs[position].userId
-            viewHolder.detailviewitem_profile_textview.setOnClickListener{
+            viewHolder.detailviewitem_profile_textview.setOnClickListener {
 
                 val fragment = UserFragment()
                 val bundle = Bundle()
@@ -214,7 +209,7 @@ class DetailViewFragment : Fragment() {
                 intent.putExtra("contentUid", contentUidList[position])
                 intent.putExtra("destinationUid", contentDTOs[position].uid)
                 startActivity(intent)
-                activity!!.overridePendingTransition(R.anim.slide_in_right,R.anim.non_anim)
+                activity!!.overridePendingTransition(R.anim.slide_in_right, R.anim.non_anim)
             }
 
         }
