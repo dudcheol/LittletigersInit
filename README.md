@@ -17,14 +17,18 @@ This app combines AR and SNS.
 - 식상한 SNS가 아닌, AR을 접목시켜 차별화된 기능을 제공하여 사용자들이 큰 흥미를 느낄 수 있음
 
 시스템 구성
+
 ![image](https://user-images.githubusercontent.com/40655666/68305920-e0f9c000-00eb-11ea-85d2-bc656bcd6767.png)
 
 사용 API와 AR core의 관계도
+
 ![image](https://user-images.githubusercontent.com/40655666/68305894-d5a69480-00eb-11ea-8cfa-2cbbe65186c5.png)
 
 YOUTUBE 영상 주소
 - https://youtu.be/E1drjy37nwc
 
+
+간략한 미리보기 이미지
 ![image](https://user-images.githubusercontent.com/40655666/68305697-76e11b00-00eb-11ea-8445-6ae07f0296c5.png)
 ![image](https://user-images.githubusercontent.com/40655666/68305701-78aade80-00eb-11ea-9846-2857623a1be5.png)
 ![image](https://user-images.githubusercontent.com/40655666/68305705-7a74a200-00eb-11ea-98d4-bfc60457f3d6.png)
