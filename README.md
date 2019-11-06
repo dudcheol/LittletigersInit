@@ -29,6 +29,7 @@ YOUTUBE 영상 주소
 
 
 간략한 미리보기 이미지
+
 ![image](https://user-images.githubusercontent.com/40655666/68305697-76e11b00-00eb-11ea-8445-6ae07f0296c5.png)
 ![image](https://user-images.githubusercontent.com/40655666/68305701-78aade80-00eb-11ea-9846-2857623a1be5.png)
 ![image](https://user-images.githubusercontent.com/40655666/68305705-7a74a200-00eb-11ea-98d4-bfc60457f3d6.png)
